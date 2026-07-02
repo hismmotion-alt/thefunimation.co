@@ -947,6 +947,9 @@
   .form-submit:active {
     transform: scaleX(1.1) scaleY(0.92);
   }
+  .form-submit:disabled {
+    opacity: .68; cursor: wait; transform: none; box-shadow: none;
+  }
   .wizard-progress {
     display: flex; gap: 8px; margin: 2px 0 32px;
   }
@@ -2613,7 +2616,12 @@
     <div class="modal-form-side">
       <h2>Tell us what you want to <span class="grad">bring to life.</span></h2>
       <p>Three quick questions. No long brief required.</p>
-      <form id="projectForm">
+      <form id="projectForm" name="project-brief" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="project-brief">
+        <input type="hidden" name="subject" data-remove-prefix value="New project inquiry from thefunimation.co">
+        <p hidden>
+          <label>Do not fill this out: <input name="bot-field"></label>
+        </p>
         <div class="wizard-progress" aria-hidden="true">
           <span class="active"></span><span></span><span></span>
         </div>
@@ -2622,7 +2630,7 @@
           <p>Nice to meet you. We’ll use this when we reply.</p>
           <div class="form-group">
             <label for="firstName">Your name <span class="req">*</span></label>
-            <input id="firstName" name="firstName" type="text" placeholder="Jane Smith" autocomplete="name" required />
+            <input id="firstName" name="name" type="text" placeholder="Jane Smith" autocomplete="name" required />
           </div>
           <div class="wizard-actions">
             <button class="form-submit wizard-next" type="button" data-next>Continue →</button>
@@ -2645,7 +2653,7 @@
           <p>A sentence or two is enough to start.</p>
           <div class="form-group">
             <label for="projectDetails">Project goal <span class="req">*</span></label>
-            <textarea id="projectDetails" name="projectDetails" placeholder="We need an explainer video for our product launch..." required></textarea>
+            <textarea id="projectDetails" name="message" placeholder="We need an explainer video for our product launch..." required></textarea>
           </div>
           <div class="wizard-actions">
             <button class="wizard-back" type="button" data-back>← Back</button>
@@ -3418,11 +3426,51 @@
     else document.querySelector('#work').scrollIntoView({ behavior: 'smooth' });
   });
 
-  // Front-end confirmation; connect this form to a CRM/form endpoint for production.
-  document.getElementById('projectForm').addEventListener('submit', e => {
+  // Submit project inquiries to Netlify Forms without leaving the page.
+  document.getElementById('projectForm').addEventListener('submit', async e => {
     e.preventDefault();
-    e.currentTarget.querySelector('.form-status').textContent = 'Thanks — your brief is ready. We’ll be in touch shortly.';
-    e.currentTarget.querySelector('.wizard-actions').scrollIntoView({ block: 'nearest' });
+    const form = e.currentTarget;
+    const status = form.querySelector('.form-status');
+    const submitButton = form.querySelector('[type="submit"]');
+    const originalLabel = submitButton.textContent;
+
+    submitButton.disabled = true;
+    submitButton.textContent = 'Sending…';
+    form.setAttribute('aria-busy', 'true');
+    status.style.color = 'var(--purple)';
+    status.textContent = 'Sending your project brief…';
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form)).toString()
+      });
+
+      if (!response.ok) throw new Error(`Form submission failed: ${response.status}`);
+
+      status.style.color = '#147d61';
+      status.textContent = 'Thanks! Your message was sent. We’ll reply within one business day.';
+      submitButton.textContent = 'Sent ✓';
+      form.reset();
+
+      window.setTimeout(() => {
+        closeModal();
+        showWizardStep(0);
+        status.textContent = '';
+        submitButton.textContent = originalLabel;
+        submitButton.disabled = false;
+      }, 2200);
+    } catch (error) {
+      console.error(error);
+      status.style.color = '#c23b2a';
+      status.textContent = 'Message could not be sent. Please email hello@thefunimation.co.';
+      submitButton.textContent = originalLabel;
+      submitButton.disabled = false;
+    } finally {
+      form.removeAttribute('aria-busy');
+      status.scrollIntoView({ block: 'nearest' });
+    }
   });
 </script>
 
