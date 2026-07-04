@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>document.documentElement.classList.add('js');</script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18298026066"></script>
   <script>
@@ -35,6 +36,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" href="instructor.json" as="fetch" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
@@ -242,6 +244,16 @@
     line-height: 1.72; letter-spacing: -.1px; text-wrap: pretty;
   }
   .hero-btns { display: flex; justify-content: flex-start; gap: 16px; flex-wrap: wrap; }
+  .js .hero h1,
+  .js .hero p,
+  .js .hero-btns > *,
+  .js .lottie-frame {
+    opacity: 0;
+  }
+  .js .hero h1 { transform: translateY(70px); }
+  .js .hero p { transform: translateY(28px); }
+  .js .hero-btns > * { transform: translateY(22px) scale(.92); }
+  .js .lottie-frame { transform: translateX(55px) scale(.82) rotateY(-12deg); }
   .hero-stage {
     position: relative; min-height: 520px; isolation: isolate;
     display: grid; place-items: center; perspective: 1000px;
@@ -1389,21 +1401,13 @@
   }
   .float-shape { animation: floatComplex 8s ease-in-out infinite !important; }
 
-  /* ---- SMOOTH PAGE TRANSITIONS ---- */
-  body {
-    animation: pageIn 0.8s var(--ease) both;
-  }
-  @keyframes pageIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
   @media (max-width: 900px) {
     .hero-content { grid-template-columns: 1fr; gap: 36px; }
     .hero-copy { text-align: center; }
     .hero p { margin-inline: auto; }
     .hero-btns { justify-content: center; }
     .hero-stage { min-height: 470px; max-width: 560px; width: 100%; margin: 0 auto; }
+    .js .lottie-frame { transform: translateY(28px) scale(.92); }
     .services-grid, .why-grid, .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
     .plans-grid {
       grid-template-columns: repeat(5, minmax(350px, 82vw));
@@ -1589,7 +1593,7 @@
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <div class="logo">
+    <a class="logo" href="/" aria-label="Funimation Studio home">
       <img src="Fun!%20logo%20dark.svg" alt="Funimation Studio">
       <svg class="logo-svg" viewBox="0 0 560 130" xmlns="http://www.w3.org/2000/svg">
         <!-- F -->
@@ -1621,7 +1625,7 @@
         <!-- Tagline -->
         <text x="298" y="126" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" font-weight="600" letter-spacing="3" fill="#1a2332" opacity="0.5">BRINGING IDEAS TO LIFE THROUGH MOTION</text>
       </svg>
-    </div>
+    </a>
     <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primaryNav">☰</button>
     <div class="nav-links" id="primaryNav">
       <a href="#work">Work</a>
@@ -2886,7 +2890,7 @@
         path: 'instructor.json',
         rendererSettings: {
           preserveAspectRatio: 'xMidYMid meet',
-          progressiveLoad: true
+          progressiveLoad: false
         }
       });
       heroLottie.addEventListener('DOMLoaded', () => {
@@ -2902,6 +2906,10 @@
   }
 
   function revealFallback() {
+    document.querySelectorAll('.hero h1, .hero p, .hero-btns > *, .lottie-frame').forEach(el => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    });
     const selectors = ['.reveal', '.reveal-stagger', '.reveal-left', '.reveal-right', '.reveal-scale', '.reveal-rotate', '.why-point'];
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -2934,15 +2942,12 @@
     gsap.set('.reveal-stagger > *', { opacity: 1, y: 0 });
 
     const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    const compactMotion = window.matchMedia('(max-width: 600px)').matches;
     intro
-      .from('.hero h1', { y: 70, opacity: 0, duration: 1.15 })
-      .from('.hero p', { y: 28, opacity: 0, duration: .75 }, '-=.62')
-      .from('.hero-btns > *', { y: 22, opacity: 0, scale: .92, stagger: .12, duration: .65 }, '-=.42')
-      .from('.lottie-frame', {
-        x: compactMotion ? 0 : 55, y: compactMotion ? 28 : 0,
-        opacity: 0, scale: compactMotion ? .92 : .82,
-        rotationY: compactMotion ? 0 : -12, duration: 1.05
+      .to('.hero h1', { y: 0, opacity: 1, duration: 1.15 })
+      .to('.hero p', { y: 0, opacity: 1, duration: .75 }, '-=.62')
+      .to('.hero-btns > *', { y: 0, opacity: 1, scale: 1, stagger: .12, duration: .65 }, '-=.42')
+      .to('.lottie-frame', {
+        x: 0, y: 0, opacity: 1, scale: 1, rotationY: 0, duration: 1.05
       }, '-=.82')
       .from('.float-shape', { opacity: 0, scale: 0, rotation: -35, stagger: .1, duration: .8 }, '-=.65')
       .from('.trusted', { y: 24, opacity: 0, duration: .7 }, '-=.35');
@@ -3072,15 +3077,13 @@
   }
 
   initMotion();
-  window.addEventListener('load', () => {
-    loadLottieRuntime()
-      .then(initHeroLottie)
-      .catch(error => {
-        const fallback = document.querySelector('.lottie-fallback');
-        if (fallback) fallback.textContent = 'Animation unavailable.';
-        console.warn(error);
-      });
-  }, { once: true });
+  loadLottieRuntime()
+    .then(initHeroLottie)
+    .catch(error => {
+      const fallback = document.querySelector('.lottie-fallback');
+      if (fallback) fallback.textContent = 'Animation unavailable.';
+      console.warn(error);
+    });
 
   // Nav shadow on scroll
   window.addEventListener('scroll', () => {
