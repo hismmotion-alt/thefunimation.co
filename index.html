@@ -3503,6 +3503,14 @@
     else document.querySelector('#work').scrollIntoView({ behavior: 'smooth' });
   });
 
+  // Count a Google Ads lead only after Netlify accepts the form submission.
+  function reportConsultationConversion() {
+    if (typeof window.gtag !== 'function') return;
+    window.gtag('event', 'conversion', {
+      send_to: 'AW-18298026066/9UqaCK-YqcscENLwlpVE'
+    });
+  }
+
   // Submit project inquiries to Netlify Forms without leaving the page.
   document.getElementById('projectForm').addEventListener('submit', async e => {
     e.preventDefault();
@@ -3526,6 +3534,7 @@
 
       if (!response.ok) throw new Error(`Form submission failed: ${response.status}`);
 
+      reportConsultationConversion();
       status.style.color = '#147d61';
       status.textContent = 'Thanks! Your message was sent. We’ll reply within one business day.';
       submitButton.textContent = 'Sent ✓';
