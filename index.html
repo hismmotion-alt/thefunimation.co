@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>document.documentElement.classList.add('js');</script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18298026066"></script>
   <script>
@@ -247,16 +246,6 @@
     line-height: 1.72; letter-spacing: -.1px; text-wrap: pretty;
   }
   .hero-btns { display: flex; justify-content: flex-start; gap: 16px; flex-wrap: wrap; }
-  .js .hero h1,
-  .js .hero p,
-  .js .hero-btns > *,
-  .js .lottie-frame {
-    opacity: 0;
-  }
-  .js .hero h1 { transform: translateY(70px); }
-  .js .hero p { transform: translateY(28px); }
-  .js .hero-btns > * { transform: translateY(22px) scale(.92); }
-  .js .lottie-frame { transform: translateX(55px) scale(.82) rotateY(-12deg); }
   .hero-stage {
     position: relative; min-height: 520px; isolation: isolate;
     display: grid; place-items: center; perspective: 1000px;
@@ -1414,7 +1403,6 @@
     .hero p { margin-inline: auto; }
     .hero-btns { justify-content: center; }
     .hero-stage { min-height: 470px; max-width: 560px; width: 100%; margin: 0 auto; }
-    .js .lottie-frame { transform: translateY(28px) scale(.92); }
     .services-grid, .why-grid, .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
     .plans-grid {
       grid-template-columns: repeat(5, minmax(350px, 82vw));
@@ -2949,20 +2937,14 @@
     gsap.set('.reveal, .reveal-scale, .why-point', { opacity: 1, y: 0, scale: 1 });
     gsap.set('.reveal-stagger > *', { opacity: 1, y: 0 });
 
-    const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    intro
-      .to('.hero h1', { y: 0, opacity: 1, duration: 1.15 })
-      .to('.hero p', { y: 0, opacity: 1, duration: .75 }, '-=.62')
-      .to('.hero-btns > *', { y: 0, opacity: 1, scale: 1, stagger: .12, duration: .65 }, '-=.42')
-      .to('.lottie-frame', {
-        x: 0, y: 0, opacity: 1, scale: 1, rotationY: 0, duration: 1.05
-      }, '-=.82')
-      .from('.float-shape', { opacity: 0, scale: 0, rotation: -35, stagger: .1, duration: .8 }, '-=.65')
-      .from('.trusted', { y: 24, opacity: 0, duration: .7 }, '-=.35');
+    gsap.set('.hero h1, .hero p, .hero-btns > *, .lottie-frame', {
+      opacity: 1,
+      clearProps: 'transform'
+    });
 
     const heroStage = document.querySelector('.hero-stage');
-    const motionCard = heroStage.querySelector('.lottie-frame');
-    const stageChips = heroStage.querySelectorAll('.stage-chip');
+    const motionCard = heroStage ? heroStage.querySelector('.lottie-frame') : null;
+    const stageChips = heroStage ? heroStage.querySelectorAll('.stage-chip') : [];
     gsap.set(stageChips, { autoAlpha: 0, scale: .72, y: 18 });
     const bubbleLoop = gsap.timeline({ repeat: -1, delay: 1 });
     stageChips.forEach((chip, index) => {
@@ -2971,7 +2953,7 @@
         .to(chip, { autoAlpha: 1, scale: 1, y: 0, duration: .5, ease: 'back.out(1.8)' }, entrance)
         .to(chip, { autoAlpha: 0, scale: .82, y: -18, duration: .45, ease: 'power2.in' }, entrance + 1.25);
     });
-    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    if (heroStage && motionCard && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
       heroStage.addEventListener('pointermove', event => {
         const rect = heroStage.getBoundingClientRect();
         const px = (event.clientX - rect.left) / rect.width - .5;
