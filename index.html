@@ -256,14 +256,30 @@
     background: linear-gradient(145deg, #f1efff, #fff2ed);
     box-shadow: 0 42px 90px rgba(14,17,22,.18);
     transform-style: preserve-3d; will-change: transform;
+    contain: layout paint style;
   }
   .hero-lottie {
     display: block; width: 100%; height: 100%;
+    opacity: 0;
+    transition: opacity .35s ease;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+  .lottie-frame.is-ready .hero-lottie {
+    opacity: 1;
   }
   .lottie-fallback {
     position: absolute; inset: 0; display: grid; place-items: center;
-    padding: 32px; text-align: center; color: rgba(14,17,22,.55);
+    padding: 32px; text-align: center; color: transparent;
     font: 600 14px/1.5 var(--font-head); pointer-events: none;
+    background:
+      radial-gradient(circle at 34% 30%, rgba(108,77,255,.10), transparent 34%),
+      radial-gradient(circle at 72% 68%, rgba(255,107,53,.12), transparent 38%),
+      linear-gradient(145deg, #f1efff, #fff2ed);
+    transition: opacity .28s ease;
+  }
+  .lottie-frame.is-ready .lottie-fallback {
+    opacity: 0;
   }
   .laptop {
     position: relative; z-index: 2; width: min(480px, 90%);
@@ -2871,9 +2887,10 @@
 
   function initHeroLottie() {
     const container = document.getElementById('heroLottie');
+    const frame = document.querySelector('.lottie-frame');
     const fallback = document.querySelector('.lottie-fallback');
     if (!container || !window.lottie) {
-      if (fallback) fallback.textContent = 'Animation unavailable.';
+      if (fallback) fallback.style.color = 'rgba(14,17,22,.55)';
       return;
     }
 
@@ -2882,20 +2899,28 @@
         container,
         renderer: 'svg',
         loop: true,
-        autoplay: !reduceMotion,
+        autoplay: false,
         path: 'instructor.json',
         rendererSettings: {
           preserveAspectRatio: 'xMidYMid meet',
-          progressiveLoad: false
+          progressiveLoad: false,
+          hideOnTransparent: true
         }
       });
       heroLottie.addEventListener('DOMLoaded', () => {
-        if (fallback) fallback.remove();
+        heroLottie.goToAndStop(0, true);
+        requestAnimationFrame(() => {
+          frame?.classList.add('is-ready');
+          if (!reduceMotion) heroLottie.play();
+          if (fallback) window.setTimeout(() => fallback.remove(), 360);
+        });
       });
       heroLottie.addEventListener('data_failed', () => {
+        if (fallback) fallback.style.color = 'rgba(14,17,22,.55)';
         if (fallback) fallback.textContent = 'Animation could not be loaded.';
       });
     } catch (error) {
+      if (fallback) fallback.style.color = 'rgba(14,17,22,.55)';
       if (fallback) fallback.textContent = 'Animation unavailable.';
       console.warn('Lottie initialization failed:', error);
     }
@@ -3067,13 +3092,20 @@
   }
 
   initMotion();
-  loadLottieRuntime()
-    .then(initHeroLottie)
-    .catch(error => {
-      const fallback = document.querySelector('.lottie-fallback');
-      if (fallback) fallback.textContent = 'Animation unavailable.';
-      console.warn(error);
+  window.addEventListener('load', () => {
+    requestAnimationFrame(() => {
+      loadLottieRuntime()
+        .then(initHeroLottie)
+        .catch(error => {
+          const fallback = document.querySelector('.lottie-fallback');
+          if (fallback) {
+            fallback.style.color = 'rgba(14,17,22,.55)';
+            fallback.textContent = 'Animation unavailable.';
+          }
+          console.warn(error);
+        });
     });
+  }, { once: true });
 
   // Nav shadow on scroll
   window.addEventListener('scroll', () => {
