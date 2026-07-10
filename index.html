@@ -177,6 +177,15 @@
     transition: opacity 0.25s;
   }
   .nav-links a:hover { opacity: 1; }
+  .nav-links .btn-primary {
+    background: linear-gradient(135deg, #6C4DFF, #9B5CFF);
+    color: #fff;
+    opacity: 1;
+    box-shadow: 0 12px 28px rgba(108,77,255,.2);
+  }
+  .nav-links .btn-primary:hover {
+    box-shadow: 0 16px 36px rgba(108,77,255,.3);
+  }
   .btn-primary {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 12px 28px; border-radius: var(--radius-pill);
@@ -297,47 +306,8 @@
   }
   .hero-reel {
     display: block; width: 100%; height: 100%;
-    object-fit: cover;
-    background: #0e1116;
-  }
-  .lottie-frame.is-playing .hero-reel {
     object-fit: contain;
-  }
-  .reel-play {
-    position: absolute; inset: 0; z-index: 3;
-    display: grid; place-items: center;
-    border: 0; cursor: pointer; color: #fff;
-    background:
-      linear-gradient(180deg, rgba(14,17,22,.04), rgba(14,17,22,.42)),
-      radial-gradient(circle at center, rgba(14,17,22,.08), rgba(14,17,22,.34));
-    transition: opacity .28s var(--ease), visibility .28s var(--ease);
-  }
-  .reel-play-inner {
-    display: inline-flex; align-items: center; gap: 14px;
-    padding: 12px 18px 12px 12px;
-    border-radius: var(--radius-pill);
-    background: rgba(255,255,255,.92);
-    color: var(--dark);
-    font-family: var(--font-head); font-size: 14px; font-weight: 700;
-    box-shadow: 0 18px 45px rgba(14,17,22,.22);
-    transform: translateY(0) scale(1);
-    transition: transform .28s var(--ease), box-shadow .28s var(--ease);
-  }
-  .reel-play-icon {
-    width: 46px; height: 46px; border-radius: 50%;
-    display: grid; place-items: center;
-    background: var(--gradient1); color: #fff;
-    box-shadow: 0 10px 24px rgba(255,107,53,.28);
-  }
-  .reel-play-icon svg {
-    width: 18px; height: 18px; margin-left: 2px;
-  }
-  .reel-play:hover .reel-play-inner {
-    transform: translateY(-2px) scale(1.03);
-    box-shadow: 0 24px 60px rgba(14,17,22,.28);
-  }
-  .lottie-frame.is-playing .reel-play {
-    opacity: 0; visibility: hidden; pointer-events: none;
+    background: #0e1116;
   }
   .hero-trust {
     margin-top: 22px;
@@ -1748,20 +1718,10 @@
     </div>
     <div class="hero-stage" aria-label="Funimation reel showcase">
       <div class="lottie-frame" aria-label="Funimation studio reel">
-        <video id="heroReel" class="hero-reel" preload="metadata" playsinline>
+        <video id="heroReel" class="hero-reel" autoplay muted loop playsinline preload="auto">
           <source src="New%20reel%20%7C%20Funimation.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <button class="reel-play" type="button" aria-label="Play Funimation reel">
-          <span class="reel-play-inner">
-            <span class="reel-play-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false">
-                <path d="M8 5.5v13l10-6.5-10-6.5Z"/>
-              </svg>
-            </span>
-            Watch reel
-          </span>
-        </button>
       </div>
       <p class="hero-trust">Trusted by startups, SaaS teams, and growing brands</p>
       <div class="stage-chip chip-one">Explainer video</div>
@@ -2958,41 +2918,6 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let lenis;
 
-  function initHeroReel() {
-    const frame = document.querySelector('.lottie-frame');
-    const video = document.getElementById('heroReel');
-    const playButton = document.querySelector('.reel-play');
-    if (!frame || !video || !playButton) return;
-
-    const playReel = () => {
-      frame.classList.add('is-playing');
-      video.controls = true;
-      const playPromise = video.play();
-      if (playPromise && typeof playPromise.catch === 'function') {
-        playPromise.catch(() => {
-          frame.classList.remove('is-playing');
-          video.controls = true;
-        });
-      }
-    };
-
-    playButton.addEventListener('click', playReel);
-    video.addEventListener('click', () => {
-      if (video.paused) playReel();
-    });
-    video.addEventListener('play', () => frame.classList.add('is-playing'));
-    video.addEventListener('pause', () => {
-      if (!video.ended) return;
-      frame.classList.remove('is-playing');
-      video.controls = false;
-    });
-    video.addEventListener('ended', () => {
-      frame.classList.remove('is-playing');
-      video.controls = false;
-      video.currentTime = 0;
-    });
-  }
-
   function revealFallback() {
     document.querySelectorAll('.hero h1, .hero p, .hero-btns > *, .lottie-frame').forEach(el => {
       el.style.opacity = '1';
@@ -3158,7 +3083,6 @@
     window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
   }
 
-  initHeroReel();
   initMotion();
 
   // Nav shadow on scroll
