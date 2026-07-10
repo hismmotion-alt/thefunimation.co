@@ -35,7 +35,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preload" href="instructor.json" as="fetch" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
@@ -253,33 +252,54 @@
   .lottie-frame {
     position: relative; z-index: 2; width: min(520px, 96%); aspect-ratio: 1.18;
     border-radius: 34px; overflow: hidden;
-    background: linear-gradient(145deg, #f1efff, #fff2ed);
+    background:
+      radial-gradient(circle at 32% 24%, rgba(108,77,255,.24), transparent 34%),
+      radial-gradient(circle at 76% 72%, rgba(255,107,53,.20), transparent 38%),
+      #0e1116;
     box-shadow: 0 42px 90px rgba(14,17,22,.18);
     transform-style: preserve-3d; will-change: transform;
     contain: layout paint style;
   }
-  .hero-lottie {
+  .hero-reel {
     display: block; width: 100%; height: 100%;
-    opacity: 0;
-    transition: opacity .35s ease;
-    transform: translateZ(0);
-    backface-visibility: hidden;
+    object-fit: cover;
+    background: #0e1116;
   }
-  .lottie-frame.is-ready .hero-lottie {
-    opacity: 1;
-  }
-  .lottie-fallback {
-    position: absolute; inset: 0; display: grid; place-items: center;
-    padding: 32px; text-align: center; color: transparent;
-    font: 600 14px/1.5 var(--font-head); pointer-events: none;
+  .reel-play {
+    position: absolute; inset: 0; z-index: 3;
+    display: grid; place-items: center;
+    border: 0; cursor: pointer; color: #fff;
     background:
-      radial-gradient(circle at 34% 30%, rgba(108,77,255,.10), transparent 34%),
-      radial-gradient(circle at 72% 68%, rgba(255,107,53,.12), transparent 38%),
-      linear-gradient(145deg, #f1efff, #fff2ed);
-    transition: opacity .28s ease;
+      linear-gradient(180deg, rgba(14,17,22,.04), rgba(14,17,22,.42)),
+      radial-gradient(circle at center, rgba(14,17,22,.08), rgba(14,17,22,.34));
+    transition: opacity .28s var(--ease), visibility .28s var(--ease);
   }
-  .lottie-frame.is-ready .lottie-fallback {
-    opacity: 0;
+  .reel-play-inner {
+    display: inline-flex; align-items: center; gap: 14px;
+    padding: 12px 18px 12px 12px;
+    border-radius: var(--radius-pill);
+    background: rgba(255,255,255,.92);
+    color: var(--dark);
+    font-family: var(--font-head); font-size: 14px; font-weight: 700;
+    box-shadow: 0 18px 45px rgba(14,17,22,.22);
+    transform: translateY(0) scale(1);
+    transition: transform .28s var(--ease), box-shadow .28s var(--ease);
+  }
+  .reel-play-icon {
+    width: 46px; height: 46px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--gradient1); color: #fff;
+    box-shadow: 0 10px 24px rgba(255,107,53,.28);
+  }
+  .reel-play-icon svg {
+    width: 18px; height: 18px; margin-left: 2px;
+  }
+  .reel-play:hover .reel-play-inner {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 24px 60px rgba(14,17,22,.28);
+  }
+  .lottie-frame.is-playing .reel-play {
+    opacity: 0; visibility: hidden; pointer-events: none;
   }
   .laptop {
     position: relative; z-index: 2; width: min(480px, 90%);
@@ -1673,10 +1693,22 @@
         <a href="#work" class="btn-secondary">See Our Work</a>
       </div>
     </div>
-    <div class="hero-stage" aria-label="Interactive animation showcase">
-      <div class="lottie-frame" aria-label="Funimation studio animation">
-        <div id="heroLottie" class="hero-lottie"></div>
-        <div class="lottie-fallback">Loading animation…</div>
+    <div class="hero-stage" aria-label="Funimation reel showcase">
+      <div class="lottie-frame" aria-label="Funimation studio reel">
+        <video id="heroReel" class="hero-reel" preload="metadata" playsinline>
+          <source src="New%20reel%20%7C%20Funimation.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <button class="reel-play" type="button" aria-label="Play Funimation reel">
+          <span class="reel-play-inner">
+            <span class="reel-play-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false">
+                <path d="M8 5.5v13l10-6.5-10-6.5Z"/>
+              </svg>
+            </span>
+            Watch reel
+          </span>
+        </button>
       </div>
       <div class="stage-chip chip-one">Explainer video</div>
       <div class="stage-chip chip-two">Interactive website</div>
@@ -2871,59 +2903,40 @@
 <script>
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let lenis;
-  let heroLottie;
 
-  function loadLottieRuntime() {
-    if (window.lottie) return Promise.resolve();
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/lottie-web@5.13.0/build/player/lottie.min.js';
-      script.async = true;
-      script.onload = resolve;
-      script.onerror = () => reject(new Error('Lottie runtime failed to load'));
-      document.head.appendChild(script);
-    });
-  }
-
-  function initHeroLottie() {
-    const container = document.getElementById('heroLottie');
+  function initHeroReel() {
     const frame = document.querySelector('.lottie-frame');
-    const fallback = document.querySelector('.lottie-fallback');
-    if (!container || !window.lottie) {
-      if (fallback) fallback.style.color = 'rgba(14,17,22,.55)';
-      return;
-    }
+    const video = document.getElementById('heroReel');
+    const playButton = document.querySelector('.reel-play');
+    if (!frame || !video || !playButton) return;
 
-    try {
-      heroLottie = lottie.loadAnimation({
-        container,
-        renderer: 'svg',
-        loop: true,
-        autoplay: false,
-        path: 'instructor.json',
-        rendererSettings: {
-          preserveAspectRatio: 'xMidYMid meet',
-          progressiveLoad: false,
-          hideOnTransparent: true
-        }
-      });
-      heroLottie.addEventListener('DOMLoaded', () => {
-        heroLottie.goToAndStop(0, true);
-        requestAnimationFrame(() => {
-          frame?.classList.add('is-ready');
-          if (!reduceMotion) heroLottie.play();
-          if (fallback) window.setTimeout(() => fallback.remove(), 360);
+    const playReel = () => {
+      frame.classList.add('is-playing');
+      video.controls = true;
+      const playPromise = video.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(() => {
+          frame.classList.remove('is-playing');
+          video.controls = true;
         });
-      });
-      heroLottie.addEventListener('data_failed', () => {
-        if (fallback) fallback.style.color = 'rgba(14,17,22,.55)';
-        if (fallback) fallback.textContent = 'Animation could not be loaded.';
-      });
-    } catch (error) {
-      if (fallback) fallback.style.color = 'rgba(14,17,22,.55)';
-      if (fallback) fallback.textContent = 'Animation unavailable.';
-      console.warn('Lottie initialization failed:', error);
-    }
+      }
+    };
+
+    playButton.addEventListener('click', playReel);
+    video.addEventListener('click', () => {
+      if (video.paused) playReel();
+    });
+    video.addEventListener('play', () => frame.classList.add('is-playing'));
+    video.addEventListener('pause', () => {
+      if (!video.ended) return;
+      frame.classList.remove('is-playing');
+      video.controls = false;
+    });
+    video.addEventListener('ended', () => {
+      frame.classList.remove('is-playing');
+      video.controls = false;
+      video.currentTime = 0;
+    });
   }
 
   function revealFallback() {
@@ -3091,21 +3104,8 @@
     window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
   }
 
+  initHeroReel();
   initMotion();
-  window.addEventListener('load', () => {
-    requestAnimationFrame(() => {
-      loadLottieRuntime()
-        .then(initHeroLottie)
-        .catch(error => {
-          const fallback = document.querySelector('.lottie-fallback');
-          if (fallback) {
-            fallback.style.color = 'rgba(14,17,22,.55)';
-            fallback.textContent = 'Animation unavailable.';
-          }
-          console.warn(error);
-        });
-    });
-  }, { once: true });
 
   // Nav shadow on scroll
   window.addEventListener('scroll', () => {
