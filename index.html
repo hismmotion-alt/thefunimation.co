@@ -189,15 +189,15 @@
   .btn-primary {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 12px 28px; border-radius: var(--radius-pill);
-    background: var(--gradient1); color: #fff;
+    background: linear-gradient(135deg, #6C4DFF, #9B5CFF); color: #fff;
     font-family: var(--font-head); font-weight: 600; font-size: 15px;
     border: none; cursor: pointer;
     transition: transform 0.3s var(--ease), box-shadow 0.3s;
-    box-shadow: 0 4px 20px rgba(255,107,53,0.3);
+    box-shadow: 0 12px 28px rgba(108,77,255,.2);
   }
   .btn-primary:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 30px rgba(255,107,53,0.4);
+    box-shadow: 0 16px 36px rgba(108,77,255,.3);
   }
   .btn-secondary {
     display: inline-flex; align-items: center; gap: 8px;
@@ -240,7 +240,7 @@
   .hero-content {
     position: relative; z-index: 1; width: 100%; max-width: var(--max-w); margin: 0 auto;
     display: grid; grid-template-columns: minmax(0, .88fr) minmax(440px, 1.12fr);
-    align-items: center; gap: clamp(56px, 6vw, 92px);
+    align-items: start; gap: clamp(56px, 6vw, 92px);
   }
   .hero-copy { position: relative; z-index: 3; min-width: 0; max-width: 650px; }
   .hero-eyebrow {
@@ -1704,7 +1704,7 @@
 
   <div class="hero-content">
     <div class="hero-copy">
-      <div class="hero-eyebrow">Custom explainer & product animation studio</div>
+      <div class="hero-eyebrow">Motion design for SaaS & digital products</div>
       <h1>
         <span class="grad headline-line headline-accent">One animation studio</span>
         <span class="headline-line headline-tight">for everything your</span>
@@ -1725,7 +1725,6 @@
       </div>
       <p class="hero-trust">Trusted by startups, SaaS teams, and growing brands</p>
       <div class="stage-chip chip-one">Explainer video</div>
-      <div class="stage-chip chip-two">Interactive website</div>
       <div class="stage-chip chip-three">Character animation</div>
       <div class="stage-chip chip-four">UI animation</div>
       <div class="stage-chip chip-five">Motion graphics</div>
