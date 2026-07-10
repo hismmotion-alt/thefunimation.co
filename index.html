@@ -243,17 +243,6 @@
     align-items: start; gap: clamp(56px, 6vw, 92px);
   }
   .hero-copy { position: relative; z-index: 3; min-width: 0; max-width: 650px; }
-  .hero-eyebrow {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 36px;
-    color: rgba(26,35,50,.55);
-    font-family: var(--font-head); font-size: 9px; font-weight: 700;
-    letter-spacing: .14em; text-transform: uppercase;
-  }
-  .hero-eyebrow::before {
-    content: ''; width: 2px; height: 22px; border-radius: 999px;
-    background: rgba(26,35,50,.42);
-  }
   .hero h1 {
     max-width: 560px;
     font-size: clamp(38px, 3.78vw, 56px); font-weight: 800;
@@ -312,9 +301,9 @@
     background: #0e1116;
   }
   .hero-trust {
-    margin-top: 22px;
+    margin: 0 0 14px;
     color: rgba(26,35,50,.44);
-    font-family: var(--font-head); font-size: 14px; font-weight: 700;
+    font-family: var(--font-head); font-size: 12px; font-weight: 700;
     letter-spacing: .04em;
   }
   .stage-chip { display: none !important; }
@@ -1453,7 +1442,6 @@
   @media (max-width: 900px) {
     .hero-content { grid-template-columns: 1fr; gap: 42px; }
     .hero-copy { text-align: center; }
-    .hero-eyebrow { justify-content: center; margin-bottom: 24px; font-size: 12px; }
     .hero-copy p { margin-inline: auto; }
     .hero-btns { justify-content: center; }
     .hero-stage { max-width: 680px; width: 100%; margin: 0 auto; }
@@ -1501,10 +1489,6 @@
     .nav-links .btn-primary { justify-content: center; margin-top: 4px; }
     .hero { padding: 104px 18px 48px; min-height: auto; }
     .hero-content { gap: 26px; }
-    .hero-eyebrow {
-      margin-bottom: 16px; font-size: 8px; letter-spacing: .11em;
-    }
-    .hero-eyebrow::before { height: 17px; }
     .hero h1 {
       max-width: 310px; margin: 0 auto 18px;
       font-size: clamp(29px, 8.2vw, 37px); line-height: 1.05; letter-spacing: -1.5px;
@@ -1519,7 +1503,7 @@
     .hero-btns a { width: 100%; justify-content: center; min-height: 43px; font-size: 13px; }
     .hero-stage { min-height: auto; }
     .lottie-frame { width: 100%; max-width: 460px; border-radius: 18px; box-shadow: 0 24px 55px rgba(14,17,22,.14); }
-    .hero-trust { margin-top: 14px; font-size: 12px; text-align: center; }
+    .hero-trust { margin-bottom: 12px; font-size: 10px; text-align: center; }
     .motion-card {
       width: 88%; border-width: 7px; border-bottom-width: 10px;
       border-radius: 18px 18px 11px 11px; clip-path: inset(0 round 18px);
@@ -1706,7 +1690,6 @@
 
   <div class="hero-content">
     <div class="hero-copy">
-      <div class="hero-eyebrow">Animation for SaaS & digital products</div>
       <h1>
         <span class="grad headline-line headline-accent">One animation studio</span>
         <span class="headline-line headline-tight">for everything your</span>
@@ -1719,13 +1702,13 @@
       </div>
     </div>
     <div class="hero-stage" aria-label="Funimation reel showcase">
+      <p class="hero-trust">Trusted by startups, SaaS teams, and growing brands</p>
       <div class="lottie-frame" aria-label="Funimation studio reel">
         <video id="heroReel" class="hero-reel" autoplay muted loop playsinline preload="auto">
           <source src="New%20reel%20%7C%20Funimation.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
       </div>
-      <p class="hero-trust">Trusted by startups, SaaS teams, and growing brands</p>
       <div class="stage-chip chip-one">Explainer video</div>
       <div class="stage-chip chip-three">Character animation</div>
       <div class="stage-chip chip-four">UI animation</div>
