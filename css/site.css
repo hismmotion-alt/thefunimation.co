@@ -885,7 +885,7 @@
     transform: translateY(-4px); border-color: rgba(74,222,181,.72);
     box-shadow: 0 16px 36px rgba(14,17,22,.1);
   }
-  .rive-embed-card:has(iframe[src]):hover {
+  .rive-embed-card.is-rive-live:hover {
     transform: none;
     box-shadow: none;
   }
@@ -902,6 +902,11 @@
   .rive-enable {
     margin: 0 0 22px;
   }
+  .rive-enable[hidden],
+  .is-rive-enabled .rive-enable,
+  .is-rive-enabled [data-enable-rive] {
+    display: none !important;
+  }
   .rive-poster {
     width: 100%;
     height: 180px;
@@ -916,9 +921,32 @@
     padding: 0;
   }
   .rive-illustrative .rive-poster { height: 220px; }
-  .rive-embed-card:has(iframe[src]) .rive-poster,
-  .rive-embed-card:has(iframe[src]) .rive-fallback-label,
-  .rive-embed-card:has(iframe[src]) .rive-enable { display: none; }
+  .rive-embed-card > .rive-poster,
+  .rive-embed-card > .rive-fallback-label,
+  .rive-embed-card > iframe {
+    grid-area: 1 / 1;
+  }
+  .rive-embed-card > .rive-poster,
+  .rive-embed-card > .rive-fallback-label {
+    position: relative;
+    z-index: 1;
+  }
+  .rive-embed-card > iframe {
+    position: relative;
+    z-index: 0;
+    background-color: transparent;
+    color-scheme: none;
+  }
+  .rive-embed-card.is-rive-live {
+    background-image: var(--rive-poster);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+  .rive-embed-card.is-rive-live > iframe { z-index: 1; }
+  .rive-embed-card.is-rive-live .rive-poster,
+  .rive-embed-card.is-rive-live .rive-fallback-label,
+  .rive-embed-card.is-rive-live .rive-enable { display: none; }
   .work-card-rive.rive-static {
     display: grid; place-items: center; min-height: 220px;
   }
@@ -936,10 +964,18 @@
   [data-motion-lite] .work-card:hover {
     transform: translateY(-3px);
   }
+  [data-motion-lite] .rive-embed-card.is-rive-live:hover {
+    transform: none;
+    box-shadow: none;
+  }
   [data-motion-lite] .work-card:hover img { transform: none; }
   .rive-embed-card iframe { width: 100%; height: 245px; border: 0; display: block; }
   .rive-embed-card iframe:not([src]),
   .rive-embed-card iframe[hidden] { display: none; }
+  .rive-embed-card:not(.is-rive-live) > iframe[src] {
+    opacity: 0;
+    pointer-events: none;
+  }
   .rive-static,
   .rive-embed-card:has(iframe:not([src])),
   .work-card-rive:has(iframe:not([src])) {

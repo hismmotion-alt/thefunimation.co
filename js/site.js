@@ -31,11 +31,43 @@
     if (changed) video.load();
   }
 
+  function riveCard(iframe) {
+    return iframe.closest('.rive-embed-card, .work-card-rive') || iframe.parentElement;
+  }
+
+  function riveHost(iframe) {
+    return iframe.closest('.rive-embed-card, .work-card-rive') || iframe;
+  }
+
+  function setRiveLive(iframe, live) {
+    const card = riveCard(iframe);
+    if (!card) return;
+    card.classList.toggle('is-rive-live', live);
+    const poster = card.querySelector('.rive-poster');
+    const posterSrc = poster && (poster.currentSrc || poster.getAttribute('src'));
+    if (live && posterSrc) {
+      card.style.setProperty('--rive-poster', 'url("' + posterSrc + '")');
+    } else {
+      card.style.removeProperty('--rive-poster');
+    }
+  }
+
   function markRiveFallback(iframe) {
-    const card = iframe.closest('.rive-embed-card, .work-card-rive') || iframe.parentElement;
-    if (card) card.classList.add('rive-static');
+    const card = riveCard(iframe);
+    if (card) {
+      card.classList.add('rive-static');
+      card.classList.remove('is-rive-live');
+      card.style.removeProperty('--rive-poster');
+    }
     iframe.setAttribute('hidden', '');
     iframe.removeAttribute('src');
+  }
+
+  function hideRiveEnable(enable) {
+    if (!enable) return;
+    enable.hidden = true;
+    enable.setAttribute('aria-hidden', 'true');
+    enable.tabIndex = -1;
   }
 
   const intersectingRive = new Set();
@@ -44,17 +76,33 @@
     return Boolean(src) && src !== 'about:blank';
   }
 
+  function isFailedRive(iframe) {
+    return iframe.dataset.riveFailed === 'true';
+  }
+
   function liveRiveFrames() {
     return Array.from(document.querySelectorAll('iframe[data-src]')).filter(frame => isLiveRiveSrc(frame.getAttribute('src')));
   }
 
   function riveDistance(iframe) {
-    const rect = iframe.getBoundingClientRect();
+    const rect = riveHost(iframe).getBoundingClientRect();
     return Math.abs(rect.top + rect.height / 2 - window.innerHeight / 2);
   }
 
+  function riveRank(a, b) {
+    const dist = riveDistance(a) - riveDistance(b);
+    if (dist !== 0) return dist;
+    const aLoading = isLiveRiveSrc(a.getAttribute('src')) ? 0 : 1;
+    const bLoading = isLiveRiveSrc(b.getAttribute('src')) ? 0 : 1;
+    if (aLoading !== bLoading) return aLoading - bLoading;
+    const pos = a.compareDocumentPosition(b);
+    if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+    if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+    return 0;
+  }
+
   function mountRiveFrame(iframe) {
-    if (reduceMotion || !iframe.dataset.src || isLiveRiveSrc(iframe.getAttribute('src'))) return;
+    if (reduceMotion || !iframe.dataset.src || isFailedRive(iframe) || isLiveRiveSrc(iframe.getAttribute('src'))) return;
     iframe.removeAttribute('hidden');
     iframe.src = iframe.dataset.src;
   }
@@ -62,6 +110,7 @@
   function unmountRiveFrame(iframe) {
     if (!iframe.dataset.src) return;
     iframe.removeAttribute('src');
+    setRiveLive(iframe, false);
   }
 
   function forgetRiveFrames(container) {
@@ -71,16 +120,12 @@
 
   function reconcileLiveRive() {
     if (reduceMotion) return;
-    const ranked = Array.from(intersectingRive).sort((a, b) => riveDistance(a) - riveDistance(b));
+    const ranked = Array.from(intersectingRive).filter(frame => !isFailedRive(frame)).sort(riveRank);
     const keep = new Set(ranked.slice(0, MAX_LIVE_RIVE));
     liveRiveFrames().forEach(frame => {
       if (!keep.has(frame)) unmountRiveFrame(frame);
     });
     keep.forEach(mountRiveFrame);
-  }
-
-  function riveHost(iframe) {
-    return iframe.closest('.rive-embed-card, .work-card-rive') || iframe;
   }
 
   function riveNearViewport(node) {
@@ -167,18 +212,36 @@
       const enable = gallery.querySelector('[data-enable-rive]');
       if (reduceMotion) {
         hydrateLazyMedia(gallery, { rive: 'off' });
-        if (enable) enable.hidden = true;
+        gallery.classList.add('is-rive-enabled');
+        hideRiveEnable(enable);
         return;
       }
       hydrateLazyMedia(gallery, { rive: 'wait' });
       const start = () => {
+        gallery.classList.add('is-rive-enabled');
         gallery.removeAttribute('data-rive-on-demand');
-        if (enable) enable.hidden = true;
+        hideRiveEnable(enable);
         hydrateLazyMedia(gallery, { rive: 'observe' });
       };
       if (enable) enable.addEventListener('click', start, { once: true });
     });
   }
+
+  document.addEventListener('load', event => {
+    const iframe = event.target;
+    if (!iframe || iframe.tagName !== 'IFRAME' || !iframe.dataset.src) return;
+    if (!isLiveRiveSrc(iframe.getAttribute('src'))) return;
+    setRiveLive(iframe, true);
+  }, true);
+
+  document.addEventListener('error', event => {
+    const iframe = event.target;
+    if (!iframe || iframe.tagName !== 'IFRAME' || !iframe.dataset.src) return;
+    iframe.dataset.riveFailed = 'true';
+    setRiveLive(iframe, false);
+    markRiveFallback(iframe);
+    reconcileLiveRive();
+  }, true);
 
   function unloadLazyMedia(container) {
     if (!container) return;
@@ -193,7 +256,7 @@
     }
     container.querySelectorAll('iframe[data-src]').forEach(iframe => {
       intersectingRive.delete(iframe);
-      iframe.removeAttribute('src');
+      unmountRiveFrame(iframe);
     });
     reconcileLiveRive();
     container.querySelectorAll('video').forEach(video => {
