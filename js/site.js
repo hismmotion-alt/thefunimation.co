@@ -3,6 +3,23 @@
   const MAX_LIVE_RIVE = 2;
   let lenis;
 
+  const PROJECT_PAGE_URLS = {
+    'ismed-clim': '/work/ismed-clim-climate-health-animation/',
+    'hancock-health': '/work/hancock-health-explainer-animation/',
+    'before-health': '/work/before-health-ai-healthcare-explainer/',
+    'sela-cloud': '/work/sela-cloud-explainer-video/',
+    'upfit-supply': '/work/upfit-supply-product-explainer/',
+    'mtech-systems': '/work/mtech-systems-agtech-explainer/',
+    'greenopia': '/work/greenopia-sustainability-explainer/',
+    'secufy-sos': '/work/secufy-sos-personal-safety-explainer/',
+    'farmerlink': '/work/farmerlink-digital-agriculture-explainer/',
+    'buddywerking': '/work/buddywerking-vlaanderen-social-impact-explainer/',
+    'carakit': '/work/carakit-care-kit-explainer/',
+    'gifybox': '/work/gifybox-event-photo-booth-explainer/',
+    'maven': '/work/maven-investment-partners-explainer/',
+    'bazaar': '/work/bazaar-interactive-icon-animation/'
+  };
+
   const PROJECT_MODAL_IDS = {
     'ismed-clim': 'projectModal',
     'hancock-health': 'hancockProjectModal',
@@ -707,7 +724,9 @@
   });
 
   const requestedProject = new URLSearchParams(window.location.search).get('project');
-  if (requestedProject && modalOpeners[requestedProject] && document.getElementById(PROJECT_MODAL_IDS[requestedProject])) {
+  if (requestedProject && PROJECT_PAGE_URLS[requestedProject]) {
+    window.location.replace(PROJECT_PAGE_URLS[requestedProject]);
+  } else if (requestedProject && modalOpeners[requestedProject] && document.getElementById(PROJECT_MODAL_IDS[requestedProject])) {
     modalOpeners[requestedProject]();
   }
 
