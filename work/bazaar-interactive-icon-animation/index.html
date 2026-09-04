@@ -39,7 +39,6 @@
 <meta name="twitter:title" content="Interactive Rive Icon Animation Case Study - Funimation">
 <meta name="twitter:description" content="Interactive Rive icon system for Bazaar — lightweight brand motion designed for web and mobile interfaces. A Funimation case study.">
 <meta name="twitter:image" content="https://thefunimation.co/hero-reel-poster.jpg">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preload" href="/fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/site.css">
@@ -111,7 +110,7 @@
 </script>
 
 </head>
-<body class="case-page">
+<body class="case-page" data-motion-lite>
 <div class="scroll-progress" aria-hidden="true"></div>
 <nav>
   <div class="nav-inner">
@@ -128,27 +127,6 @@
     </div>
   </div>
 </nav>
-<section class="rive-project-gallery" data-rive-on-demand>
-    <div class="rive-project-head">
-      <h3>Interactive icon collection</h3>
-      <p>Static frames first. Live Rive runtimes mount only after you enable them, then only while a card is near the viewport. Reduced-motion visitors stay on the static fallback.</p>
-    </div>
-    <button class="btn-secondary rive-enable" type="button" data-enable-rive>Load interactive icons</button>
-    <div class="rive-gallery-grid">
-      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 1</span><iframe data-src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar interactive icon 1" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon</span><iframe data-src="https://rive.app/s/kLDNhJdhoU2DvY19aiHJkQ/embed" title="Bazaar interactive icon 2" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon</span><iframe data-src="https://rive.app/s/mcV4lUTPBEmtRWzSiIWklw/embed" title="Bazaar interactive icon 3" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon</span><iframe data-src="https://rive.app/s/ex290J8yKEuKhFn5CPiFnQ/embed" title="Bazaar interactive icon 4" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon</span><iframe data-src="https://rive.app/s/hmuv20UmekyWcseE6yhyyw/embed" title="Bazaar interactive icon 5" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon</span><iframe data-src="https://rive.app/s/WeifwonwnkqCjAligEDshA/embed" title="Bazaar interactive icon 6" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon</span><iframe data-src="https://rive.app/s/z4mQrdbJW0i_kRwuy2VtsA/embed" title="Bazaar interactive icon 7" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon</span><iframe data-src="https://rive.app/s/ld273qprv0_dxu3OztUOFw/embed" title="Bazaar interactive icon 8" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon</span><iframe data-src="https://rive.app/s/1Kp3JxG5FUSWYG_QFcxcXg/embed" title="Bazaar interactive icon 9" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon</span><iframe data-src="https://rive.app/s/--ZdVd43mEi4m49uK35j1g/embed" title="Bazaar interactive icon 10" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon</span><iframe data-src="https://rive.app/s/-4LQ5Dh72E6b7Bu5BGx_mA/embed" title="Bazaar interactive icon 11" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-    </div>
-  </section>
-    
     <div class="project-content">
       <div class="project-content-main">
         <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/work/">Work</a><span>/</span><span>Bazaar</span></nav>
@@ -161,10 +139,29 @@
         <div class="project-meta-item"><strong>Client</strong><span>Bazaar</span></div>
         <div class="project-meta-item"><strong>Deliverables</strong><span>Interactive icon system, brand motion, Rive animations</span></div>
         <div class="project-meta-item"><strong>Focus</strong><span>Web and mobile interaction, usability, lightweight motion</span></div>
-        
         <a class="project-resource" href="/contact/">Contact us</a>
       </aside>
     </div>
+<section class="rive-project-gallery" data-rive-on-demand>
+    <div class="rive-project-head">
+      <h3>Interactive icon collection</h3>
+      <p>Static frames first. After you enable motion, at most two Rive runtimes stay live — the ones near the viewport. Reduced-motion visitors keep the static fallback.</p>
+    </div>
+    <button class="btn-secondary rive-enable" type="button" data-enable-rive>Load interactive icons</button>
+    <div class="rive-gallery-grid">
+      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 1</span><iframe data-src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar interactive icon 1" loading="lazy"></iframe></div>
+      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 2</span><iframe data-src="https://rive.app/s/kLDNhJdhoU2DvY19aiHJkQ/embed" title="Bazaar interactive icon 2" loading="lazy"></iframe></div>
+      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 3</span><iframe data-src="https://rive.app/s/mcV4lUTPBEmtRWzSiIWklw/embed" title="Bazaar interactive icon 3" loading="lazy"></iframe></div>
+      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 4</span><iframe data-src="https://rive.app/s/ex290J8yKEuKhFn5CPiFnQ/embed" title="Bazaar interactive icon 4" loading="lazy"></iframe></div>
+      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 5</span><iframe data-src="https://rive.app/s/hmuv20UmekyWcseE6yhyyw/embed" title="Bazaar interactive icon 5" loading="lazy"></iframe></div>
+      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 6</span><iframe data-src="https://rive.app/s/WeifwonwnkqCjAligEDshA/embed" title="Bazaar interactive icon 6" loading="lazy"></iframe></div>
+      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 7</span><iframe data-src="https://rive.app/s/z4mQrdbJW0i_kRwuy2VtsA/embed" title="Bazaar interactive icon 7" loading="lazy"></iframe></div>
+      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 8</span><iframe data-src="https://rive.app/s/ld273qprv0_dxu3OztUOFw/embed" title="Bazaar interactive icon 8" loading="lazy"></iframe></div>
+      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 9</span><iframe data-src="https://rive.app/s/1Kp3JxG5FUSWYG_QFcxcXg/embed" title="Bazaar interactive icon 9" loading="lazy"></iframe></div>
+      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 10</span><iframe data-src="https://rive.app/s/--ZdVd43mEi4m49uK35j1g/embed" title="Bazaar interactive icon 10" loading="lazy"></iframe></div>
+      <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 11</span><iframe data-src="https://rive.app/s/-4LQ5Dh72E6b7Bu5BGx_mA/embed" title="Bazaar interactive icon 11" loading="lazy"></iframe></div>
+    </div>
+  </section>
     <section class="section">
       <div class="section-inner">
         <h2 class="section-title">More work</h2>
@@ -219,9 +216,6 @@
     <span>Made with motion ✨</span>
   </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.23/dist/lenis.min.js" defer></script>
 <script src="/js/site.js" defer></script>
 </body>
 </html>

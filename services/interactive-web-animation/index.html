@@ -39,7 +39,6 @@
 <meta name="twitter:title" content="Interactive Web Animation Studio | Rive &amp; Lottie Experts - Funimation">
 <meta name="twitter:description" content="Interactive website animation, Rive, and Lottie design for landing pages and product sites. Lightweight, on-brand motion that boosts engagement and conversion.">
 <meta name="twitter:image" content="https://thefunimation.co/1st%20project/cover.png">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preload" href="/fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/site.css">
@@ -122,7 +121,7 @@
 </script>
 
 </head>
-<body>
+<body data-motion-lite>
 <div class="scroll-progress" aria-hidden="true"></div>
 <nav>
   <div class="nav-inner">
@@ -178,12 +177,13 @@
     <p>Rive is particularly useful when an animation needs to respond to interaction or state changes. Lottie is well suited to lightweight interface animation and reusable motion assets. We can help determine which approach fits the experience, create the animation, and work with your design or development team on the final implementation requirements.</p>
   </div>
 </section>
-<section class="section" data-hydrate-media>
+<section class="section" data-rive-on-demand>
   <div class="section-inner">
     <h2 class="section-title">Case study: Bazaar interactive icon system</h2>
-    <p class="section-desc">A small illustrative Rive preview — not a hero embed. It stays a static card until it is near the viewport, and it is skipped entirely when reduced motion is preferred.</p>
-    <div class="rive-embed-card" style="max-width:320px">
+    <p class="section-desc">A small illustrative preview — not a hero embed. The Rive runtime stays off until you play it, and it is skipped entirely when reduced motion is preferred.</p>
+    <div class="rive-embed-card rive-illustrative">
       <span class="rive-fallback-label">Bazaar icon preview</span>
+      <button class="btn-secondary rive-enable" type="button" data-enable-rive>Play preview</button>
       <iframe data-src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar interactive icon preview" loading="lazy"></iframe>
     </div>
     <p style="margin-top:20px"><a href="/work/bazaar-interactive-icon-animation/" class="btn-secondary">Open the Bazaar case study</a></p>
@@ -324,9 +324,6 @@
     <span>Made with motion ✨</span>
   </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.23/dist/lenis.min.js" defer></script>
 <script src="/js/site.js" defer></script>
 </body>
 </html>

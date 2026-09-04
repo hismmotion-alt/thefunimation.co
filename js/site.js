@@ -1,4 +1,6 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motionLite = document.body.hasAttribute('data-motion-lite');
+  const MAX_LIVE_RIVE = 2;
   let lenis;
 
   const PROJECT_MODAL_IDS = {
@@ -36,14 +38,49 @@
     iframe.removeAttribute('src');
   }
 
+  const intersectingRive = new Set();
+
+  function isLiveRiveSrc(src) {
+    return Boolean(src) && src !== 'about:blank';
+  }
+
+  function liveRiveFrames() {
+    return Array.from(document.querySelectorAll('iframe[data-src]')).filter(frame => isLiveRiveSrc(frame.getAttribute('src')));
+  }
+
+  function riveDistance(iframe) {
+    const rect = iframe.getBoundingClientRect();
+    return Math.abs(rect.top + rect.height / 2 - window.innerHeight / 2);
+  }
+
   function mountRiveFrame(iframe) {
-    if (reduceMotion || !iframe.dataset.src || iframe.getAttribute('src')) return;
+    if (reduceMotion || !iframe.dataset.src || isLiveRiveSrc(iframe.getAttribute('src'))) return;
+    iframe.removeAttribute('hidden');
     iframe.src = iframe.dataset.src;
   }
 
   function unmountRiveFrame(iframe) {
     if (!iframe.dataset.src) return;
     iframe.removeAttribute('src');
+  }
+
+  function forgetRiveFrames(container) {
+    if (!container) return;
+    container.querySelectorAll('iframe[data-src]').forEach(frame => intersectingRive.delete(frame));
+  }
+
+  function reconcileLiveRive() {
+    if (reduceMotion) return;
+    const ranked = Array.from(intersectingRive).sort((a, b) => riveDistance(a) - riveDistance(b));
+    const keep = new Set(ranked.slice(0, MAX_LIVE_RIVE));
+    liveRiveFrames().forEach(frame => {
+      if (!keep.has(frame)) unmountRiveFrame(frame);
+    });
+    keep.forEach(mountRiveFrame);
+  }
+
+  function riveFramesToObserve(container) {
+    return Array.from(container.querySelectorAll('iframe[data-src]')).filter(iframe => !iframe.closest('[data-rive-on-demand]'));
   }
 
   function hydrateLazyMedia(container, options) {
@@ -73,43 +110,72 @@
     if (container._lazyVideoIo) container._lazyVideoIo.disconnect();
     container._lazyVideoIo = videoIo;
 
+    if (container._lazyIo) {
+      forgetRiveFrames(container);
+      container._lazyIo.disconnect();
+      container._lazyIo = null;
+    }
+
     if (reduceMotion || settings.rive === 'off') {
       container.querySelectorAll('iframe[data-src]').forEach(markRiveFallback);
+      reconcileLiveRive();
       return;
     }
 
     if (settings.rive === 'wait') {
-      container.querySelectorAll('iframe[data-src]').forEach(iframe => {
-        iframe.removeAttribute('src');
-      });
+      container.querySelectorAll('iframe[data-src]').forEach(unmountRiveFrame);
+      reconcileLiveRive();
       return;
     }
 
     const io = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        const iframe = entry.target;
-        if (entry.isIntersecting) mountRiveFrame(iframe);
-        else unmountRiveFrame(iframe);
+        if (entry.isIntersecting) intersectingRive.add(entry.target);
+        else intersectingRive.delete(entry.target);
       });
-    }, { root: scrollRoot, rootMargin: '80px 0px', threshold: 0.01 });
+      reconcileLiveRive();
+    }, { root: scrollRoot, rootMargin: '200px 0px', threshold: 0.01 });
 
-    container.querySelectorAll('iframe[data-src]').forEach(iframe => {
-      if (iframe.getAttribute('src')) return;
-      io.observe(iframe);
-    });
-    if (container._lazyIo) container._lazyIo.disconnect();
+    riveFramesToObserve(container).forEach(iframe => io.observe(iframe));
     container._lazyIo = io;
+  }
+
+  function bindRiveOnDemand(root) {
+    (root || document).querySelectorAll('[data-rive-on-demand]').forEach(gallery => {
+      if (gallery.dataset.riveBound === 'true') return;
+      gallery.dataset.riveBound = 'true';
+      const enable = gallery.querySelector('[data-enable-rive]');
+      if (reduceMotion) {
+        hydrateLazyMedia(gallery, { rive: 'off' });
+        if (enable) enable.hidden = true;
+        return;
+      }
+      hydrateLazyMedia(gallery, { rive: 'wait' });
+      const start = () => {
+        gallery.removeAttribute('data-rive-on-demand');
+        if (enable) enable.hidden = true;
+        hydrateLazyMedia(gallery, { rive: 'observe' });
+      };
+      if (enable) enable.addEventListener('click', start, { once: true });
+    });
   }
 
   function unloadLazyMedia(container) {
     if (!container) return;
     if (container._lazyIo) {
+      forgetRiveFrames(container);
       container._lazyIo.disconnect();
       container._lazyIo = null;
     }
+    if (container._lazyVideoIo) {
+      container._lazyVideoIo.disconnect();
+      container._lazyVideoIo = null;
+    }
     container.querySelectorAll('iframe[data-src]').forEach(iframe => {
+      intersectingRive.delete(iframe);
       iframe.removeAttribute('src');
     });
+    reconcileLiveRive();
     container.querySelectorAll('video').forEach(video => {
       video.pause();
       video.querySelectorAll('source[data-src]').forEach(source => {
@@ -157,7 +223,7 @@
   }
 
   function initMotion() {
-    if (!window.gsap || !window.ScrollTrigger || !window.Lenis || reduceMotion) {
+    if (!window.gsap || !window.ScrollTrigger || !window.Lenis || reduceMotion || motionLite) {
       revealFallback();
       return;
     }
@@ -292,7 +358,7 @@
   }
 
   function initDecorativeMotion() {
-    if (!window.gsap || reduceMotion) return;
+    if (!window.gsap || reduceMotion || motionLite) return;
     document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
       if (button.closest('.hero-btns')) return;
       button.addEventListener('pointermove', event => {
@@ -362,7 +428,7 @@
   document.querySelectorAll('.stat-num').forEach(el => countObs.observe(el));
 
   whenIdle(() => {
-    if (reduceMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    if (reduceMotion || motionLite || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
     document.querySelectorAll('.service-card, .test-card').forEach(card => {
       card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
@@ -429,7 +495,12 @@
     document.body.style.overflow = 'hidden';
     const closeBtn = projectModal.querySelector('.modal-close');
     if (closeBtn) closeBtn.focus();
-    hydrateLazyMedia(projectModal, { eagerVideo: true });
+    const hasOnDemandRive = Boolean(projectModal.querySelector('[data-rive-on-demand], [data-enable-rive]'));
+    hydrateLazyMedia(projectModal, {
+      eagerVideo: true,
+      rive: reduceMotion ? 'off' : (hasOnDemandRive ? 'wait' : 'observe')
+    });
+    bindRiveOnDemand(projectModal);
   }
   function closeNamedProjectModal(id) {
     const projectModal = document.getElementById(id);
@@ -552,7 +623,7 @@
 
       if (expanding) {
         workGrid.classList.add('expanded');
-        hydrateLazyMedia(workGrid);
+        hydrateLazyMedia(workGrid, { rive: reduceMotion ? 'off' : 'observe' });
         if (window.gsap) {
           gsap.fromTo(extraProjects,
             { opacity: 0, y: 50, scale: .97 },
@@ -726,21 +797,7 @@
   document.querySelectorAll('[data-hydrate-media]:not([data-rive-on-demand])').forEach(node => {
     hydrateLazyMedia(node, { rive: reduceMotion ? 'off' : 'observe' });
   });
-
-  document.querySelectorAll('[data-rive-on-demand]').forEach(gallery => {
-    if (reduceMotion) {
-      hydrateLazyMedia(gallery, { rive: 'off' });
-      return;
-    }
-    const enable = gallery.querySelector('[data-enable-rive]');
-    hydrateLazyMedia(gallery, { rive: 'wait' });
-    if (!enable) return;
-    enable.addEventListener('click', () => {
-      gallery.removeAttribute('data-rive-on-demand');
-      enable.hidden = true;
-      hydrateLazyMedia(gallery, { rive: 'observe' });
-    }, { once: true });
-  });
+  bindRiveOnDemand(document);
 
   const filterBar = document.querySelector('[data-work-filters]');
   if (filterBar && workGrid) {

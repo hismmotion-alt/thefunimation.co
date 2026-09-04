@@ -131,7 +131,7 @@ function cta(title, copy, primary = { href: '/contact/', label: 'Start a Project
 </section>`;
 }
 
-function page({ title, description, canonical, ogImage, ogAlt, current, schema = [], bodyClass = '', extraHead = '', body }) {
+function page({ title, description, canonical, ogImage, ogAlt, current, schema = [], bodyClass = '', bodyAttrs = '', extraHead = '', body }) {
   const graph = [ORG_SCHEMA, {
     '@type': 'WebSite',
     '@id': 'https://thefunimation.co/#website',
@@ -143,6 +143,11 @@ function page({ title, description, canonical, ogImage, ogAlt, current, schema =
   }, ...schema];
   const image = ogImage || 'https://thefunimation.co/1st%20project/cover.png';
   const alt = ogAlt || 'Funimation Studio animation work';
+  const motionLite = /\bdata-motion-lite\b/.test(bodyAttrs);
+  const motionScripts = motionLite ? '' : `<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.23/dist/lenis.min.js" defer></script>
+`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -184,8 +189,7 @@ function page({ title, description, canonical, ogImage, ogAlt, current, schema =
 <meta name="twitter:title" content="${escape(title)}">
 <meta name="twitter:description" content="${escape(description)}">
 <meta name="twitter:image" content="${image}">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preload" href="/fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
+${motionLite ? '' : '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n'}<link rel="preload" href="/fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/site.css">
 <script type="application/ld+json">
@@ -193,15 +197,12 @@ ${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }, null, 2)
 </script>
 ${extraHead}
 </head>
-<body${bodyClass ? ` class="${bodyClass}"` : ''}>
+<body${bodyClass ? ` class="${bodyClass}"` : ''}${bodyAttrs ? ` ${bodyAttrs}` : ''}>
 <div class="scroll-progress" aria-hidden="true"></div>
 ${nav(current)}
 ${body}
 ${footer()}
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.23/dist/lenis.min.js" defer></script>
-<script src="/js/site.js" defer></script>
+${motionScripts}<script src="/js/site.js" defer></script>
 </body>
 </html>
 `;
@@ -617,6 +618,7 @@ const interactive = page({
   canonical: 'https://thefunimation.co/services/interactive-web-animation/',
   current: 'services',
   schema: [serviceSchema('Interactive web animation', 'Rive and Lottie animation', 'https://thefunimation.co/services/interactive-web-animation/', 'Interactive website motion, Rive, Lottie, and scroll animation for product sites.')],
+  bodyAttrs: 'data-motion-lite',
   body: `<header class="page-hero">
   <div class="section-inner">
     <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/services/">Services</a><span>/</span><span>Interactive Web Animation</span></nav>
@@ -656,12 +658,14 @@ const interactive = page({
     <p>Rive is particularly useful when an animation needs to respond to interaction or state changes. Lottie is well suited to lightweight interface animation and reusable motion assets. We can help determine which approach fits the experience, create the animation, and work with your design or development team on the final implementation requirements.</p>
   </div>
 </section>
-<section class="section" data-hydrate-media>
+<section class="section" data-rive-on-demand>
   <div class="section-inner">
     <h2 class="section-title">Case study: Bazaar interactive icon system</h2>
-    <p class="section-desc">A lightweight Rive icon system for web and product UI. The live embed below loads only when it is about to enter view.</p>
-    <div class="rive-embed-card" style="max-width:420px">
-      <iframe data-src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar interactive icon preview" loading="lazy" allow="autoplay"></iframe>
+    <p class="section-desc">A small illustrative preview — not a hero embed. The Rive runtime stays off until you play it, and it is skipped entirely when reduced motion is preferred.</p>
+    <div class="rive-embed-card rive-illustrative">
+      <span class="rive-fallback-label">Bazaar icon preview</span>
+      <button class="btn-secondary rive-enable" type="button" data-enable-rive>Play preview</button>
+      <iframe data-src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar interactive icon preview" loading="lazy"></iframe>
     </div>
     <p style="margin-top:20px"><a href="/work/bazaar-interactive-icon-animation/" class="btn-secondary">Open the Bazaar case study</a></p>
   </div>
@@ -834,11 +838,11 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, paragraphs,
     ? `<section class="rive-project-gallery" data-rive-on-demand>
     <div class="rive-project-head">
       <h3>Interactive icon collection</h3>
-      <p>Static frames first. Live Rive runtimes mount only after you enable them, then only while a card is near the viewport.</p>
+      <p>Static frames first. After you enable motion, at most two Rive runtimes stay live — the ones near the viewport.</p>
     </div>
     <button class="btn-secondary rive-enable" type="button" data-enable-rive>Load interactive icons</button>
     <div class="rive-gallery-grid">
-      ${rive.map((src, i) => `<div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon ${i + 1}</span><iframe data-src="${src}" title="Bazaar interactive icon ${i + 1}" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>`).join('\n      ')}
+      ${rive.map((src, i) => `<div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon ${i + 1}</span><iframe data-src="${src}" title="Bazaar interactive icon ${i + 1}" loading="lazy"></iframe></div>`).join('\n      ')}
     </div>
   </section>`
     : `<div class="project-media" data-hydrate-media>
@@ -848,18 +852,7 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, paragraphs,
     </video>
   </div>`;
 
-  return page({
-    title: metaTitle,
-    description,
-    canonical,
-    current: 'work',
-    ogImage: `https://thefunimation.co/${poster}`,
-    ogAlt: h1,
-    schema,
-    bodyClass: 'case-page',
-    body: `${media}
-    ${sceneHtml}
-    <div class="project-content">
+  const content = `<div class="project-content">
       <div class="project-content-main">
         <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/work/">Work</a><span>/</span><span>${escape(client)}</span></nav>
         <div class="project-kicker">${kicker}</div>
@@ -873,14 +866,33 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, paragraphs,
         ${website ? `<div class="project-meta-item"><strong>Website</strong><span><a href="${website}" target="_blank" rel="noopener noreferrer">${website.replace('https://', '')} ↗</a></span></div>` : ''}
         <a class="project-resource" href="/contact/">Contact us</a>
       </aside>
-    </div>
-    <section class="section">
+    </div>`;
+  const rest = `<section class="section">
       <div class="section-inner">
         <h2 class="section-title">More work</h2>
         <p><a href="/work/" class="btn-secondary">Back to portfolio</a> <a href="/services/" class="btn-primary" style="margin-left:8px">Explore services</a></p>
       </div>
     </section>
-    ${cta('Want a similar result?', 'Tell us about the product or story you need to explain. We will help shape the right animation approach.')}`
+    ${cta('Want a similar result?', 'Tell us about the product or story you need to explain. We will help shape the right animation approach.')}`;
+
+  return page({
+    title: metaTitle,
+    description,
+    canonical,
+    current: 'work',
+    ogImage: `https://thefunimation.co/${poster}`,
+    ogAlt: h1,
+    schema,
+    bodyClass: 'case-page',
+    bodyAttrs: rive ? 'data-motion-lite' : '',
+    body: rive
+      ? `${content}
+    ${media}
+    ${rest}`
+      : `${media}
+    ${sceneHtml}
+    ${content}
+    ${rest}`
   });
 }
 

@@ -334,8 +334,8 @@
         </div>
       </a>
       <a class="work-card extra-project" href="/work/bazaar-interactive-icon-animation/" data-project="bazaar" aria-label="Bazaar interactive brand icon animation case study">
-        <div class="work-card-rive" aria-hidden="true">
-          <iframe data-src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar animated brand icon preview" loading="lazy" allow="autoplay"></iframe>
+        <div class="work-card-rive rive-static" aria-hidden="true">
+          <span class="rive-fallback-label">Bazaar interactive icons</span>
         </div>
         <div class="work-card-body">
           <div class="work-tags"><span class="work-tag">Interactive Icons</span><span class="work-tag">Rive Animation</span></div>
@@ -1300,14 +1300,15 @@
 <div class="modal-overlay" id="bazaarProjectModal" data-lenis-prevent data-lenis-prevent-wheel data-lenis-prevent-touch>
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="bazaarProjectTitle">
     <button class="modal-close" onclick="closeBazaarProjectModal()" aria-label="Close project">✕</button>
-    <section class="rive-project-gallery" aria-labelledby="bazaarGalleryTitle">
+    <section class="rive-project-gallery" data-rive-on-demand aria-labelledby="bazaarGalleryTitle">
       <div class="rive-project-head">
         <h3 id="bazaarGalleryTitle">Interactive icon collection</h3>
-        <p>Explore the live Rive animations below. Move, click, or tap to experience their interactive states.</p>
+        <p>Static frames first. Live Rive mounts after you enable it, at most two runtimes at a time, and tears down offscreen.</p>
       </div>
+      <button class="btn-secondary rive-enable" type="button" data-enable-rive>Load interactive icons</button>
       <div class="rive-gallery-grid">
-        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar interactive icon 1" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/kLDNhJdhoU2DvY19aiHJkQ/embed" title="Bazaar interactive icon 2" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 1</span><iframe data-src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar interactive icon 1" loading="lazy"></iframe></div>
+        <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 2</span><iframe data-src="https://rive.app/s/kLDNhJdhoU2DvY19aiHJkQ/embed" title="Bazaar interactive icon 2" loading="lazy"></iframe></div>
         <div class="rive-info-card">
           <div>
             <strong>Bazaar</strong>
@@ -1315,15 +1316,15 @@
             <span>Software: Rive</span>
           </div>
         </div>
-        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/mcV4lUTPBEmtRWzSiIWklw/embed" title="Bazaar interactive icon 3" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/ex290J8yKEuKhFn5CPiFnQ/embed" title="Bazaar interactive icon 4" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/hmuv20UmekyWcseE6yhyyw/embed" title="Bazaar interactive icon 5" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/WeifwonwnkqCjAligEDshA/embed" title="Bazaar interactive icon 6" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/z4mQrdbJW0i_kRwuy2VtsA/embed" title="Bazaar interactive icon 7" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/ld273qprv0_dxu3OztUOFw/embed" title="Bazaar interactive icon 8" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/1Kp3JxG5FUSWYG_QFcxcXg/embed" title="Bazaar interactive icon 9" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/--ZdVd43mEi4m49uK35j1g/embed" title="Bazaar interactive icon 10" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/-4LQ5Dh72E6b7Bu5BGx_mA/embed" title="Bazaar interactive icon 11" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 3</span><iframe data-src="https://rive.app/s/mcV4lUTPBEmtRWzSiIWklw/embed" title="Bazaar interactive icon 3" loading="lazy"></iframe></div>
+        <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 4</span><iframe data-src="https://rive.app/s/ex290J8yKEuKhFn5CPiFnQ/embed" title="Bazaar interactive icon 4" loading="lazy"></iframe></div>
+        <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 5</span><iframe data-src="https://rive.app/s/hmuv20UmekyWcseE6yhyyw/embed" title="Bazaar interactive icon 5" loading="lazy"></iframe></div>
+        <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 6</span><iframe data-src="https://rive.app/s/WeifwonwnkqCjAligEDshA/embed" title="Bazaar interactive icon 6" loading="lazy"></iframe></div>
+        <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 7</span><iframe data-src="https://rive.app/s/z4mQrdbJW0i_kRwuy2VtsA/embed" title="Bazaar interactive icon 7" loading="lazy"></iframe></div>
+        <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 8</span><iframe data-src="https://rive.app/s/ld273qprv0_dxu3OztUOFw/embed" title="Bazaar interactive icon 8" loading="lazy"></iframe></div>
+        <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 9</span><iframe data-src="https://rive.app/s/1Kp3JxG5FUSWYG_QFcxcXg/embed" title="Bazaar interactive icon 9" loading="lazy"></iframe></div>
+        <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 10</span><iframe data-src="https://rive.app/s/--ZdVd43mEi4m49uK35j1g/embed" title="Bazaar interactive icon 10" loading="lazy"></iframe></div>
+        <div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon 11</span><iframe data-src="https://rive.app/s/-4LQ5Dh72E6b7Bu5BGx_mA/embed" title="Bazaar interactive icon 11" loading="lazy"></iframe></div>
       </div>
     </section>
     <div class="project-content">
