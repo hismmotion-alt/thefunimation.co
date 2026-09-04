@@ -324,7 +324,6 @@
       }
       hydrateLazyMedia(gallery, { rive: 'wait' });
       prefetchRiveWarmup();
-      const coarsePointer = window.matchMedia('(hover: none), (pointer: coarse)').matches;
       const scrollRoot = gallery.closest('.modal-overlay');
       const io = new IntersectionObserver(entries => {
         entries.forEach(entry => {
@@ -344,22 +343,30 @@
       gallery.querySelectorAll('.rive-embed-card').forEach(card => {
         const iframe = card.querySelector('iframe[data-src]');
         if (!iframe) return;
-        if (!coarsePointer && !card.hasAttribute('tabindex')) card.tabIndex = 0;
+        if (!card.hasAttribute('tabindex')) card.tabIndex = 0;
         const title = iframe.getAttribute('title');
         if (title && !card.getAttribute('aria-label')) card.setAttribute('aria-label', title);
         io.observe(card);
         const play = () => requestHoverRive(iframe);
         const pause = () => releaseHoverRive(iframe);
-        if (!coarsePointer) {
-          card.addEventListener('pointerenter', play);
-          card.addEventListener('pointerleave', pause);
-          card.addEventListener('focusin', play);
-          card.addEventListener('focusout', event => {
-            if (card.contains(event.relatedTarget)) return;
-            pause();
-          });
-        }
+        card.addEventListener('pointerenter', event => {
+          if (event.pointerType === 'touch') return;
+          play();
+        });
+        card.addEventListener('pointerleave', event => {
+          if (event.pointerType === 'touch') return;
+          pause();
+        });
         let tapPoint = null;
+        let ignoreFocusPlay = false;
+        card.addEventListener('focusin', () => {
+          if (ignoreFocusPlay) return;
+          play();
+        });
+        card.addEventListener('focusout', event => {
+          if (card.contains(event.relatedTarget)) return;
+          pause();
+        });
         card.addEventListener('pointerdown', event => {
           if (event.pointerType !== 'touch' && event.pointerType !== 'pen') return;
           tapPoint = { id: event.pointerId, x: event.clientX, y: event.clientY };
@@ -370,8 +377,10 @@
           const dy = Math.abs(event.clientY - tapPoint.y);
           tapPoint = null;
           if (dx > 12 || dy > 12) return;
+          ignoreFocusPlay = true;
           if (isLiveRiveSrc(iframe.getAttribute('src'))) pause();
           else play();
+          window.setTimeout(() => { ignoreFocusPlay = false; }, 0);
         });
         card.addEventListener('pointercancel', () => {
           tapPoint = null;
