@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { registerPhase2 } from './phase2-pages.mjs';
 
 const ORG_SCHEMA = {
   '@type': 'Organization',
@@ -57,8 +58,8 @@ function nav(current) {
     <div class="nav-links" id="primaryNav">
       ${item('/work/', 'Work', 'work')}
       ${item('/services/', 'Services', 'services')}
-      <a href="/#process">Process</a>
-      <a href="/#about">About</a>
+      ${item('/process/', 'Process', 'process')}
+      ${item('/about/', 'About', 'about')}
       ${item('/contact/', 'Get a free consultation', 'contact').replace('<a ', '<a class="btn-primary" ')}
     </div>
   </div>
@@ -78,8 +79,8 @@ function footer() {
       <h6>Navigation</h6>
       <a href="/work/">Work</a>
       <a href="/services/">Services</a>
-      <a href="/#process">Process</a>
-      <a href="/#about">About</a>
+      <a href="/process/">Process</a>
+      <a href="/about/">About</a>
       <a href="/contact/">Contact</a>
     </div>
     <div class="footer-col">
@@ -87,8 +88,9 @@ function footer() {
       <a href="/services/explainer-videos/">Explainer Videos</a>
       <a href="/services/saas-product-animation/">SaaS Animation</a>
       <a href="/services/interactive-web-animation/">Web Animation</a>
-      <a href="/services/">App Motion</a>
-      <a href="/services/">Character Animation</a>
+      <a href="/services/app-motion-design/">App Motion</a>
+      <a href="/services/character-animation/">Character Animation</a>
+      <a href="/services/motion-graphics/">Motion Graphics</a>
     </div>
     <div class="footer-col">
       <h6>Contact</h6>
@@ -349,21 +351,24 @@ ${proofStrip({
         <p>Bring your website to life with interactive web animation, website motion design, scroll animation design, hover states, and interactive storytelling. We also create lightweight Rive and Lottie experiences that can support modern product websites and digital interfaces.</p>
         <span class="service-more">Explore service →</span>
       </a>
-      <div class="service-card">
+      <a class="service-card" href="/services/app-motion-design/">
         <div class="service-icon" style="background:rgba(74,222,181,0.1)">📱</div>
         <h3>App Motion Design</h3>
         <p>Make mobile experiences clearer and more engaging with app onboarding animation, UI motion design, transitions, feedback states, and micro-interaction design. We create motion that supports usability while giving your product a more distinctive personality.</p>
-      </div>
-      <div class="service-card">
+        <span class="service-more">Explore service →</span>
+      </a>
+      <a class="service-card" href="/services/character-animation/">
         <div class="service-icon" style="background:rgba(255,211,77,0.15)">🧸</div>
         <h3>Character Animation</h3>
         <p>A memorable character can make a product easier to connect with. Our character animation studio creates custom characters, mascots, brand personalities, and story-driven scenes for product experiences, explainers, campaigns, and educational content.</p>
-      </div>
-      <div class="service-card">
+        <span class="service-more">Explore service →</span>
+      </a>
+      <a class="service-card" href="/services/motion-graphics/">
         <div class="service-icon" style="background:rgba(255,107,53,0.08)">✨</div>
         <h3>Motion Graphics</h3>
         <p>Our motion graphics studio creates animated visuals for product launches, presentations, ads, social media, websites, and marketing campaigns. We use typography, illustration, icons, data, and movement to make information more engaging without losing clarity.</p>
-      </div>
+        <span class="service-more">Explore service →</span>
+      </a>
     </div>
   </div>
 </section>
@@ -401,7 +406,7 @@ ${proofStrip({
       <div class="process-step"><div class="step-num">04</div><h4>Animate</h4><p>We bring the approved design to life with polished motion and interaction.</p></div>
       <div class="process-step"><div class="step-num">05</div><h4>Deliver</h4><p>We provide the final files in the formats your team needs, depending on the project.</p></div>
     </div>
-    <p style="margin-top:28px"><a href="/#process" class="btn-secondary" style="border-color:rgba(255,255,255,.3);color:#fff">See Our Process</a></p>
+    <p style="margin-top:28px"><a href="/process/" class="btn-secondary" style="border-color:rgba(255,255,255,.3);color:#fff">See Our Process</a></p>
   </div>
 </section>
 <section class="section" style="background:#fff">
@@ -506,7 +511,7 @@ ${proofStrip({
       <div class="process-item"><div class="step-num">05</div><div><strong>Animation</strong><p>We add movement, transitions, timing, sound design, and polish to bring the approved storyboard to life.</p></div></div>
       <div class="process-item"><div class="step-num">06</div><div><strong>Delivery</strong><p>We prepare the final video for the channels and formats your team needs, including MP4, web-embed, and Lottie when interactive use is part of the brief.</p></div></div>
     </div>
-    <p style="margin-top:24px"><a href="/#process" class="btn-secondary">See Our Full Process</a></p>
+    <p style="margin-top:24px"><a href="/process/" class="btn-secondary">See Our Full Process</a></p>
   </div>
 </section>
 <section class="section" style="background:#fff">
@@ -633,7 +638,7 @@ ${proofStrip({
       <div class="process-item"><div class="step-num">05</div><div><strong>Animation</strong><p>We animate the UI, transitions, typography, illustrations, characters, and other elements required by the story.</p></div></div>
       <div class="process-item"><div class="step-num">06</div><div><strong>Review &amp; Delivery</strong><p>We refine the animation through the agreed review stages and prepare final assets for your intended channels.</p></div></div>
     </div>
-    <p style="margin-top:24px"><a href="/#process" class="btn-secondary">See Our Process</a></p>
+    <p style="margin-top:24px"><a href="/process/" class="btn-secondary">See Our Process</a></p>
   </div>
 </section>
 <section class="section">
@@ -766,7 +771,7 @@ ${proofStrip({
       <div class="process-item"><div class="step-num">04</div><div><strong>Prototype &amp; Animate</strong><p>We build the approved interactions and refine timing, transitions, responsiveness, and user feedback.</p></div></div>
       <div class="process-item"><div class="step-num">05</div><div><strong>Handoff</strong><p>We prepare implementation-ready assets and documentation for your development team, based on the agreed technical approach.</p></div></div>
     </div>
-    <p style="margin-top:24px"><a href="/#process" class="btn-secondary">Explore Our Process</a></p>
+    <p style="margin-top:24px"><a href="/process/" class="btn-secondary">Explore Our Process</a></p>
   </div>
 </section>
 <section class="section" style="background:#fff">
@@ -809,16 +814,16 @@ const workCards = [
   { href: '/work/before-health-ai-healthcare-explainer/', filters: 'explainer product', img: '/3rd%20project/cover.png', alt: 'Before Health Intelligence cover', tags: 'AI Healthcare · Explainer', title: 'Before Health Intelligence — AI Healthcare Explainer', copy: 'Making predictive health technology clear through approachable characters and modern visual storytelling.' },
   { href: '/work/sela-cloud-explainer-video/', filters: 'explainer product', img: '/4th%20project/cover.png', alt: 'Sela Cloud cover', tags: 'Cloud & AI · Explainer', title: 'Sela Cloud — Cloud & AI Explainer Animation', copy: 'Simplifying cloud infrastructure and AI services for business and technical audiences.' },
   { href: '/work/bazaar-interactive-icon-animation/', filters: 'interactive', img: '/bazaar/frames/01.png', alt: 'Bazaar interactive brand icon still', tags: 'Interactive · Rive', title: 'Bazaar — Interactive Brand Icon Animation', copy: 'A lightweight interactive icon system bringing motion, feedback, and personality to Bazaar’s digital experience.' },
-  { href: '/?project=maven', filters: 'explainer', img: '/13%20project/thumbnail.png', alt: 'Maven Investment Partners thumbnail', tags: 'Investment · Explainer', title: 'Maven Investment Partners — Explainer Animation', copy: 'Communicating trust, growth, and financial expertise through polished branding and clear presentation.' },
-  { href: '/?project=ismed-clim', filters: 'explainer', img: '/1st%20project/cover.png', alt: 'ISMED-CLIM cover', tags: 'Climate & Health · Explainer', title: 'ISMED-CLIM — Climate & Public Health Awareness', copy: 'Making climate-health research clear, accessible, and engaging for audiences across the Mediterranean.' },
-  { href: '/?project=gifybox', filters: 'explainer product', img: '/12%20project/cover.png', alt: 'GifyBox cover', tags: 'Event Tech · Product Explainer', title: 'GifyBox — Event Photo Booth Explainer', copy: 'Showing how interactive photo and GIF experiences turn live events into shareable branded moments.' },
-  { href: '/?project=upfit-supply', filters: 'explainer product', img: '/5th%20project/cover.png', alt: 'Upfit Supply cover', tags: 'Commercial Vehicles · Product', title: 'Upfit Supply — Product Explainer Animation', copy: 'Showing how custom commercial vehicle solutions improve efficiency, organization, and productivity.' },
-  { href: '/?project=hancock-health', filters: 'explainer', img: '/2nd%20project/cover.png', alt: 'Hancock Health cover', tags: 'Healthcare · Explainer', title: 'Hancock Health — Healthcare Explainer Animation', copy: 'An approachable visual story helping patients understand community-focused healthcare services.' },
-  { href: '/?project=mtech-systems', filters: 'explainer product', img: '/6th%20project/cover.png', alt: 'MTech Systems cover', tags: 'AgTech · Explainer', title: 'MTech Systems — AgTech Explainer Animation', copy: 'Explaining how real-time data, IoT, and AI help producers make smarter decisions across the supply chain.' },
-  { href: '/?project=greenopia', filters: 'explainer', img: '/7th%20project/Cover.png', alt: 'Greenopia cover', tags: 'Sustainability · Explainer', title: 'Greenopia — Sustainability Platform Explainer', copy: 'Helping people understand how to discover verified businesses and make more conscious purchasing decisions.' },
-  { href: '/?project=secufy-sos', filters: 'explainer', img: '/8th%20project/cover-08.png', alt: 'Secufy SOS cover', tags: 'Personal Safety · App', title: 'Secufy SOS — Personal Safety Explainer', copy: 'Making emergency alerts, live location sharing, and rapid access to help clear and reassuring.' },
-  { href: '/?project=farmerlink', filters: 'explainer product', img: '/9th%20project/cover-25.png', alt: 'FarmerLink cover', tags: 'Digital Agriculture · Explainer', title: 'FarmerLink — Digital Agriculture Explainer', copy: 'Making field data collection, collaboration, and data-driven farm management easy to understand.' },
-  { href: '/?project=buddywerking', filters: 'explainer character', img: '/10%20project/cover-08.png', alt: 'Buddywerking cover', tags: 'Social Impact · Nonprofit', title: 'Buddywerking Vlaanderen — Social Impact Explainer', copy: 'Showing how meaningful one-on-one friendships foster trust, inclusion, and community support.' }
+  { href: '/work/maven-investment-partners-explainer/', filters: 'explainer', img: '/13%20project/thumbnail.png', alt: 'Maven Investment Partners thumbnail', tags: 'Investment · Explainer', title: 'Maven Investment Partners — Explainer Animation', copy: 'Communicating trust, growth, and financial expertise through polished branding and clear presentation.' },
+  { href: '/work/ismed-clim-climate-health-animation/', filters: 'explainer character', img: '/1st%20project/cover.png', alt: 'ISMED-CLIM cover', tags: 'Climate & Health · Explainer', title: 'ISMED-CLIM — Climate & Public Health Awareness', copy: 'Making climate-health research clear, accessible, and engaging for audiences across the Mediterranean.' },
+  { href: '/work/gifybox-event-photo-booth-explainer/', filters: 'explainer product motion', img: '/12%20project/cover.png', alt: 'GifyBox cover', tags: 'Event Tech · Product Explainer', title: 'GifyBox — Event Photo Booth Explainer', copy: 'Showing how interactive photo and GIF experiences turn live events into shareable branded moments.' },
+  { href: '/work/upfit-supply-product-explainer/', filters: 'explainer product', img: '/5th%20project/cover.png', alt: 'Upfit Supply cover', tags: 'Commercial Vehicles · Product', title: 'Upfit Supply — Product Explainer Animation', copy: 'Showing how custom commercial vehicle solutions improve efficiency, organization, and productivity.' },
+  { href: '/work/hancock-health-explainer-animation/', filters: 'explainer character', img: '/2nd%20project/cover.png', alt: 'Hancock Health cover', tags: 'Healthcare · Explainer', title: 'Hancock Health — Healthcare Explainer Animation', copy: 'An approachable visual story helping patients understand community-focused healthcare services.' },
+  { href: '/work/mtech-systems-agtech-explainer/', filters: 'explainer product motion', img: '/6th%20project/cover.png', alt: 'MTech Systems cover', tags: 'AgTech · Explainer', title: 'MTech Systems — AgTech Explainer Animation', copy: 'Explaining how real-time data, IoT, and AI help producers make smarter decisions across the supply chain.' },
+  { href: '/work/greenopia-sustainability-explainer/', filters: 'explainer character motion', img: '/7th%20project/Cover.png', alt: 'Greenopia cover', tags: 'Sustainability · Explainer', title: 'Greenopia — Sustainability Platform Explainer', copy: 'Helping people understand how to discover verified businesses and make more conscious purchasing decisions.' },
+  { href: '/work/secufy-sos-personal-safety-explainer/', filters: 'explainer product app', img: '/8th%20project/cover-08.png', alt: 'Secufy SOS cover', tags: 'Personal Safety · App', title: 'Secufy SOS — Personal Safety Explainer', copy: 'Making emergency alerts, live location sharing, and rapid access to help clear and reassuring.' },
+  { href: '/work/farmerlink-digital-agriculture-explainer/', filters: 'explainer product', img: '/9th%20project/cover-25.png', alt: 'FarmerLink cover', tags: 'Digital Agriculture · Explainer', title: 'FarmerLink — Digital Agriculture Explainer', copy: 'Making field data collection, collaboration, and data-driven farm management easy to understand.' },
+  { href: '/work/buddywerking-vlaanderen-social-impact-explainer/', filters: 'explainer character', img: '/10%20project/cover-08.png', alt: 'Buddywerking cover', tags: 'Social Impact · Nonprofit', title: 'Buddywerking Vlaanderen — Social Impact Explainer', copy: 'Showing how meaningful one-on-one friendships foster trust, inclusion, and community support.' }
 ];
 
 const workHub = page({
@@ -843,6 +848,8 @@ const workHub = page({
       <button class="filter-btn" type="button" data-filter="explainer" aria-pressed="false">Explainer Videos</button>
       <button class="filter-btn" type="button" data-filter="product" aria-pressed="false">SaaS Product Animation</button>
       <button class="filter-btn" type="button" data-filter="interactive" aria-pressed="false">Interactive Web Animation</button>
+      <button class="filter-btn" type="button" data-filter="app" aria-pressed="false">App Motion Design</button>
+      <button class="filter-btn" type="button" data-filter="motion" aria-pressed="false">Motion Graphics</button>
       <button class="filter-btn" type="button" data-filter="character" aria-pressed="false">Character Animation</button>
     </div>
     <div class="work-grid" style="margin-top:28px">
@@ -861,7 +868,7 @@ const workHub = page({
   <div class="section-inner copy-block">
     <h2 class="section-title">What Goes Into Each Project</h2>
     <p>A finished animation is only one part of the process. Behind each project are discovery, research, scripting, storyboarding, visual development, design, animation, sound, reviews, and final delivery. We work with client teams to understand the product and audience, then translate that understanding into a visual story.</p>
-    <p>Wave-1 case studies — CaraKit, Before Health Intelligence, Sela Cloud, and Bazaar — have dedicated pages. Other projects currently open from the homepage so you can still watch the film and read the original write-up.</p>
+    <p>Every project in this portfolio has a dedicated case-study page with the challenge, approach, result, and the original film or interactive work.</p>
   </div>
 </section>
 <section class="section" style="background:#fff">
@@ -1184,6 +1191,9 @@ const contact = page({
       <a class="service-card" href="/services/explainer-videos/"><h3>Explainer Videos</h3><p>Clear 2D stories for products, launches, and education.</p></a>
       <a class="service-card" href="/services/saas-product-animation/"><h3>SaaS Product Animation</h3><p>Feature launches, demos, and product walkthroughs.</p></a>
       <a class="service-card" href="/services/interactive-web-animation/"><h3>Interactive Web Animation</h3><p>Rive, Lottie, scroll, and website motion.</p></a>
+      <a class="service-card" href="/services/app-motion-design/"><h3>App Motion Design</h3><p>Onboarding, UI motion, and micro-interactions.</p></a>
+      <a class="service-card" href="/services/character-animation/"><h3>Character Animation</h3><p>Mascots, companions, and story-driven characters.</p></a>
+      <a class="service-card" href="/services/motion-graphics/"><h3>Motion Graphics</h3><p>Campaign, social, and presentation animation.</p></a>
     </div>
   </div>
 </section>
@@ -1201,6 +1211,17 @@ writePage('work/sela-cloud-explainer-video', sela);
 writePage('work/bazaar-interactive-icon-animation', bazaar);
 writePage('contact', contact);
 
+const phase2Urls = registerPhase2({
+  page,
+  faq,
+  cta,
+  proofStrip,
+  casePage,
+  serviceSchema,
+  writePage,
+  HERO_CTAS
+});
+
 const urls = [
   'https://thefunimation.co/',
   'https://thefunimation.co/services/',
@@ -1212,7 +1233,8 @@ const urls = [
   'https://thefunimation.co/work/before-health-ai-healthcare-explainer/',
   'https://thefunimation.co/work/sela-cloud-explainer-video/',
   'https://thefunimation.co/work/bazaar-interactive-icon-animation/',
-  'https://thefunimation.co/contact/'
+  'https://thefunimation.co/contact/',
+  ...phase2Urls
 ];
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -1221,7 +1243,7 @@ ${urls.map((loc, i) => `  <url>
     <loc>${loc}</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>${i === 0 ? '1.0' : loc.includes('/services/') || loc.includes('/work/') || loc.includes('/contact/') ? '0.8' : '0.7'}</priority>
+    <priority>${i === 0 ? '1.0' : loc.includes('/services/') || loc.includes('/work/') || loc.includes('/contact/') || loc.includes('/about/') || loc.includes('/process/') || loc.includes('/industries/') ? '0.8' : '0.7'}</priority>
   </url>`).join('\n')}
 </urlset>
 `;
