@@ -460,7 +460,6 @@ ${proofStrip({
         <div>
           <span class="nap-label">Social</span>
           <a href="https://www.linkedin.com/company/funanimation/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a href="https://www.fiverr.com/s/EgGWEVe" target="_blank" rel="noopener noreferrer">Fiverr</a>
         </div>
       </div>
     </aside>
@@ -579,7 +578,7 @@ ${cta('Have a Project in Mind? Let’s Build It Step by Step', 'Whether you need
     schema: [serviceSchema('SaaS and startup animation', 'Animation for SaaS companies', 'https://thefunimation.co/industries/saas-startups/', 'Explainer videos, product animation, and interactive motion for SaaS companies and startups.')],
     body: `<header class="page-hero">
   <div class="section-inner">
-    <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><span>Industries</span><span>/</span><span>SaaS &amp; Startups</span></nav>
+    <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/industries/">Industries</a><span>/</span><span>SaaS &amp; Startups</span></nav>
     <p class="page-kicker">SaaS &amp; startups</p>
     <h1>Animation built for SaaS and startups.</h1>
     <p class="lead">Explainer videos and product animation built specifically for SaaS companies and startups. We help teams launch, convert, and grow — from a first product story to ongoing feature motion.</p>
@@ -651,6 +650,17 @@ ${proofStrip({
       <div class="test-card"><p>Funimation transformed our onboarding flow. The animations make our product feel intuitive and premium. Our sign-up-to-activation rate increased 34% after launch.</p><div class="test-author"><div class="test-avatar" style="background:var(--gradient1)">S</div><div class="test-author-info"><h5>Sarah Chen</h5><span>CPO, Payflow</span></div></div></div>
       <div class="test-card"><p>Working with Funimation was incredibly smooth. They understood our brand instantly and delivered character animations that our users absolutely love.</p><div class="test-author"><div class="test-avatar" style="background:var(--gradient2)">M</div><div class="test-author-info"><h5>Marcus Rivera</h5><span>Founder, Learnie</span></div></div></div>
       <div class="test-card"><p>The interactive web animations they built for our landing page are stunning. Conversion went up 28% and visitors spend twice as long on the page now.</p><div class="test-author"><div class="test-avatar" style="background:var(--gradient3)">A</div><div class="test-author-info"><h5>Anika Johal</h5><span>Marketing Lead, Nuvem</span></div></div></div>
+    </div>
+  </div>
+</section>
+<section class="section" style="background:#fff">
+  <div class="section-inner">
+    <h2 class="section-title">More industries</h2>
+    <p class="section-desc">The same craft, different buyers. See how we work in healthcare and in AgTech, cloud, and sustainability.</p>
+    <div class="services-grid">
+      <a class="service-card" href="/industries/healthcare/"><h3>Healthcare</h3><p>Patient-facing and clinical-product stories that stay clear without sounding institutional.</p><span class="service-more">Healthcare animation →</span></a>
+      <a class="service-card" href="/industries/agtech-cloud-sustainability/"><h3>AgTech, cloud &amp; sustainability</h3><p>Field systems, cloud platforms, and mission-led products that need to be seen, not just described.</p><span class="service-more">AgTech &amp; cloud →</span></a>
+      <a class="service-card" href="/industries/"><h3>All industries</h3><p>SaaS, healthcare, and AgTech — one studio, the work that matches the brief.</p><span class="service-more">Browse industries →</span></a>
     </div>
   </div>
 </section>

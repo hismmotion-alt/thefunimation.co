@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { registerPhase2 } from './phase2-pages.mjs';
+import { registerPhase3 } from './phase3-pages.mjs';
 
 const ORG_SCHEMA = {
   '@type': 'Organization',
@@ -31,8 +32,7 @@ const ORG_SCHEMA = {
     { '@type': 'Country', name: 'Canada' }
   ],
   sameAs: [
-    'https://www.linkedin.com/company/funanimation/',
-    'https://www.fiverr.com/s/EgGWEVe'
+    'https://www.linkedin.com/company/funanimation/'
   ]
 };
 
@@ -81,6 +81,8 @@ function footer() {
       <a href="/services/">Services</a>
       <a href="/process/">Process</a>
       <a href="/about/">About</a>
+      <a href="/industries/">Industries</a>
+      <a href="/blog/">Blog</a>
       <a href="/contact/">Contact</a>
     </div>
     <div class="footer-col">
@@ -97,7 +99,6 @@ function footer() {
       <a href="mailto:hello@thefunimation.co">hello@thefunimation.co</a>
       <a href="tel:+18189664249">(+1) 818 966 4249</a>
       <span class="footer-contact-text">16437 Knapp Street<br>North Hills, CA</span>
-      <a href="https://www.fiverr.com/s/EgGWEVe" target="_blank" rel="noopener noreferrer">Fiverr Profile</a>
       <a href="https://www.linkedin.com/company/funanimation/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
     </div>
   </div>
@@ -186,7 +187,7 @@ function bazaarGallery(items = BAZAAR_ICONS) {
   </section>`;
 }
 
-function page({ title, description, canonical, ogImage, ogAlt, current, schema = [], bodyClass = '', bodyAttrs = '', extraHead = '', body }) {
+function page({ title, description, canonical, ogImage, ogAlt, ogType = 'website', current, schema = [], bodyClass = '', bodyAttrs = '', extraHead = '', body }) {
   const graph = [ORG_SCHEMA, {
     '@type': 'WebSite',
     '@id': 'https://thefunimation.co/#website',
@@ -233,7 +234,7 @@ function page({ title, description, canonical, ogImage, ogAlt, current, schema =
 <link rel="shortcut icon" href="/favicon.ico?v=5">
 <link rel="icon" type="image/svg+xml" href="/Fun!%20logo%20dark.svg?v=5">
 <meta name="theme-color" content="#FAFAF8">
-<meta property="og:type" content="website">
+<meta property="og:type" content="${ogType}">
 <meta property="og:site_name" content="Funimation Studio">
 <meta property="og:url" content="${canonical}">
 <meta property="og:title" content="${escape(title)}">
@@ -1163,7 +1164,6 @@ const contact = page({
         <div>
           <span class="nap-label">Social</span>
           <a href="https://www.linkedin.com/company/funanimation/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a href="https://www.fiverr.com/s/EgGWEVe" target="_blank" rel="noopener noreferrer">Fiverr</a>
         </div>
       </div>
     </aside>
@@ -1217,6 +1217,16 @@ const phase2Urls = registerPhase2({
   HERO_CTAS
 });
 
+const phase3Urls = registerPhase3({
+  page,
+  faq,
+  cta,
+  proofStrip,
+  serviceSchema,
+  writePage,
+  HERO_CTAS
+});
+
 const urls = [
   'https://thefunimation.co/',
   'https://thefunimation.co/services/',
@@ -1229,7 +1239,8 @@ const urls = [
   'https://thefunimation.co/work/sela-cloud-explainer-video/',
   'https://thefunimation.co/work/bazaar-interactive-icon-animation/',
   'https://thefunimation.co/contact/',
-  ...phase2Urls
+  ...phase2Urls,
+  ...phase3Urls
 ];
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -1238,7 +1249,7 @@ ${urls.map((loc, i) => `  <url>
     <loc>${loc}</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>${i === 0 ? '1.0' : loc.includes('/services/') || loc.includes('/work/') || loc.includes('/contact/') || loc.includes('/about/') || loc.includes('/process/') || loc.includes('/industries/') ? '0.8' : '0.7'}</priority>
+    <priority>${i === 0 ? '1.0' : loc.includes('/services/') || loc.includes('/work/') || loc.includes('/contact/') || loc.includes('/about/') || loc.includes('/process/') || loc.includes('/industries/') || loc === 'https://thefunimation.co/blog/' ? '0.8' : '0.7'}</priority>
   </url>`).join('\n')}
 </urlset>
 `;
