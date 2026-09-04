@@ -13,8 +13,8 @@
   </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Animation Studio for SaaS &amp; Digital Products | Funimation</title>
-<meta name="description" content="Funimation is a Los Angeles animation studio creating explainer videos, product animation, Rive, Lottie, web motion, and app micro-interactions.">
+<title>Explainer Video &amp; Animation Studio for SaaS | Funimation</title>
+<meta name="description" content="Funimation creates explainer videos, product animation, and interactive web motion for SaaS and startups across the US &amp; Canada. Get a free consultation.">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <link rel="canonical" href="https://thefunimation.co/">
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=5">
@@ -29,19 +29,20 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Funimation Studio">
 <meta property="og:url" content="https://thefunimation.co/">
-<meta property="og:title" content="Animation Studio for SaaS &amp; Digital Products | Funimation">
-<meta property="og:description" content="Explainer videos, product animation, interactive web motion, Rive, Lottie, and app micro-interactions for startups and SaaS companies.">
+<meta property="og:title" content="Explainer Video &amp; Animation Studio for SaaS | Funimation">
+<meta property="og:description" content="Funimation creates explainer videos, product animation, and interactive web motion for SaaS and startups across the US &amp; Canada. Get a free consultation.">
 <meta property="og:image" content="https://thefunimation.co/1st%20project/cover.png">
 <meta property="og:image:alt" content="A colorful character animation created by Funimation Studio">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Animation Studio for SaaS &amp; Digital Products | Funimation">
-<meta name="twitter:description" content="Explainer videos and interactive product animation for startups, SaaS companies, and modern digital products.">
+<meta name="twitter:title" content="Explainer Video &amp; Animation Studio for SaaS | Funimation">
+<meta name="twitter:description" content="Funimation creates explainer videos, product animation, and interactive web motion for SaaS and startups across the US &amp; Canada. Get a free consultation.">
 <meta name="twitter:image" content="https://thefunimation.co/1st%20project/cover.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -54,13 +55,13 @@
       "url": "https://thefunimation.co/",
       "logo": "https://thefunimation.co/Fun!%20logo%20dark.svg",
       "email": "hello@thefunimation.co",
-      "description": "Los Angeles animation studio creating explainer videos, product animation, interactive web motion, Rive, Lottie, and app micro-interactions.",
+      "telephone": "+1-818-966-4249",
+      "description": "Funimation creates explainer videos, product animation, and interactive web motion for SaaS and startups across the US and Canada.",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "5250 Lankershim Blvd",
-        "addressLocality": "North Hollywood",
+        "streetAddress": "16437 Knapp Street",
+        "addressLocality": "North Hills",
         "addressRegion": "CA",
-        "postalCode": "91601",
         "addressCountry": "US"
       },
       "contactPoint": {
@@ -70,6 +71,10 @@
         "email": "hello@thefunimation.co",
         "availableLanguage": "English"
       },
+      "areaServed": [
+        { "@type": "Country", "name": "United States" },
+        { "@type": "Country", "name": "Canada" }
+      ],
       "sameAs": [
         "https://www.linkedin.com/company/funanimation/",
         "https://www.fiverr.com/s/EgGWEVe"
@@ -961,6 +966,10 @@
     box-shadow: 0 20px 48px rgba(14,17,22,.1);
   }
   .rive-embed-card iframe { width: 100%; height: 245px; border: 0; display: block; }
+  .rive-embed-card:has(iframe:not([src])),
+  .work-card-rive:has(iframe:not([src])) {
+    background: linear-gradient(145deg, #effbf9, #fff7ef);
+  }
   .rive-info-card {
     padding: 28px; text-align: center;
     background: linear-gradient(145deg, #f0fbf9, #fff5ed);
@@ -1719,7 +1728,7 @@
     <div class="hero-stage" aria-label="Funimation reel showcase">
       <p class="hero-trust">Trusted by startups, SaaS teams, and growing brands</p>
       <div class="lottie-frame" aria-label="Funimation studio reel">
-        <video id="heroReel" class="hero-reel" autoplay muted loop playsinline preload="auto">
+        <video id="heroReel" class="hero-reel" autoplay muted loop playsinline preload="metadata">
           <source src="New%20reel%20%7C%20Funimation.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
@@ -1852,7 +1861,7 @@
       </article>
       <article class="work-card extra-project" tabindex="0" data-project="bazaar" aria-label="Bazaar interactive brand icon animation case study">
         <div class="work-card-rive" aria-hidden="true">
-          <iframe src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar animated brand icon preview" loading="lazy" allow="autoplay"></iframe>
+          <iframe data-src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar animated brand icon preview" loading="lazy" allow="autoplay"></iframe>
         </div>
         <div class="work-card-body">
           <div class="work-tags"><span class="work-tag">Interactive Icons</span><span class="work-tag">Rive Animation</span></div>
@@ -2249,8 +2258,8 @@
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="projectTitle">
     <button class="modal-close" onclick="closeProjectModal()" aria-label="Close project">✕</button>
     <div class="project-media">
-      <video controls preload="metadata" poster="1st%20project/cover.png">
-        <source src="1st%20project/Pregnanq%20women.mp4" type="video/mp4">
+      <video controls preload="none" poster="1st%20project/cover.png">
+        <source data-src="1st%20project/Pregnanq%20women.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
     </div>
@@ -2260,20 +2269,20 @@
         <p>Selected frames from the animation’s visual development</p>
       </div>
       <div class="scene-grid">
-        <a href="1st%20project/scenes/scene-01.jpg" target="_blank"><img src="1st%20project/scenes/scene-01.jpg" alt="ISMED-CLIM visual scene 1" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-02.jpg" target="_blank"><img src="1st%20project/scenes/scene-02.jpg" alt="ISMED-CLIM visual scene 2" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-03.jpg" target="_blank"><img src="1st%20project/scenes/scene-03.jpg" alt="ISMED-CLIM visual scene 3" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-04.jpg" target="_blank"><img src="1st%20project/scenes/scene-04.jpg" alt="ISMED-CLIM visual scene 4" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-05.jpg" target="_blank"><img src="1st%20project/scenes/scene-05.jpg" alt="ISMED-CLIM visual scene 5" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-06.jpg" target="_blank"><img src="1st%20project/scenes/scene-06.jpg" alt="ISMED-CLIM visual scene 6" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-07.jpg" target="_blank"><img src="1st%20project/scenes/scene-07.jpg" alt="ISMED-CLIM visual scene 7" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-08.jpg" target="_blank"><img src="1st%20project/scenes/scene-08.jpg" alt="ISMED-CLIM visual scene 8" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-09.jpg" target="_blank"><img src="1st%20project/scenes/scene-09.jpg" alt="ISMED-CLIM visual scene 9" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-10.jpg" target="_blank"><img src="1st%20project/scenes/scene-10.jpg" alt="ISMED-CLIM visual scene 10" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-11.jpg" target="_blank"><img src="1st%20project/scenes/scene-11.jpg" alt="ISMED-CLIM visual scene 11" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-12.jpg" target="_blank"><img src="1st%20project/scenes/scene-12.jpg" alt="ISMED-CLIM visual scene 12" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-13.jpg" target="_blank"><img src="1st%20project/scenes/scene-13.jpg" alt="ISMED-CLIM visual scene 13" loading="lazy"></a>
-        <a href="1st%20project/scenes/scene-14.jpg" target="_blank"><img src="1st%20project/scenes/scene-14.jpg" alt="ISMED-CLIM visual scene 14" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-01.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-01.jpg" alt="ISMED-CLIM visual scene 1" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-02.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-02.jpg" alt="ISMED-CLIM visual scene 2" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-03.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-03.jpg" alt="ISMED-CLIM visual scene 3" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-04.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-04.jpg" alt="ISMED-CLIM visual scene 4" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-05.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-05.jpg" alt="ISMED-CLIM visual scene 5" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-06.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-06.jpg" alt="ISMED-CLIM visual scene 6" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-07.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-07.jpg" alt="ISMED-CLIM visual scene 7" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-08.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-08.jpg" alt="ISMED-CLIM visual scene 8" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-09.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-09.jpg" alt="ISMED-CLIM visual scene 9" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-10.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-10.jpg" alt="ISMED-CLIM visual scene 10" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-11.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-11.jpg" alt="ISMED-CLIM visual scene 11" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-12.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-12.jpg" alt="ISMED-CLIM visual scene 12" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-13.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-13.jpg" alt="ISMED-CLIM visual scene 13" loading="lazy"></a>
+        <a href="1st%20project/scenes/scene-14.jpg" target="_blank"><img data-src="1st%20project/scenes/scene-14.jpg" alt="ISMED-CLIM visual scene 14" loading="lazy"></a>
       </div>
     </section>
     <div class="project-content">
@@ -2306,8 +2315,8 @@
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="hancockProjectTitle">
     <button class="modal-close" onclick="closeHancockProjectModal()" aria-label="Close project">✕</button>
     <div class="project-media">
-      <video controls preload="metadata" poster="2nd%20project/cover.png">
-        <source src="2nd%20project/hancock-health-web.mp4" type="video/mp4">
+      <video controls preload="none" poster="2nd%20project/cover.png">
+        <source data-src="2nd%20project/hancock-health-web.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
     </div>
@@ -2345,8 +2354,8 @@
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="beforeHealthProjectTitle">
     <button class="modal-close" onclick="closeBeforeHealthProjectModal()" aria-label="Close project">✕</button>
     <div class="project-media">
-      <video controls preload="metadata" poster="3rd%20project/cover.png">
-        <source src="3rd%20project/before-health-web.mp4" type="video/mp4">
+      <video controls preload="none" poster="3rd%20project/cover.png">
+        <source data-src="3rd%20project/before-health-web.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
     </div>
@@ -2356,18 +2365,18 @@
         <p>Selected frames from the animation’s visual development</p>
       </div>
       <div class="scene-grid">
-        <a href="3rd%20project/scenes/scene-01.jpg" target="_blank"><img src="3rd%20project/scenes/scene-01.jpg" alt="Before Health Intelligence visual scene 1" loading="lazy"></a>
-        <a href="3rd%20project/scenes/scene-02.jpg" target="_blank"><img src="3rd%20project/scenes/scene-02.jpg" alt="Before Health Intelligence visual scene 2" loading="lazy"></a>
-        <a href="3rd%20project/scenes/scene-03.jpg" target="_blank"><img src="3rd%20project/scenes/scene-03.jpg" alt="Before Health Intelligence visual scene 3" loading="lazy"></a>
-        <a href="3rd%20project/scenes/scene-04.jpg" target="_blank"><img src="3rd%20project/scenes/scene-04.jpg" alt="Before Health Intelligence visual scene 4" loading="lazy"></a>
-        <a href="3rd%20project/scenes/scene-05.jpg" target="_blank"><img src="3rd%20project/scenes/scene-05.jpg" alt="Before Health Intelligence visual scene 5" loading="lazy"></a>
-        <a href="3rd%20project/scenes/scene-06.jpg" target="_blank"><img src="3rd%20project/scenes/scene-06.jpg" alt="Before Health Intelligence visual scene 6" loading="lazy"></a>
-        <a href="3rd%20project/scenes/scene-07.jpg" target="_blank"><img src="3rd%20project/scenes/scene-07.jpg" alt="Before Health Intelligence visual scene 7" loading="lazy"></a>
-        <a href="3rd%20project/scenes/scene-08.jpg" target="_blank"><img src="3rd%20project/scenes/scene-08.jpg" alt="Before Health Intelligence visual scene 8" loading="lazy"></a>
-        <a href="3rd%20project/scenes/scene-09.jpg" target="_blank"><img src="3rd%20project/scenes/scene-09.jpg" alt="Before Health Intelligence visual scene 9" loading="lazy"></a>
-        <a href="3rd%20project/scenes/scene-10.jpg" target="_blank"><img src="3rd%20project/scenes/scene-10.jpg" alt="Before Health Intelligence visual scene 10" loading="lazy"></a>
-        <a href="3rd%20project/scenes/scene-11.jpg" target="_blank"><img src="3rd%20project/scenes/scene-11.jpg" alt="Before Health Intelligence visual scene 11" loading="lazy"></a>
-        <a href="3rd%20project/scenes/scene-12.jpg" target="_blank"><img src="3rd%20project/scenes/scene-12.jpg" alt="Before Health Intelligence visual scene 12" loading="lazy"></a>
+        <a href="3rd%20project/scenes/scene-01.jpg" target="_blank"><img data-src="3rd%20project/scenes/scene-01.jpg" alt="Before Health Intelligence visual scene 1" loading="lazy"></a>
+        <a href="3rd%20project/scenes/scene-02.jpg" target="_blank"><img data-src="3rd%20project/scenes/scene-02.jpg" alt="Before Health Intelligence visual scene 2" loading="lazy"></a>
+        <a href="3rd%20project/scenes/scene-03.jpg" target="_blank"><img data-src="3rd%20project/scenes/scene-03.jpg" alt="Before Health Intelligence visual scene 3" loading="lazy"></a>
+        <a href="3rd%20project/scenes/scene-04.jpg" target="_blank"><img data-src="3rd%20project/scenes/scene-04.jpg" alt="Before Health Intelligence visual scene 4" loading="lazy"></a>
+        <a href="3rd%20project/scenes/scene-05.jpg" target="_blank"><img data-src="3rd%20project/scenes/scene-05.jpg" alt="Before Health Intelligence visual scene 5" loading="lazy"></a>
+        <a href="3rd%20project/scenes/scene-06.jpg" target="_blank"><img data-src="3rd%20project/scenes/scene-06.jpg" alt="Before Health Intelligence visual scene 6" loading="lazy"></a>
+        <a href="3rd%20project/scenes/scene-07.jpg" target="_blank"><img data-src="3rd%20project/scenes/scene-07.jpg" alt="Before Health Intelligence visual scene 7" loading="lazy"></a>
+        <a href="3rd%20project/scenes/scene-08.jpg" target="_blank"><img data-src="3rd%20project/scenes/scene-08.jpg" alt="Before Health Intelligence visual scene 8" loading="lazy"></a>
+        <a href="3rd%20project/scenes/scene-09.jpg" target="_blank"><img data-src="3rd%20project/scenes/scene-09.jpg" alt="Before Health Intelligence visual scene 9" loading="lazy"></a>
+        <a href="3rd%20project/scenes/scene-10.jpg" target="_blank"><img data-src="3rd%20project/scenes/scene-10.jpg" alt="Before Health Intelligence visual scene 10" loading="lazy"></a>
+        <a href="3rd%20project/scenes/scene-11.jpg" target="_blank"><img data-src="3rd%20project/scenes/scene-11.jpg" alt="Before Health Intelligence visual scene 11" loading="lazy"></a>
+        <a href="3rd%20project/scenes/scene-12.jpg" target="_blank"><img data-src="3rd%20project/scenes/scene-12.jpg" alt="Before Health Intelligence visual scene 12" loading="lazy"></a>
       </div>
     </section>
     <div class="project-content">
@@ -2400,8 +2409,8 @@
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="selaCloudProjectTitle">
     <button class="modal-close" onclick="closeSelaCloudProjectModal()" aria-label="Close project">✕</button>
     <div class="project-media">
-      <video controls preload="metadata" poster="4th%20project/cover.png">
-        <source src="4th%20project/sela-cloud-web.mp4" type="video/mp4">
+      <video controls preload="none" poster="4th%20project/cover.png">
+        <source data-src="4th%20project/sela-cloud-web.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
     </div>
@@ -2411,14 +2420,14 @@
         <p>Selected frames from the animation’s visual development</p>
       </div>
       <div class="scene-grid">
-        <a href="4th%20project/scenes/scene-01.jpg" target="_blank"><img src="4th%20project/scenes/scene-01.jpg" alt="Sela Cloud visual scene 1" loading="lazy"></a>
-        <a href="4th%20project/scenes/scene-02.jpg" target="_blank"><img src="4th%20project/scenes/scene-02.jpg" alt="Sela Cloud visual scene 2" loading="lazy"></a>
-        <a href="4th%20project/scenes/scene-03.jpg" target="_blank"><img src="4th%20project/scenes/scene-03.jpg" alt="Sela Cloud visual scene 3" loading="lazy"></a>
-        <a href="4th%20project/scenes/scene-04.jpg" target="_blank"><img src="4th%20project/scenes/scene-04.jpg" alt="Sela Cloud visual scene 4" loading="lazy"></a>
-        <a href="4th%20project/scenes/scene-05.jpg" target="_blank"><img src="4th%20project/scenes/scene-05.jpg" alt="Sela Cloud visual scene 5" loading="lazy"></a>
-        <a href="4th%20project/scenes/scene-06.jpg" target="_blank"><img src="4th%20project/scenes/scene-06.jpg" alt="Sela Cloud visual scene 6" loading="lazy"></a>
-        <a href="4th%20project/scenes/scene-07.jpg" target="_blank"><img src="4th%20project/scenes/scene-07.jpg" alt="Sela Cloud visual scene 7" loading="lazy"></a>
-        <a href="4th%20project/scenes/scene-08.jpg" target="_blank"><img src="4th%20project/scenes/scene-08.jpg" alt="Sela Cloud visual scene 8" loading="lazy"></a>
+        <a href="4th%20project/scenes/scene-01.jpg" target="_blank"><img data-src="4th%20project/scenes/scene-01.jpg" alt="Sela Cloud visual scene 1" loading="lazy"></a>
+        <a href="4th%20project/scenes/scene-02.jpg" target="_blank"><img data-src="4th%20project/scenes/scene-02.jpg" alt="Sela Cloud visual scene 2" loading="lazy"></a>
+        <a href="4th%20project/scenes/scene-03.jpg" target="_blank"><img data-src="4th%20project/scenes/scene-03.jpg" alt="Sela Cloud visual scene 3" loading="lazy"></a>
+        <a href="4th%20project/scenes/scene-04.jpg" target="_blank"><img data-src="4th%20project/scenes/scene-04.jpg" alt="Sela Cloud visual scene 4" loading="lazy"></a>
+        <a href="4th%20project/scenes/scene-05.jpg" target="_blank"><img data-src="4th%20project/scenes/scene-05.jpg" alt="Sela Cloud visual scene 5" loading="lazy"></a>
+        <a href="4th%20project/scenes/scene-06.jpg" target="_blank"><img data-src="4th%20project/scenes/scene-06.jpg" alt="Sela Cloud visual scene 6" loading="lazy"></a>
+        <a href="4th%20project/scenes/scene-07.jpg" target="_blank"><img data-src="4th%20project/scenes/scene-07.jpg" alt="Sela Cloud visual scene 7" loading="lazy"></a>
+        <a href="4th%20project/scenes/scene-08.jpg" target="_blank"><img data-src="4th%20project/scenes/scene-08.jpg" alt="Sela Cloud visual scene 8" loading="lazy"></a>
       </div>
     </section>
     <div class="project-content">
@@ -2455,8 +2464,8 @@
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="upfitSupplyProjectTitle">
     <button class="modal-close" onclick="closeUpfitSupplyProjectModal()" aria-label="Close project">✕</button>
     <div class="project-media">
-      <video controls preload="metadata" poster="5th%20project/cover.png">
-        <source src="5th%20project/upfit-supply-web.mp4" type="video/mp4">
+      <video controls preload="none" poster="5th%20project/cover.png">
+        <source data-src="5th%20project/upfit-supply-web.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
     </div>
@@ -2490,8 +2499,8 @@
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="mtechProjectTitle">
     <button class="modal-close" onclick="closeMtechProjectModal()" aria-label="Close project">✕</button>
     <div class="project-media">
-      <video controls preload="metadata" poster="6th%20project/cover.png">
-        <source src="6th%20project/mtech-systems-web.mp4" type="video/mp4">
+      <video controls preload="none" poster="6th%20project/cover.png">
+        <source data-src="6th%20project/mtech-systems-web.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
     </div>
@@ -2525,8 +2534,8 @@
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="greenopiaProjectTitle">
     <button class="modal-close" onclick="closeGreenopiaProjectModal()" aria-label="Close project">✕</button>
     <div class="project-media">
-      <video controls preload="metadata" poster="7th%20project/Cover.png">
-        <source src="7th%20project/greenopia-web.mp4" type="video/mp4">
+      <video controls preload="none" poster="7th%20project/Cover.png">
+        <source data-src="7th%20project/greenopia-web.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
     </div>
@@ -2536,18 +2545,18 @@
         <p>Selected frames from the animation’s visual development</p>
       </div>
       <div class="scene-grid">
-        <a href="7th%20project/scenes/scene-01.jpg" target="_blank"><img src="7th%20project/scenes/scene-01.jpg" alt="Greenopia visual scene 1" loading="lazy"></a>
-        <a href="7th%20project/scenes/scene-02.jpg" target="_blank"><img src="7th%20project/scenes/scene-02.jpg" alt="Greenopia visual scene 2" loading="lazy"></a>
-        <a href="7th%20project/scenes/scene-03.jpg" target="_blank"><img src="7th%20project/scenes/scene-03.jpg" alt="Greenopia visual scene 3" loading="lazy"></a>
-        <a href="7th%20project/scenes/scene-04.jpg" target="_blank"><img src="7th%20project/scenes/scene-04.jpg" alt="Greenopia visual scene 4" loading="lazy"></a>
-        <a href="7th%20project/scenes/scene-05.jpg" target="_blank"><img src="7th%20project/scenes/scene-05.jpg" alt="Greenopia visual scene 5" loading="lazy"></a>
-        <a href="7th%20project/scenes/scene-06.jpg" target="_blank"><img src="7th%20project/scenes/scene-06.jpg" alt="Greenopia visual scene 6" loading="lazy"></a>
-        <a href="7th%20project/scenes/scene-07.jpg" target="_blank"><img src="7th%20project/scenes/scene-07.jpg" alt="Greenopia visual scene 7" loading="lazy"></a>
-        <a href="7th%20project/scenes/scene-08.jpg" target="_blank"><img src="7th%20project/scenes/scene-08.jpg" alt="Greenopia visual scene 8" loading="lazy"></a>
-        <a href="7th%20project/scenes/scene-09.jpg" target="_blank"><img src="7th%20project/scenes/scene-09.jpg" alt="Greenopia visual scene 9" loading="lazy"></a>
-        <a href="7th%20project/scenes/scene-10.jpg" target="_blank"><img src="7th%20project/scenes/scene-10.jpg" alt="Greenopia visual scene 10" loading="lazy"></a>
-        <a href="7th%20project/scenes/scene-11.jpg" target="_blank"><img src="7th%20project/scenes/scene-11.jpg" alt="Greenopia visual scene 11" loading="lazy"></a>
-        <a href="7th%20project/scenes/scene-12.jpg" target="_blank"><img src="7th%20project/scenes/scene-12.jpg" alt="Greenopia visual scene 12" loading="lazy"></a>
+        <a href="7th%20project/scenes/scene-01.jpg" target="_blank"><img data-src="7th%20project/scenes/scene-01.jpg" alt="Greenopia visual scene 1" loading="lazy"></a>
+        <a href="7th%20project/scenes/scene-02.jpg" target="_blank"><img data-src="7th%20project/scenes/scene-02.jpg" alt="Greenopia visual scene 2" loading="lazy"></a>
+        <a href="7th%20project/scenes/scene-03.jpg" target="_blank"><img data-src="7th%20project/scenes/scene-03.jpg" alt="Greenopia visual scene 3" loading="lazy"></a>
+        <a href="7th%20project/scenes/scene-04.jpg" target="_blank"><img data-src="7th%20project/scenes/scene-04.jpg" alt="Greenopia visual scene 4" loading="lazy"></a>
+        <a href="7th%20project/scenes/scene-05.jpg" target="_blank"><img data-src="7th%20project/scenes/scene-05.jpg" alt="Greenopia visual scene 5" loading="lazy"></a>
+        <a href="7th%20project/scenes/scene-06.jpg" target="_blank"><img data-src="7th%20project/scenes/scene-06.jpg" alt="Greenopia visual scene 6" loading="lazy"></a>
+        <a href="7th%20project/scenes/scene-07.jpg" target="_blank"><img data-src="7th%20project/scenes/scene-07.jpg" alt="Greenopia visual scene 7" loading="lazy"></a>
+        <a href="7th%20project/scenes/scene-08.jpg" target="_blank"><img data-src="7th%20project/scenes/scene-08.jpg" alt="Greenopia visual scene 8" loading="lazy"></a>
+        <a href="7th%20project/scenes/scene-09.jpg" target="_blank"><img data-src="7th%20project/scenes/scene-09.jpg" alt="Greenopia visual scene 9" loading="lazy"></a>
+        <a href="7th%20project/scenes/scene-10.jpg" target="_blank"><img data-src="7th%20project/scenes/scene-10.jpg" alt="Greenopia visual scene 10" loading="lazy"></a>
+        <a href="7th%20project/scenes/scene-11.jpg" target="_blank"><img data-src="7th%20project/scenes/scene-11.jpg" alt="Greenopia visual scene 11" loading="lazy"></a>
+        <a href="7th%20project/scenes/scene-12.jpg" target="_blank"><img data-src="7th%20project/scenes/scene-12.jpg" alt="Greenopia visual scene 12" loading="lazy"></a>
       </div>
     </section>
     <div class="project-content">
@@ -2584,8 +2593,8 @@
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="secufyProjectTitle">
     <button class="modal-close" onclick="closeSecufyProjectModal()" aria-label="Close project">✕</button>
     <div class="project-media">
-      <video controls preload="metadata" poster="8th%20project/cover-08.png">
-        <source src="8th%20project/secufy-sos-web.mp4" type="video/mp4">
+      <video controls preload="none" poster="8th%20project/cover-08.png">
+        <source data-src="8th%20project/secufy-sos-web.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
     </div>
@@ -2619,8 +2628,8 @@
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="farmerLinkProjectTitle">
     <button class="modal-close" onclick="closeFarmerLinkProjectModal()" aria-label="Close project">✕</button>
     <div class="project-media">
-      <video controls preload="metadata" poster="9th%20project/cover-25.png">
-        <source src="9th%20project/farmerlink-web.mp4" type="video/mp4">
+      <video controls preload="none" poster="9th%20project/cover-25.png">
+        <source data-src="9th%20project/farmerlink-web.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
     </div>
@@ -2654,8 +2663,8 @@
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="buddywerkingProjectTitle">
     <button class="modal-close" onclick="closeBuddywerkingProjectModal()" aria-label="Close project">✕</button>
     <div class="project-media">
-      <video controls preload="metadata" poster="10%20project/cover-08.png">
-        <source src="10%20project/buddywerking-web.mp4" type="video/mp4">
+      <video controls preload="none" poster="10%20project/cover-08.png">
+        <source data-src="10%20project/buddywerking-web.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
     </div>
@@ -2665,12 +2674,12 @@
         <p>Selected frames from the animation’s visual development</p>
       </div>
       <div class="scene-grid">
-        <a href="10%20project/scenes/scene-01.jpg" target="_blank"><img src="10%20project/scenes/scene-01.jpg" alt="Buddywerking Vlaanderen visual scene 1" loading="lazy"></a>
-        <a href="10%20project/scenes/scene-02.jpg" target="_blank"><img src="10%20project/scenes/scene-02.jpg" alt="Buddywerking Vlaanderen visual scene 2" loading="lazy"></a>
-        <a href="10%20project/scenes/scene-03.jpg" target="_blank"><img src="10%20project/scenes/scene-03.jpg" alt="Buddywerking Vlaanderen visual scene 3" loading="lazy"></a>
-        <a href="10%20project/scenes/scene-04.jpg" target="_blank"><img src="10%20project/scenes/scene-04.jpg" alt="Buddywerking Vlaanderen visual scene 4" loading="lazy"></a>
-        <a href="10%20project/scenes/scene-05.jpg" target="_blank"><img src="10%20project/scenes/scene-05.jpg" alt="Buddywerking Vlaanderen visual scene 5" loading="lazy"></a>
-        <a href="10%20project/scenes/scene-06.jpg" target="_blank"><img src="10%20project/scenes/scene-06.jpg" alt="Buddywerking Vlaanderen visual scene 6" loading="lazy"></a>
+        <a href="10%20project/scenes/scene-01.jpg" target="_blank"><img data-src="10%20project/scenes/scene-01.jpg" alt="Buddywerking Vlaanderen visual scene 1" loading="lazy"></a>
+        <a href="10%20project/scenes/scene-02.jpg" target="_blank"><img data-src="10%20project/scenes/scene-02.jpg" alt="Buddywerking Vlaanderen visual scene 2" loading="lazy"></a>
+        <a href="10%20project/scenes/scene-03.jpg" target="_blank"><img data-src="10%20project/scenes/scene-03.jpg" alt="Buddywerking Vlaanderen visual scene 3" loading="lazy"></a>
+        <a href="10%20project/scenes/scene-04.jpg" target="_blank"><img data-src="10%20project/scenes/scene-04.jpg" alt="Buddywerking Vlaanderen visual scene 4" loading="lazy"></a>
+        <a href="10%20project/scenes/scene-05.jpg" target="_blank"><img data-src="10%20project/scenes/scene-05.jpg" alt="Buddywerking Vlaanderen visual scene 5" loading="lazy"></a>
+        <a href="10%20project/scenes/scene-06.jpg" target="_blank"><img data-src="10%20project/scenes/scene-06.jpg" alt="Buddywerking Vlaanderen visual scene 6" loading="lazy"></a>
       </div>
     </section>
     <div class="project-content">
@@ -2703,8 +2712,8 @@
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="carakitProjectTitle">
     <button class="modal-close" onclick="closeCarakitProjectModal()" aria-label="Close project">✕</button>
     <div class="project-media">
-      <video controls preload="metadata" poster="11%20project/cover.png">
-        <source src="11%20project/Animation%20Video%20111.mp4" type="video/mp4">
+      <video controls preload="none" poster="11%20project/cover.png">
+        <source data-src="11%20project/Animation%20Video%20111.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
     </div>
@@ -2739,8 +2748,8 @@
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="gifyboxProjectTitle">
     <button class="modal-close" onclick="closeGifyboxProjectModal()" aria-label="Close project">✕</button>
     <div class="project-media">
-      <video controls preload="metadata" poster="12%20project/cover.png">
-        <source src="12%20project/GifyBox%20Animation%20v3.0.mp4" type="video/mp4">
+      <video controls preload="none" poster="12%20project/cover.png">
+        <source data-src="12%20project/GifyBox%20Animation%20v3.0.mp4" type="video/mp4">
         Your browser does not support HTML video.
       </video>
     </div>
@@ -2780,8 +2789,8 @@
         <p>Explore the live Rive animations below. Move, click, or tap to experience their interactive states.</p>
       </div>
       <div class="rive-gallery-grid">
-        <div class="rive-embed-card"><iframe src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar interactive icon 1" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe src="https://rive.app/s/kLDNhJdhoU2DvY19aiHJkQ/embed" title="Bazaar interactive icon 2" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar interactive icon 1" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/kLDNhJdhoU2DvY19aiHJkQ/embed" title="Bazaar interactive icon 2" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
         <div class="rive-info-card">
           <div>
             <strong>Bazaar</strong>
@@ -2789,15 +2798,15 @@
             <span>Software: Rive</span>
           </div>
         </div>
-        <div class="rive-embed-card"><iframe src="https://rive.app/s/mcV4lUTPBEmtRWzSiIWklw/embed" title="Bazaar interactive icon 3" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe src="https://rive.app/s/ex290J8yKEuKhFn5CPiFnQ/embed" title="Bazaar interactive icon 4" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe src="https://rive.app/s/hmuv20UmekyWcseE6yhyyw/embed" title="Bazaar interactive icon 5" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe src="https://rive.app/s/WeifwonwnkqCjAligEDshA/embed" title="Bazaar interactive icon 6" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe src="https://rive.app/s/z4mQrdbJW0i_kRwuy2VtsA/embed" title="Bazaar interactive icon 7" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe src="https://rive.app/s/ld273qprv0_dxu3OztUOFw/embed" title="Bazaar interactive icon 8" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe src="https://rive.app/s/1Kp3JxG5FUSWYG_QFcxcXg/embed" title="Bazaar interactive icon 9" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe src="https://rive.app/s/--ZdVd43mEi4m49uK35j1g/embed" title="Bazaar interactive icon 10" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
-        <div class="rive-embed-card"><iframe src="https://rive.app/s/-4LQ5Dh72E6b7Bu5BGx_mA/embed" title="Bazaar interactive icon 11" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/mcV4lUTPBEmtRWzSiIWklw/embed" title="Bazaar interactive icon 3" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/ex290J8yKEuKhFn5CPiFnQ/embed" title="Bazaar interactive icon 4" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/hmuv20UmekyWcseE6yhyyw/embed" title="Bazaar interactive icon 5" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/WeifwonwnkqCjAligEDshA/embed" title="Bazaar interactive icon 6" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/z4mQrdbJW0i_kRwuy2VtsA/embed" title="Bazaar interactive icon 7" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/ld273qprv0_dxu3OztUOFw/embed" title="Bazaar interactive icon 8" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/1Kp3JxG5FUSWYG_QFcxcXg/embed" title="Bazaar interactive icon 9" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/--ZdVd43mEi4m49uK35j1g/embed" title="Bazaar interactive icon 10" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
+        <div class="rive-embed-card"><iframe data-src="https://rive.app/s/-4LQ5Dh72E6b7Bu5BGx_mA/embed" title="Bazaar interactive icon 11" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>
       </div>
     </section>
     <div class="project-content">
@@ -2980,7 +2989,7 @@
       <h6>Contact</h6>
       <a href="mailto:hello@thefunimation.co">hello@thefunimation.co</a>
       <a href="tel:+18189664249">(+1) 818 966 4249</a>
-      <span class="footer-contact-text">5250 Lankershim Blvd<br>North Hollywood, CA 91601</span>
+      <span class="footer-contact-text">16437 Knapp Street<br>North Hills, CA</span>
       <a href="https://www.fiverr.com/s/EgGWEVe" target="_blank" rel="noopener noreferrer">Fiverr Profile</a>
       <a href="https://www.linkedin.com/company/funanimation/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
     </div>
@@ -2992,12 +3001,86 @@
 </footer>
 
 <!-- SMOOTH SCROLL + MOTION -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.23/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.23/dist/lenis.min.js" defer></script>
 <script>
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let lenis;
+
+  function loadVideoSources(video) {
+    let changed = false;
+    video.querySelectorAll('source[data-src]').forEach(source => {
+      if (!source.getAttribute('src')) {
+        source.src = source.dataset.src;
+        changed = true;
+      }
+    });
+    if (changed) video.load();
+  }
+
+  function hydrateLazyMedia(container) {
+    container.querySelectorAll('img[data-src]').forEach(img => {
+      if (!img.getAttribute('src')) img.src = img.dataset.src;
+    });
+    container.querySelectorAll('video').forEach(loadVideoSources);
+
+    const scrollRoot = container.classList && container.classList.contains('modal-overlay')
+      ? container
+      : null;
+    const io = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const iframe = entry.target;
+        if (iframe.dataset.src && !iframe.getAttribute('src')) {
+          iframe.src = iframe.dataset.src;
+        }
+        observer.unobserve(iframe);
+      });
+    }, { root: scrollRoot, rootMargin: '220px 0px', threshold: 0.01 });
+
+    container.querySelectorAll('iframe[data-src]').forEach(iframe => {
+      if (iframe.getAttribute('src')) return;
+      io.observe(iframe);
+    });
+    if (container._lazyIo) container._lazyIo.disconnect();
+    container._lazyIo = io;
+  }
+
+  function unloadLazyMedia(container) {
+    if (container._lazyIo) {
+      container._lazyIo.disconnect();
+      container._lazyIo = null;
+    }
+    container.querySelectorAll('iframe[data-src]').forEach(iframe => {
+      iframe.removeAttribute('src');
+    });
+    container.querySelectorAll('video').forEach(video => {
+      video.pause();
+      video.querySelectorAll('source[data-src]').forEach(source => {
+        source.removeAttribute('src');
+      });
+      video.load();
+    });
+  }
+
+  function initHeroReel() {
+    const video = document.getElementById('heroReel');
+    if (!video) return;
+    if (reduceMotion) {
+      video.removeAttribute('autoplay');
+      video.pause();
+      return;
+    }
+    const syncPlayback = entry => {
+      if (entry.isIntersecting) video.play().catch(() => {});
+      else video.pause();
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => entries.forEach(syncPlayback), { threshold: 0.2 });
+      io.observe(video);
+    }
+  }
 
   function revealFallback() {
     document.querySelectorAll('.hero h1, .hero p, .hero-btns > *, .lottie-frame').forEach(el => {
@@ -3164,7 +3247,12 @@
     window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
   }
 
-  initMotion();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMotion, { once: true });
+  } else {
+    initMotion();
+  }
+  initHeroReel();
 
   // Nav shadow on scroll
   window.addEventListener('scroll', () => {
@@ -3244,185 +3332,47 @@
     document.body.style.overflow = '';
     if (lenis) lenis.start();
   }
-  function openProjectModal() {
-    const projectModal = document.getElementById('projectModal');
+  function openNamedProjectModal(id) {
+    const projectModal = document.getElementById(id);
     projectModal.classList.add('active');
     projectModal.scrollTop = 0;
     document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
+    const closeBtn = projectModal.querySelector('.modal-close');
+    if (closeBtn) closeBtn.focus();
+    hydrateLazyMedia(projectModal);
   }
-  function closeProjectModal() {
-    const projectModal = document.getElementById('projectModal');
+  function closeNamedProjectModal(id) {
+    const projectModal = document.getElementById(id);
     projectModal.classList.remove('active');
-    const video = projectModal.querySelector('video');
-    if (video) video.pause();
+    unloadLazyMedia(projectModal);
     document.body.style.overflow = '';
   }
-  function openHancockProjectModal() {
-    const projectModal = document.getElementById('hancockProjectModal');
-    projectModal.classList.add('active');
-    projectModal.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
-  }
-  function closeHancockProjectModal() {
-    const projectModal = document.getElementById('hancockProjectModal');
-    projectModal.classList.remove('active');
-    const video = projectModal.querySelector('video');
-    if (video) video.pause();
-    document.body.style.overflow = '';
-  }
-  function openBeforeHealthProjectModal() {
-    const projectModal = document.getElementById('beforeHealthProjectModal');
-    projectModal.classList.add('active');
-    projectModal.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
-  }
-  function closeBeforeHealthProjectModal() {
-    const projectModal = document.getElementById('beforeHealthProjectModal');
-    projectModal.classList.remove('active');
-    const video = projectModal.querySelector('video');
-    if (video) video.pause();
-    document.body.style.overflow = '';
-  }
-  function openSelaCloudProjectModal() {
-    const projectModal = document.getElementById('selaCloudProjectModal');
-    projectModal.classList.add('active');
-    projectModal.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
-  }
-  function closeSelaCloudProjectModal() {
-    const projectModal = document.getElementById('selaCloudProjectModal');
-    projectModal.classList.remove('active');
-    const video = projectModal.querySelector('video');
-    if (video) video.pause();
-    document.body.style.overflow = '';
-  }
-  function openUpfitSupplyProjectModal() {
-    const projectModal = document.getElementById('upfitSupplyProjectModal');
-    projectModal.classList.add('active');
-    projectModal.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
-  }
-  function closeUpfitSupplyProjectModal() {
-    const projectModal = document.getElementById('upfitSupplyProjectModal');
-    projectModal.classList.remove('active');
-    const video = projectModal.querySelector('video');
-    if (video) video.pause();
-    document.body.style.overflow = '';
-  }
-  function openMtechProjectModal() {
-    const projectModal = document.getElementById('mtechProjectModal');
-    projectModal.classList.add('active');
-    projectModal.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
-  }
-  function closeMtechProjectModal() {
-    const projectModal = document.getElementById('mtechProjectModal');
-    projectModal.classList.remove('active');
-    const video = projectModal.querySelector('video');
-    if (video) video.pause();
-    document.body.style.overflow = '';
-  }
-  function openGreenopiaProjectModal() {
-    const projectModal = document.getElementById('greenopiaProjectModal');
-    projectModal.classList.add('active');
-    projectModal.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
-  }
-  function closeGreenopiaProjectModal() {
-    const projectModal = document.getElementById('greenopiaProjectModal');
-    projectModal.classList.remove('active');
-    const video = projectModal.querySelector('video');
-    if (video) video.pause();
-    document.body.style.overflow = '';
-  }
-  function openSecufyProjectModal() {
-    const projectModal = document.getElementById('secufyProjectModal');
-    projectModal.classList.add('active');
-    projectModal.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
-  }
-  function closeSecufyProjectModal() {
-    const projectModal = document.getElementById('secufyProjectModal');
-    projectModal.classList.remove('active');
-    const video = projectModal.querySelector('video');
-    if (video) video.pause();
-    document.body.style.overflow = '';
-  }
-  function openFarmerLinkProjectModal() {
-    const projectModal = document.getElementById('farmerLinkProjectModal');
-    projectModal.classList.add('active');
-    projectModal.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
-  }
-  function closeFarmerLinkProjectModal() {
-    const projectModal = document.getElementById('farmerLinkProjectModal');
-    projectModal.classList.remove('active');
-    const video = projectModal.querySelector('video');
-    if (video) video.pause();
-    document.body.style.overflow = '';
-  }
-  function openBuddywerkingProjectModal() {
-    const projectModal = document.getElementById('buddywerkingProjectModal');
-    projectModal.classList.add('active');
-    projectModal.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
-  }
-  function closeBuddywerkingProjectModal() {
-    const projectModal = document.getElementById('buddywerkingProjectModal');
-    projectModal.classList.remove('active');
-    const video = projectModal.querySelector('video');
-    if (video) video.pause();
-    document.body.style.overflow = '';
-  }
-  function openCarakitProjectModal() {
-    const projectModal = document.getElementById('carakitProjectModal');
-    projectModal.classList.add('active');
-    projectModal.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
-  }
-  function closeCarakitProjectModal() {
-    const projectModal = document.getElementById('carakitProjectModal');
-    projectModal.classList.remove('active');
-    const video = projectModal.querySelector('video');
-    if (video) video.pause();
-    document.body.style.overflow = '';
-  }
-  function openGifyboxProjectModal() {
-    const projectModal = document.getElementById('gifyboxProjectModal');
-    projectModal.classList.add('active');
-    projectModal.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
-  }
-  function closeGifyboxProjectModal() {
-    const projectModal = document.getElementById('gifyboxProjectModal');
-    projectModal.classList.remove('active');
-    const video = projectModal.querySelector('video');
-    if (video) video.pause();
-    document.body.style.overflow = '';
-  }
-  function openBazaarProjectModal() {
-    const projectModal = document.getElementById('bazaarProjectModal');
-    projectModal.classList.add('active');
-    projectModal.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-    projectModal.querySelector('.modal-close').focus();
-  }
-  function closeBazaarProjectModal() {
-    document.getElementById('bazaarProjectModal').classList.remove('active');
-    document.body.style.overflow = '';
-  }
+  function openProjectModal() { openNamedProjectModal('projectModal'); }
+  function closeProjectModal() { closeNamedProjectModal('projectModal'); }
+  function openHancockProjectModal() { openNamedProjectModal('hancockProjectModal'); }
+  function closeHancockProjectModal() { closeNamedProjectModal('hancockProjectModal'); }
+  function openBeforeHealthProjectModal() { openNamedProjectModal('beforeHealthProjectModal'); }
+  function closeBeforeHealthProjectModal() { closeNamedProjectModal('beforeHealthProjectModal'); }
+  function openSelaCloudProjectModal() { openNamedProjectModal('selaCloudProjectModal'); }
+  function closeSelaCloudProjectModal() { closeNamedProjectModal('selaCloudProjectModal'); }
+  function openUpfitSupplyProjectModal() { openNamedProjectModal('upfitSupplyProjectModal'); }
+  function closeUpfitSupplyProjectModal() { closeNamedProjectModal('upfitSupplyProjectModal'); }
+  function openMtechProjectModal() { openNamedProjectModal('mtechProjectModal'); }
+  function closeMtechProjectModal() { closeNamedProjectModal('mtechProjectModal'); }
+  function openGreenopiaProjectModal() { openNamedProjectModal('greenopiaProjectModal'); }
+  function closeGreenopiaProjectModal() { closeNamedProjectModal('greenopiaProjectModal'); }
+  function openSecufyProjectModal() { openNamedProjectModal('secufyProjectModal'); }
+  function closeSecufyProjectModal() { closeNamedProjectModal('secufyProjectModal'); }
+  function openFarmerLinkProjectModal() { openNamedProjectModal('farmerLinkProjectModal'); }
+  function closeFarmerLinkProjectModal() { closeNamedProjectModal('farmerLinkProjectModal'); }
+  function openBuddywerkingProjectModal() { openNamedProjectModal('buddywerkingProjectModal'); }
+  function closeBuddywerkingProjectModal() { closeNamedProjectModal('buddywerkingProjectModal'); }
+  function openCarakitProjectModal() { openNamedProjectModal('carakitProjectModal'); }
+  function closeCarakitProjectModal() { closeNamedProjectModal('carakitProjectModal'); }
+  function openGifyboxProjectModal() { openNamedProjectModal('gifyboxProjectModal'); }
+  function closeGifyboxProjectModal() { closeNamedProjectModal('gifyboxProjectModal'); }
+  function openBazaarProjectModal() { openNamedProjectModal('bazaarProjectModal'); }
+  function closeBazaarProjectModal() { closeNamedProjectModal('bazaarProjectModal'); }
   // Close on overlay click
   document.getElementById('contactModal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
@@ -3520,6 +3470,7 @@
 
     if (expanding) {
       workGrid.classList.add('expanded');
+      hydrateLazyMedia(workGrid);
       if (window.gsap) {
         gsap.fromTo(extraProjects,
           { opacity: 0, y: 50, scale: .97 },
@@ -3531,12 +3482,14 @@
         opacity: 0, y: 30, stagger: .06, duration: .35, ease: 'power2.in',
         onComplete: () => {
           workGrid.classList.remove('expanded');
+          unloadLazyMedia(workGrid);
           gsap.set(extraProjects, { clearProps: 'opacity,transform' });
           ScrollTrigger.refresh();
         }
       });
     } else {
       workGrid.classList.remove('expanded');
+      unloadLazyMedia(workGrid);
     }
   });
 
