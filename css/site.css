@@ -583,11 +583,18 @@
     border-radius: var(--radius-pill); background: #fff; color: var(--dark);
     font: 700 14px/1 var(--font-head); cursor: pointer;
     box-shadow: 0 8px 24px rgba(14,17,22,.07);
-    transition: transform .3s var(--ease), box-shadow .3s, border-color .3s;
+    transition: transform 180ms ease-out, box-shadow 180ms ease-out, border-color 180ms ease-out, filter 180ms ease-out;
   }
-  .show-more-btn:hover {
-    transform: translateY(-3px); border-color: rgba(108,77,255,.35);
-    box-shadow: 0 13px 32px rgba(14,17,22,.12);
+  .show-more-btn:hover:not(:focus-visible) {
+    transform: translateY(-1px); border-color: rgba(108,77,255,.35);
+    box-shadow: 0 10px 24px rgba(14,17,22,.1);
+    filter: brightness(1.02);
+  }
+  .show-more-btn:focus-visible {
+    outline: 2px solid var(--purple);
+    outline-offset: 3px;
+    transform: none;
+    filter: none;
   }
   .show-more-btn .arrow { transition: transform .35s var(--ease); }
   .show-more-btn[aria-expanded="true"] .arrow { transform: rotate(180deg); }
@@ -1710,7 +1717,7 @@
     .work-card:hover img, .work-card:hover .work-card-rive iframe { transform: none; }
     .plan-card:hover .plan-icon { animation: none; transform: none; }
     .btn-primary:hover, .btn-secondary:hover, .chat-launcher:hover,
-    .project-resource:hover, .form-submit:hover { transform: none; filter: none; }
+    .project-resource:hover, .form-submit:hover, .show-more-btn:hover { transform: none; filter: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
