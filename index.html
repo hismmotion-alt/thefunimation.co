@@ -895,6 +895,7 @@
   #buddywerkingProjectModal,
   #carakitProjectModal,
   #gifyboxProjectModal,
+  #mavenProjectModal,
   #bazaarProjectModal {
     align-items: flex-start; overflow-y: auto; padding: 32px 20px;
     overscroll-behavior: contain; touch-action: pan-y;
@@ -912,6 +913,7 @@
   #buddywerkingProjectModal .project-modal,
   #carakitProjectModal .project-modal,
   #gifyboxProjectModal .project-modal,
+  #mavenProjectModal .project-modal,
   #bazaarProjectModal .project-modal {
     flex: 0 0 auto; max-height: none; margin: auto 0;
   }
@@ -1577,7 +1579,7 @@
     #projectModal, #hancockProjectModal, #beforeHealthProjectModal,
     #selaCloudProjectModal, #upfitSupplyProjectModal, #mtechProjectModal,
     #greenopiaProjectModal, #secufyProjectModal, #farmerLinkProjectModal,
-    #buddywerkingProjectModal, #carakitProjectModal, #gifyboxProjectModal, #bazaarProjectModal {
+    #buddywerkingProjectModal, #carakitProjectModal, #gifyboxProjectModal, #mavenProjectModal, #bazaarProjectModal {
       padding: 0; align-items: flex-end;
     }
     .project-modal {
@@ -1915,6 +1917,14 @@
           <div class="work-tags"><span class="work-tag">Social Impact</span><span class="work-tag">Nonprofit Explainer</span></div>
           <h3>Buddywerking Vlaanderen — Social Impact Explainer</h3>
           <p>Showing how meaningful one-on-one friendships foster trust, inclusion, and community support.</p>
+        </div>
+      </article>
+      <article class="work-card extra-project" tabindex="0" data-project="maven" aria-label="Maven Investment Partners explainer animation case study">
+        <img src="13%20project/thumbnail.png" alt="Maven Investment Partners explainer animation thumbnail" loading="lazy" decoding="async" />
+        <div class="work-card-body">
+          <div class="work-tags"><span class="work-tag">Investment</span><span class="work-tag">Explainer Animation</span></div>
+          <h3>Maven Investment Partners — Explainer Animation</h3>
+          <p>Communicating trust, growth, and financial expertise through polished branding and clear presentation.</p>
         </div>
       </article>
     </div>
@@ -2779,6 +2789,42 @@
   </article>
 </div>
 
+<!-- MAVEN INVESTMENT PARTNERS CASE STUDY MODAL -->
+<div class="modal-overlay" id="mavenProjectModal" data-lenis-prevent data-lenis-prevent-wheel data-lenis-prevent-touch>
+  <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="mavenProjectTitle">
+    <button class="modal-close" onclick="closeMavenProjectModal()" aria-label="Close project">✕</button>
+    <div class="project-media">
+      <video controls preload="none" poster="13%20project/thumbnail.png">
+        <source data-src="13%20project/MAVEN.mp4" type="video/mp4">
+        Your browser does not support HTML video.
+      </video>
+    </div>
+    <div class="project-content">
+      <div class="project-content-main">
+        <div class="project-kicker">Featured Case Study · Investment</div>
+        <h2 id="mavenProjectTitle">Maven Investment Partners — Explainer Animation</h2>
+        <p>Funimation Studio created a polished visual identity and digital presentation project for Maven Investment Partners, designed to communicate trust, growth, and financial expertise. The project focused on building a clean, professional look that reflects Maven Investment Partners' role as a forward-thinking investment company.</p>
+        <p>The final work combined modern branding, refined layouts, and clear messaging to help the company present its services with confidence. Every design element was crafted to feel credible, elegant, and easy to understand for potential clients and partners.</p>
+      </div>
+      <aside class="project-meta">
+        <div class="project-meta-item">
+          <strong>Client</strong>
+          <span>Maven Investment Partners</span>
+        </div>
+        <div class="project-meta-item">
+          <strong>Deliverables</strong>
+          <span>Explainer animation, visual identity, digital presentation</span>
+        </div>
+        <div class="project-meta-item">
+          <strong>Focus</strong>
+          <span>Financial expertise, trust, growth, investor communication</span>
+        </div>
+        <button class="project-resource" type="button" onclick="closeMavenProjectModal(); openModal(event)">Contact us</button>
+      </aside>
+    </div>
+  </article>
+</div>
+
 <!-- BAZAAR INTERACTIVE ICONS CASE STUDY MODAL -->
 <div class="modal-overlay" id="bazaarProjectModal" data-lenis-prevent data-lenis-prevent-wheel data-lenis-prevent-touch>
   <article class="modal project-modal" role="dialog" aria-modal="true" aria-labelledby="bazaarProjectTitle">
@@ -3371,6 +3417,8 @@
   function closeCarakitProjectModal() { closeNamedProjectModal('carakitProjectModal'); }
   function openGifyboxProjectModal() { openNamedProjectModal('gifyboxProjectModal'); }
   function closeGifyboxProjectModal() { closeNamedProjectModal('gifyboxProjectModal'); }
+  function openMavenProjectModal() { openNamedProjectModal('mavenProjectModal'); }
+  function closeMavenProjectModal() { closeNamedProjectModal('mavenProjectModal'); }
   function openBazaarProjectModal() { openNamedProjectModal('bazaarProjectModal'); }
   function closeBazaarProjectModal() { closeNamedProjectModal('bazaarProjectModal'); }
   // Close on overlay click
@@ -3413,6 +3461,9 @@
   document.getElementById('gifyboxProjectModal').addEventListener('click', function(e) {
     if (e.target === this) closeGifyboxProjectModal();
   });
+  document.getElementById('mavenProjectModal').addEventListener('click', function(e) {
+    if (e.target === this) closeMavenProjectModal();
+  });
   document.getElementById('bazaarProjectModal').addEventListener('click', function(e) {
     if (e.target === this) closeBazaarProjectModal();
   });
@@ -3432,6 +3483,7 @@
       closeBuddywerkingProjectModal();
       closeCarakitProjectModal();
       closeGifyboxProjectModal();
+      closeMavenProjectModal();
       closeBazaarProjectModal();
     }
   });
@@ -3542,6 +3594,10 @@
       }
       if (card.dataset.project === 'gifybox') {
         openGifyboxProjectModal();
+        return;
+      }
+      if (card.dataset.project === 'maven') {
+        openMavenProjectModal();
         return;
       }
       if (card.dataset.project === 'bazaar') {
