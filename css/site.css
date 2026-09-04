@@ -902,9 +902,9 @@
   .rive-enable {
     margin: 0 0 22px;
   }
-  [data-rive-on-demand].is-rive-enabled [data-enable-rive],
-  .is-rive-enabled [data-enable-rive],
-  [data-enable-rive][hidden] {
+  .rive-enable[hidden],
+  .is-rive-enabled .rive-enable,
+  .is-rive-enabled [data-enable-rive] {
     display: none !important;
   }
   .rive-poster {
