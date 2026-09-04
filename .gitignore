@@ -1,6 +1,11 @@
 .DS_Store
 **/.DS_Store
 
+# Unused / source-only heavy assets (not referenced by the homepage).
+New reel | Funimation.mp4
+24596-46145-data-change-on-click.riv
+instructor.json
+
 # Large production source videos; optimized web versions remain tracked.
 2nd project/Love Final.mp4
 3rd project/Hnoori_feedback.mp4
