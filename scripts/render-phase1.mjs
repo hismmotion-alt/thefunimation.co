@@ -118,7 +118,7 @@ function faq(items) {
     </div>`;
 }
 
-function cta(title, copy, primary = { href: '/contact/', label: 'Start a Project' }, secondary = { href: '/work/', label: 'View Our Work' }) {
+function cta(title, copy, primary = { href: '/contact/', label: 'Get a free consultation' }, secondary = { href: '/work/', label: 'See our work' }) {
   return `<section class="final-cta" id="cta">
   <div class="blob blob-1" style="width:450px;height:450px"></div>
   <div class="blob blob-2" style="width:380px;height:380px"></div>
@@ -129,6 +129,60 @@ function cta(title, copy, primary = { href: '/contact/', label: 'Start a Project
     <a href="${secondary.href}" class="btn-secondary" style="border-color:rgba(255,255,255,.35);color:#fff">${secondary.label}</a>
   </div>
 </section>`;
+}
+
+const HERO_CTAS = `<div class="hero-btns">
+      <a href="/contact/" class="btn-primary">Get a free consultation</a>
+      <a href="/work/" class="btn-secondary">See our work</a>
+    </div>`;
+
+function proofStrip({ video, poster, stills = [], label = 'Work in motion' }) {
+  const cells = [];
+  if (video) {
+    cells.push(`<div class="proof-cell proof-video" data-hydrate-media>
+      <video controls preload="none" poster="${poster}" width="1920" height="1080">
+        <source data-src="${video}" type="video/mp4">
+      </video>
+    </div>`);
+  }
+  stills.forEach(still => {
+    cells.push(`<div class="proof-cell"><img src="${still.src}" alt="${escape(still.alt)}" loading="lazy" decoding="async"></div>`);
+  });
+  return `<section class="proof-strip" aria-label="${escape(label)}">
+  <div class="section-inner proof-strip-inner">
+    ${cells.join('\n    ')}
+  </div>
+</section>`;
+}
+
+const BAZAAR_ICONS = [
+  { src: 'https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed', frame: '/bazaar/frames/01.png' },
+  { src: 'https://rive.app/s/kLDNhJdhoU2DvY19aiHJkQ/embed', frame: '/bazaar/frames/02.png' },
+  { src: 'https://rive.app/s/mcV4lUTPBEmtRWzSiIWklw/embed', frame: '/bazaar/frames/03.png' },
+  { src: 'https://rive.app/s/ex290J8yKEuKhFn5CPiFnQ/embed', frame: '/bazaar/frames/04.png' },
+  { src: 'https://rive.app/s/hmuv20UmekyWcseE6yhyyw/embed', frame: '/bazaar/frames/05.png' },
+  { src: 'https://rive.app/s/WeifwonwnkqCjAligEDshA/embed', frame: '/bazaar/frames/06.png' },
+  { src: 'https://rive.app/s/z4mQrdbJW0i_kRwuy2VtsA/embed', frame: '/bazaar/frames/07.png' },
+  { src: 'https://rive.app/s/ld273qprv0_dxu3OztUOFw/embed', frame: '/bazaar/frames/08.png' },
+  { src: 'https://rive.app/s/1Kp3JxG5FUSWYG_QFcxcXg/embed', frame: '/bazaar/frames/09.png' },
+  { src: 'https://rive.app/s/--ZdVd43mEi4m49uK35j1g/embed', frame: '/bazaar/frames/10.png' },
+  { src: 'https://rive.app/s/-4LQ5Dh72E6b7Bu5BGx_mA/embed', frame: '/bazaar/frames/11.png' }
+];
+
+function bazaarGallery(items = BAZAAR_ICONS) {
+  return `<section class="rive-project-gallery" data-rive-on-demand>
+    <div class="rive-project-head">
+      <h3>Icon system</h3>
+      <p>Static art first. Motion is progressive enhancement — two live icons at a time, near the viewport.</p>
+    </div>
+    <button class="btn-secondary rive-enable" type="button" data-enable-rive>Bring the icons to life</button>
+    <div class="rive-gallery-grid">
+      ${items.map(item => `<div class="rive-embed-card">
+        <img class="rive-poster" src="${item.frame}" alt="Bazaar brand icon, static art frame" width="800" height="800" loading="lazy" decoding="async">
+        <iframe data-src="${item.src}" title="Bazaar interactive brand icon" loading="lazy"></iframe>
+      </div>`).join('\n      ')}
+    </div>
+  </section>`;
 }
 
 function page({ title, description, canonical, ogImage, ogAlt, current, schema = [], bodyClass = '', bodyAttrs = '', extraHead = '', body }) {
@@ -239,14 +293,19 @@ const servicesHub = page({
   body: `<header class="page-hero">
   <div class="section-inner">
     <p class="page-kicker">Services</p>
-    <h1>Animation Services for SaaS, Products and Modern Brands</h1>
+    <h1>Animation that makes your product make sense.</h1>
     <p class="lead">Funimation is an animation studio for SaaS companies, startups, product teams, and growing brands. We create explainer videos, product animation, interactive web animation, app motion, character animation, and motion graphics that make complex ideas easier to understand and digital products more engaging.</p>
-    <div class="hero-btns">
-      <a href="/contact/" class="btn-primary">Get a Free Consultation</a>
-      <a href="/work/" class="btn-secondary">See Our Work</a>
-    </div>
+    ${HERO_CTAS}
   </div>
 </header>
+${proofStrip({
+  stills: [
+    { src: '/11%20project/cover.png', alt: 'CaraKit explainer still' },
+    { src: '/4th%20project/cover.png', alt: 'Sela Cloud product animation still' },
+    { src: '/bazaar/frames/01.png', alt: 'Bazaar interactive icon still' }
+  ],
+  label: 'Selected stills from Funimation work'
+})}
 <div class="trusted">
   <p>Trusted by startups, SaaS teams and growing brands</p>
   <div class="why-grid" style="max-width:var(--max-w);margin:0 auto">
@@ -360,11 +419,11 @@ const servicesHub = page({
         <div class="work-card-body"><div class="work-tags"><span class="work-tag">Cloud &amp; AI</span></div><h3>Sela Cloud</h3><p>Cloud infrastructure and AI services, told simply.</p></div>
       </a>
       <a class="work-card" href="/work/bazaar-interactive-icon-animation/">
-        <img src="/1st%20project/cover.png" alt="Interactive motion example" loading="lazy">
+        <img src="/bazaar/frames/01.png" alt="Bazaar interactive icon still" loading="lazy">
         <div class="work-card-body"><div class="work-tags"><span class="work-tag">Rive</span></div><h3>Bazaar</h3><p>Interactive brand icons built for web and product UI.</p></div>
       </a>
     </div>
-    <p style="margin-top:28px"><a href="/work/" class="btn-primary">View All Work</a></p>
+    <p style="margin-top:28px"><a href="/work/" class="btn-primary">See our work</a></p>
   </div>
 </section>
 <section class="section">
@@ -380,7 +439,7 @@ const servicesHub = page({
     ])}
   </div>
 </section>
-${cta('Have a Product or Idea That Needs Motion?', 'Whether you need an explainer video company for a launch, a product animation studio for a new feature, or interactive web animation for your website, Funimation can help turn your idea into a clear visual experience.', { href: '/contact/', label: 'Start a Project' }, { href: '/contact/', label: 'Get a Free Consultation' })}`
+${cta('Have a Product or Idea That Needs Motion?', 'Whether you need an explainer video company for a launch, a product animation studio for a new feature, or interactive web animation for your website, Funimation can help turn your idea into a clear visual experience.')}`
 });
 
 const explainer = page({
@@ -395,14 +454,20 @@ const explainer = page({
   <div class="section-inner">
     <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/services/">Services</a><span>/</span><span>Explainer Videos</span></nav>
     <p class="page-kicker">Explainer video company</p>
-    <h1>Explainer Video Company for SaaS, Startups and Modern Brands</h1>
+    <h1>Explainer videos that make complex products feel simple.</h1>
     <p class="lead">Complex products are easier to understand when the story is clear. Funimation is an explainer video company creating custom 2D explainer video production for SaaS businesses, startups, technology teams, and brands that need to explain what they do, how their product works, and why it matters.</p>
-    <div class="hero-btns">
-      <a href="/contact/" class="btn-primary">Start Your Project</a>
-      <a href="/work/" class="btn-secondary">View Explainer Videos</a>
-    </div>
+    ${HERO_CTAS}
   </div>
 </header>
+${proofStrip({
+  video: '/11%20project/Animation%20Video%20111.mp4',
+  poster: '/11%20project/cover.png',
+  stills: [
+    { src: '/3rd%20project/cover.png', alt: 'Before Health Intelligence explainer still' },
+    { src: '/4th%20project/cover.png', alt: 'Sela Cloud explainer still' }
+  ],
+  label: 'Explainer work in motion'
+})}
 <section class="section" style="background:#fff">
   <div class="section-inner copy-block">
     <h2 class="section-title">Turn Complex Ideas Into Clear Stories</h2>
@@ -474,7 +539,7 @@ const explainer = page({
       <a class="work-card" href="/work/before-health-ai-healthcare-explainer/"><img src="/3rd%20project/cover.png" alt="Before Health Intelligence explainer" loading="lazy"><div class="work-card-body"><h3>Before Health Intelligence</h3><p>AI healthcare explainer.</p></div></a>
       <a class="work-card" href="/work/sela-cloud-explainer-video/"><img src="/4th%20project/cover.png" alt="Sela Cloud explainer" loading="lazy"><div class="work-card-body"><h3>Sela Cloud</h3><p>Cloud and AI explainer.</p></div></a>
     </div>
-    <p style="margin-top:24px"><a href="/work/" class="btn-primary">View Our Work</a></p>
+    <p style="margin-top:24px"><a href="/work/" class="btn-primary">See our work</a></p>
   </div>
 </section>
 <section class="section">
@@ -489,7 +554,7 @@ const explainer = page({
     ])}
   </div>
 </section>
-${cta('Have a Product That Needs Explaining?', 'Tell us what you are building, who you need to reach, and what you want people to understand. We will help shape the story and create an explainer video that makes the message clear.', { href: '/contact/', label: 'Start a Project' }, { href: '/contact/', label: 'Talk to Our Team' })}`
+${cta('Have a Product That Needs Explaining?', 'Tell us what you are building, who you need to reach, and what you want people to understand. We will help shape the story and create an explainer video that makes the message clear.')}`
 });
 
 const saas = page({
@@ -504,14 +569,20 @@ const saas = page({
   <div class="section-inner">
     <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/services/">Services</a><span>/</span><span>SaaS Product Animation</span></nav>
     <p class="page-kicker">Product animation studio</p>
-    <h1>SaaS Product Animation That Makes Software Easier to Understand</h1>
+    <h1>Product animation that shows what your software does.</h1>
     <p class="lead">Your software can do a lot. Your audience should not have to figure it all out alone. Funimation is a product animation studio creating custom SaaS product animation, software demo animation, and feature launch videos that show how digital products work and why their features matter.</p>
-    <div class="hero-btns">
-      <a href="/contact/" class="btn-primary">Start Your Project</a>
-      <a href="/work/" class="btn-secondary">View Our Product Animation</a>
-    </div>
+    ${HERO_CTAS}
   </div>
 </header>
+${proofStrip({
+  video: '/4th%20project/sela-cloud-web.mp4',
+  poster: '/4th%20project/cover.png',
+  stills: [
+    { src: '/3rd%20project/cover.png', alt: 'Before Health Intelligence product still' },
+    { src: '/6th%20project/cover.png', alt: 'MTech Systems product still' }
+  ],
+  label: 'Product animation in motion'
+})}
 <section class="section" style="background:#fff">
   <div class="section-inner copy-block">
     <h2 class="section-title">Show Your Product, Not Just Your Screenshots</h2>
@@ -584,7 +655,7 @@ const saas = page({
     <h2 class="section-title">Where to Use SaaS Product Animation</h2>
     <p>Use product animation wherever your audience needs to understand software quickly. Add it to a homepage to demonstrate the product at a glance. Place it on a feature page to explain a specific workflow. Use it in a launch campaign to introduce a new capability. Add it to a sales deck when a live demo is not practical.</p>
     <p>Product animation can also support onboarding, customer education, help content, social media, paid advertising, webinars, and internal presentations. The same core story can often be edited or repurposed into shorter pieces for different channels.</p>
-    <p style="margin-top:20px"><a href="/contact/" class="btn-primary">Discuss Your Product</a></p>
+    <p style="margin-top:20px"><a href="/contact/" class="btn-primary">Get a free consultation</a></p>
   </div>
 </section>
 <section class="section">
@@ -623,19 +694,24 @@ const interactive = page({
   <div class="section-inner">
     <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/services/">Services</a><span>/</span><span>Interactive Web Animation</span></nav>
     <p class="page-kicker">Rive &amp; Lottie</p>
-    <h1>Interactive Web Animation That Makes Digital Experiences Move</h1>
+    <h1>Web motion that responds — not just decorates.</h1>
     <p class="lead">Make your website more engaging with interactive web animation built around your brand and user experience. Funimation creates website motion design, scroll animation, interactive UI elements, Rive experiences, and Lottie animation that help visitors understand, explore, and connect with your digital product.</p>
-    <div class="hero-btns">
-      <a href="/contact/" class="btn-primary">Start Your Project</a>
-      <a href="/work/bazaar-interactive-icon-animation/" class="btn-secondary">See Our Interactive Work</a>
-    </div>
+    ${HERO_CTAS}
   </div>
 </header>
+${proofStrip({
+  stills: [
+    { src: '/bazaar/frames/01.png', alt: 'Bazaar interactive icon still' },
+    { src: '/bazaar/frames/02.png', alt: 'Bazaar interactive icon still' },
+    { src: '/bazaar/frames/03.png', alt: 'Bazaar interactive icon still' }
+  ],
+  label: 'Interactive icon stills from Bazaar'
+})}
 <section class="section" style="background:#fff">
   <div class="section-inner copy-block">
     <h2 class="section-title">Motion That Responds to the User</h2>
     <p>Modern websites can do more than display information. Thoughtful animation can guide attention, explain how a product works, show relationships between ideas, and create moments that make a brand memorable. Our interactive web animation services combine design and motion with the way people actually move through a page.</p>
-    <p>Instead of adding animation simply because it looks impressive, we use motion where it has a job to do. A transition can connect two sections. A micro-interaction can confirm an action. A scroll animation can reveal a product story at the right moment. An interactive visual can demonstrate a workflow that would otherwise take several paragraphs to explain. One client landing-page engagement test saw conversion lift 28% after interactive motion shipped — the point is purpose, not decoration.</p>
+    <p>Instead of adding animation simply because it looks impressive, we use motion where it has a job to do. A transition can connect two sections. A micro-interaction can confirm an action. A scroll animation can reveal a product story at the right moment. An interactive visual can demonstrate a workflow that would otherwise take several paragraphs to explain. The point is purpose, not decoration.</p>
   </div>
 </section>
 <section class="section">
@@ -658,16 +734,14 @@ const interactive = page({
     <p>Rive is particularly useful when an animation needs to respond to interaction or state changes. Lottie is well suited to lightweight interface animation and reusable motion assets. We can help determine which approach fits the experience, create the animation, and work with your design or development team on the final implementation requirements.</p>
   </div>
 </section>
-<section class="section" data-rive-on-demand>
+<section class="section">
   <div class="section-inner">
     <h2 class="section-title">Case study: Bazaar interactive icon system</h2>
-    <p class="section-desc">A small illustrative preview — not a hero embed. The Rive runtime stays off until you play it, and it is skipped entirely when reduced motion is preferred.</p>
+    <p class="section-desc">Static art first — a small illustrative preview, not a hero embed. Open the case study to enable the Rive runtime.</p>
     <div class="rive-embed-card rive-illustrative">
-      <span class="rive-fallback-label">Bazaar icon preview</span>
-      <button class="btn-secondary rive-enable" type="button" data-enable-rive>Play preview</button>
-      <iframe data-src="https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed" title="Bazaar interactive icon preview" loading="lazy"></iframe>
+      <img class="rive-poster" src="/bazaar/frames/01.png" alt="Bazaar brand icon, static art frame" width="800" height="800" loading="lazy" decoding="async">
     </div>
-    <p style="margin-top:20px"><a href="/work/bazaar-interactive-icon-animation/" class="btn-secondary">Open the Bazaar case study</a></p>
+    <p style="margin-top:20px"><a href="/work/bazaar-interactive-icon-animation/" class="btn-secondary">See our work</a></p>
   </div>
 </section>
 <section class="section" style="background:#fff">
@@ -734,7 +808,7 @@ const workCards = [
   { href: '/work/carakit-care-kit-explainer/', filters: 'explainer character', img: '/11%20project/cover.png', alt: 'CaraKit explainer cover', tags: 'Care & Recovery · Explainer', title: 'CaraKit — Care-Kit Brand Explainer', copy: 'Helping people understand how curated, treatment-aware gifts can bring comfort and practical support.' },
   { href: '/work/before-health-ai-healthcare-explainer/', filters: 'explainer product', img: '/3rd%20project/cover.png', alt: 'Before Health Intelligence cover', tags: 'AI Healthcare · Explainer', title: 'Before Health Intelligence — AI Healthcare Explainer', copy: 'Making predictive health technology clear through approachable characters and modern visual storytelling.' },
   { href: '/work/sela-cloud-explainer-video/', filters: 'explainer product', img: '/4th%20project/cover.png', alt: 'Sela Cloud cover', tags: 'Cloud & AI · Explainer', title: 'Sela Cloud — Cloud & AI Explainer Animation', copy: 'Simplifying cloud infrastructure and AI services for business and technical audiences.' },
-  { href: '/work/bazaar-interactive-icon-animation/', filters: 'interactive', img: '/hero-reel-poster.jpg', alt: 'Interactive motion still', tags: 'Interactive · Rive', title: 'Bazaar — Interactive Brand Icon Animation', copy: 'A lightweight interactive icon system bringing motion, feedback, and personality to Bazaar’s digital experience.' },
+  { href: '/work/bazaar-interactive-icon-animation/', filters: 'interactive', img: '/bazaar/frames/01.png', alt: 'Bazaar interactive brand icon still', tags: 'Interactive · Rive', title: 'Bazaar — Interactive Brand Icon Animation', copy: 'A lightweight interactive icon system bringing motion, feedback, and personality to Bazaar’s digital experience.' },
   { href: '/?project=maven', filters: 'explainer', img: '/13%20project/thumbnail.png', alt: 'Maven Investment Partners thumbnail', tags: 'Investment · Explainer', title: 'Maven Investment Partners — Explainer Animation', copy: 'Communicating trust, growth, and financial expertise through polished branding and clear presentation.' },
   { href: '/?project=ismed-clim', filters: 'explainer', img: '/1st%20project/cover.png', alt: 'ISMED-CLIM cover', tags: 'Climate & Health · Explainer', title: 'ISMED-CLIM — Climate & Public Health Awareness', copy: 'Making climate-health research clear, accessible, and engaging for audiences across the Mediterranean.' },
   { href: '/?project=gifybox', filters: 'explainer product', img: '/12%20project/cover.png', alt: 'GifyBox cover', tags: 'Event Tech · Product Explainer', title: 'GifyBox — Event Photo Booth Explainer', copy: 'Showing how interactive photo and GIF experiences turn live events into shareable branded moments.' },
@@ -757,10 +831,7 @@ const workHub = page({
     <p class="page-kicker">Portfolio</p>
     <h1>Our Work</h1>
     <p class="lead">Explore a selection of animation, motion design, and interactive projects created by Funimation. From SaaS product animation and explainer videos to character animation and interactive web experiences, our portfolio shows how we use design and motion to make complex ideas easier to understand.</p>
-    <div class="hero-btns">
-      <a href="/contact/" class="btn-primary">Start a Project</a>
-      <a href="/services/" class="btn-secondary">Explore Services</a>
-    </div>
+    ${HERO_CTAS}
   </div>
 </header>
 <section class="section" style="background:#fff">
@@ -804,10 +875,10 @@ const workHub = page({
     ])}
   </div>
 </section>
-${cta('Like What You See? Let’s Create Something Together', 'If you have a product, feature, campaign, website, or idea that needs animation, tell us what you are trying to communicate.', { href: '/contact/', label: 'Start a Project' }, { href: '/contact/', label: 'Contact Us' })}`
+${cta('Like What You See? Let’s Create Something Together', 'If you have a product, feature, campaign, website, or idea that needs animation, tell us what you are trying to communicate.')}`
 });
 
-function casePage({ slug, title, metaTitle, description, kicker, h1, paragraphs, client, deliverables, focus, website, poster, video, scenes, videoName, rive }) {
+function casePage({ slug, title, metaTitle, description, kicker, h1, stake, challenge, approach, result, client, deliverables, focus, website, poster, video, scenes, videoName, rive }) {
   const canonical = `https://thefunimation.co/work/${slug}/`;
   const schema = [{
     '@type': 'CreativeWork',
@@ -835,30 +906,30 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, paragraphs,
     </div>
   </section>` : '';
   const media = rive
-    ? `<section class="rive-project-gallery" data-rive-on-demand>
-    <div class="rive-project-head">
-      <h3>Interactive icon collection</h3>
-      <p>Static frames first. After you enable motion, at most two Rive runtimes stay live — the ones near the viewport.</p>
-    </div>
-    <button class="btn-secondary rive-enable" type="button" data-enable-rive>Load interactive icons</button>
-    <div class="rive-gallery-grid">
-      ${rive.map((src, i) => `<div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon ${i + 1}</span><iframe data-src="${src}" title="Bazaar interactive icon ${i + 1}" loading="lazy"></iframe></div>`).join('\n      ')}
-    </div>
-  </section>`
-    : `<div class="project-media" data-hydrate-media>
+    ? `<div class="case-stage-media case-stage-stills">
+      ${BAZAAR_ICONS.slice(0, 3).map(item => `<img src="${item.frame}" alt="Bazaar brand icon, static art frame" width="800" height="800" loading="eager" decoding="async">`).join('\n      ')}
+    </div>`
+    : `<div class="case-stage-media project-media" data-hydrate-media>
     <video controls preload="none" poster="/${poster}" width="1920" height="1080">
       <source data-src="/${video}" type="video/mp4">
       Your browser does not support HTML video.
     </video>
   </div>`;
-
-  const content = `<div class="project-content">
-      <div class="project-content-main">
+  const stage = `<div class="case-stage">
+      <div class="case-stage-copy">
         <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/work/">Work</a><span>/</span><span>${escape(client)}</span></nav>
         <div class="project-kicker">${kicker}</div>
         <h1 id="caseTitle">${h1}</h1>
-        ${paragraphs.map(p => `<p>${p}</p>`).join('\n        ')}
+        <p class="case-stake">${stake}</p>
       </div>
+      ${media}
+    </div>
+    <section class="case-story">
+      <div class="case-story-item"><h2>Challenge</h2><p>${challenge}</p></div>
+      <div class="case-story-item"><h2>Approach</h2><p>${approach}</p></div>
+      <div class="case-story-item"><h2>Result</h2><p>${result}</p></div>
+    </section>
+    <div class="project-content case-meta-only">
       <aside class="project-meta">
         <div class="project-meta-item"><strong>Client</strong><span>${escape(client)}</span></div>
         <div class="project-meta-item"><strong>Deliverables</strong><span>${escape(deliverables)}</span></div>
@@ -870,7 +941,7 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, paragraphs,
   const rest = `<section class="section">
       <div class="section-inner">
         <h2 class="section-title">More work</h2>
-        <p><a href="/work/" class="btn-secondary">Back to portfolio</a> <a href="/services/" class="btn-primary" style="margin-left:8px">Explore services</a></p>
+        <p><a href="/work/" class="btn-secondary">See our work</a> <a href="/contact/" class="btn-primary" style="margin-left:8px">Get a free consultation</a></p>
       </div>
     </section>
     ${cta('Want a similar result?', 'Tell us about the product or story you need to explain. We will help shape the right animation approach.')}`;
@@ -886,12 +957,11 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, paragraphs,
     bodyClass: 'case-page',
     bodyAttrs: rive ? 'data-motion-lite' : '',
     body: rive
-      ? `${content}
-    ${media}
+      ? `${stage}
+    ${bazaarGallery()}
     ${rest}`
-      : `${media}
+      : `${stage}
     ${sceneHtml}
-    ${content}
     ${rest}`
   });
 }
@@ -903,10 +973,10 @@ const carakit = casePage({
   description: '2D explainer animation for CaraKit, a care-kit brand supporting people through treatment and recovery. A Funimation case study.',
   kicker: 'Featured Case Study · Care & Recovery',
   h1: 'CaraKit — Care-Kit Brand Explainer',
-  paragraphs: [
-    'Funimation created a 2D explainer animation for CaraKit, a thoughtful care-kit brand helping people send meaningful support to loved ones going through cancer treatment, surgery, and recovery. The video was designed to communicate CaraKit’s compassionate approach to gifting, showing how curated, treatment-aware products can bring comfort, reassurance, and practical care during some of life’s hardest moments.',
-    'Through warm character animation, clean motion graphics, and gentle visual storytelling, we helped transform CaraKit’s mission into an approachable and emotionally resonant explainer that makes it easier for people to understand how to show up with care.'
-  ],
+  stake: 'People didn’t know how to show up for loved ones in treatment with gifts that actually help.',
+  challenge: 'People didn’t know how to show up for loved ones in treatment with gifts that actually help.',
+  approach: 'Warm character-led 2D explainer that walks through compassionate, treatment-aware gifting.',
+  result: 'An emotional, easy-to-follow story that makes CaraKit feel approachable and purposeful.',
   client: 'CaraKit',
   deliverables: '2D explainer animation, character animation, motion graphics',
   focus: 'Cancer treatment, surgery recovery, compassionate gifting',
@@ -921,10 +991,10 @@ const beforeHealth = casePage({
   description: '2D explainer animation for Before Health Intelligence, translating predictive AI healthcare into a clear, memorable story.',
   kicker: 'Featured Case Study · AI Healthcare',
   h1: 'Before Health Intelligence — AI Healthcare Explainer',
-  paragraphs: [
-    'Funimation partnered with Before Health Intelligence to create an engaging 2D explainer animation showcasing how artificial intelligence and wearable technology can help predict critical health events before they happen. The video translates advanced medical technology into a clear, accessible story, illustrating how predictive algorithms analyze data from everyday devices to support earlier intervention and better patient outcomes.',
-    'Through modern motion graphics and clean visual storytelling, we helped communicate a complex healthcare innovation in a way that’s easy to understand and memorable.'
-  ],
+  stake: 'Predictive AI and wearables sounded technical and distant to non-clinical audiences.',
+  challenge: 'Predictive AI and wearables sounded technical and distant to non-clinical audiences.',
+  approach: 'Approachable characters and clean motion that turn algorithms into everyday health moments.',
+  result: 'A memorable explainer that makes earlier intervention feel human, not jargon.',
   client: 'Before Health Intelligence',
   deliverables: '2D explainer animation, character animation, motion graphics',
   focus: 'Artificial intelligence, wearable technology, predictive healthcare',
@@ -940,10 +1010,10 @@ const sela = casePage({
   description: '2D explainer animation for Sela Cloud, simplifying cloud infrastructure and AI services for business and technical audiences.',
   kicker: 'Featured Case Study · Cloud & AI',
   h1: 'Sela Cloud — Cloud & AI Explainer Animation',
-  paragraphs: [
-    'Funimation created a 2D explainer animation for Sela Cloud, a global cloud consulting partner helping SaaS and AI companies build, migrate, and optimize solutions across AWS, Microsoft Azure, and Google Cloud. The animation simplifies complex cloud infrastructure and AI concepts into an engaging visual story, making technical services easy to understand for both business and technical audiences.',
-    'Through modern motion graphics and clear storytelling, we helped showcase Sela Cloud’s expertise in accelerating innovation, improving scalability, and driving digital transformation.'
-  ],
+  stake: 'Cloud and AI consulting was hard to grasp for mixed business and technical buyers.',
+  challenge: 'Cloud and AI consulting was hard to grasp for mixed business and technical buyers.',
+  approach: 'A focused visual narrative that simplifies infrastructure and AI across AWS, Azure, and GCP.',
+  result: 'A shared story sales and marketing can use without a live demo.',
   client: 'Sela Cloud',
   deliverables: '2D explainer animation, character animation, motion graphics',
   focus: 'Cloud infrastructure, AI services, digital transformation',
@@ -960,27 +1030,15 @@ const bazaar = casePage({
   description: 'Interactive Rive icon system for Bazaar — lightweight brand motion designed for web and mobile interfaces. A Funimation case study.',
   kicker: 'Featured Case Study · Interactive Brand Motion',
   h1: 'Bazaar — Interactive Brand Icon Animation',
-  paragraphs: [
-    'Funimation partnered with Bazaar to create a collection of interactive animated icons that bring their digital brand experience to life. Designed with performance and usability in mind, the animations provide subtle, engaging feedback while reinforcing the brand’s visual identity across web and mobile interfaces.',
-    'By combining thoughtful motion design with clean, lightweight animation, we helped create a more polished, dynamic, and memorable user experience.'
-  ],
+  stake: 'Brand icons felt static and didn’t carry personality into product UI.',
+  challenge: 'Brand icons felt static and didn’t carry personality into product UI.',
+  approach: 'A lightweight interactive Rive icon system tuned for feedback, brand feel, and performance.',
+  result: 'Motion that ships in web and mobile interfaces without weighing them down.',
   client: 'Bazaar',
   deliverables: 'Interactive icon system, brand motion, Rive animations',
   focus: 'Web and mobile interaction, usability, lightweight motion',
-  poster: 'hero-reel-poster.jpg',
-  rive: [
-    'https://rive.app/s/jnWiap4xwUyTwzj0M5uZhQ/embed',
-    'https://rive.app/s/kLDNhJdhoU2DvY19aiHJkQ/embed',
-    'https://rive.app/s/mcV4lUTPBEmtRWzSiIWklw/embed',
-    'https://rive.app/s/ex290J8yKEuKhFn5CPiFnQ/embed',
-    'https://rive.app/s/hmuv20UmekyWcseE6yhyyw/embed',
-    'https://rive.app/s/WeifwonwnkqCjAligEDshA/embed',
-    'https://rive.app/s/z4mQrdbJW0i_kRwuy2VtsA/embed',
-    'https://rive.app/s/ld273qprv0_dxu3OztUOFw/embed',
-    'https://rive.app/s/1Kp3JxG5FUSWYG_QFcxcXg/embed',
-    'https://rive.app/s/--ZdVd43mEi4m49uK35j1g/embed',
-    'https://rive.app/s/-4LQ5Dh72E6b7Bu5BGx_mA/embed'
-  ]
+  poster: 'bazaar/frames/01.png',
+  rive: true
 });
 
 const contact = page({
@@ -1024,7 +1082,7 @@ const contact = page({
 <section class="section" style="background:#fff">
   <div class="section-inner contact-grid">
     <div class="contact-card">
-      <h2>Start a Project</h2>
+      <h2>Tell us about the work</h2>
       <p class="page-lead" style="margin-bottom:22px">We’ll review your project and get back to you with the next steps.</p>
       <form id="contactForm" class="contact-form" name="project-brief" method="POST" data-netlify="true" netlify-honeypot="bot-field">
         <input type="hidden" name="form-name" value="project-brief">
@@ -1081,7 +1139,7 @@ const contact = page({
           <label for="contactMessage">Tell us about your project <span class="req">*</span></label>
           <textarea id="contactMessage" name="message" required placeholder="Your project details, goals, requirements and useful links"></textarea>
         </div>
-        <button class="form-submit" type="submit">Send Project Details</button>
+        <button class="form-submit" type="submit">Send project details</button>
         <p class="form-status" role="status" aria-live="polite" style="margin-top:16px;color:var(--purple);font-weight:600;"></p>
       </form>
     </div>
@@ -1129,7 +1187,7 @@ const contact = page({
     </div>
   </div>
 </section>
-${cta('Have an Idea? Let’s Make It Move.', 'Have a product, feature, campaign or story that needs animation? Let’s turn it into something clear, useful and memorable.', { href: '/work/', label: 'View Our Work' }, { href: '/services/', label: 'Explore Services' })}`
+${cta('Have an Idea? Let’s Make It Move.', 'Have a product, feature, campaign or story that needs animation? Let’s turn it into something clear, useful and memorable.')}`
 });
 
 writePage('services', servicesHub);
