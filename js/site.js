@@ -63,6 +63,11 @@
     if (reduceMotion) {
       video.removeAttribute('autoplay');
       video.pause();
+      video.querySelectorAll('source').forEach(source => {
+        source.removeAttribute('src');
+      });
+      video.removeAttribute('src');
+      video.load();
       return;
     }
     const syncPlayback = entry => {
