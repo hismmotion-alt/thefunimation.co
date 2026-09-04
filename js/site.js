@@ -41,7 +41,15 @@
 
   function setRiveLive(iframe, live) {
     const card = riveCard(iframe);
-    if (card) card.classList.toggle('is-rive-live', live);
+    if (!card) return;
+    card.classList.toggle('is-rive-live', live);
+    const poster = card.querySelector('.rive-poster');
+    const posterSrc = poster && (poster.currentSrc || poster.getAttribute('src'));
+    if (live && posterSrc) {
+      card.style.setProperty('--rive-poster', 'url("' + posterSrc + '")');
+    } else {
+      card.style.removeProperty('--rive-poster');
+    }
   }
 
   function markRiveFallback(iframe) {
@@ -49,6 +57,7 @@
     if (card) {
       card.classList.add('rive-static');
       card.classList.remove('is-rive-live');
+      card.style.removeProperty('--rive-poster');
     }
     iframe.setAttribute('hidden', '');
     iframe.removeAttribute('src');
