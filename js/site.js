@@ -1,6 +1,10 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const motionLite = document.body.hasAttribute('data-motion-lite');
-  const MAX_LIVE_RIVE = 2;
+  const MAX_LIVE_RIVE = 3;
+  const HOVER_UNMOUNT_MS = 320;
+  const hoverRiveWanted = new Map();
+  const hoverRiveTimers = new WeakMap();
+  let hoverRiveSeq = 0;
   let lenis;
 
   const PROJECT_PAGE_URLS = {
@@ -137,9 +141,10 @@
 
   function reconcileLiveRive() {
     if (reduceMotion) return;
-    const ranked = Array.from(intersectingRive).filter(frame => !isFailedRive(frame)).sort(riveRank);
+    const ranked = Array.from(intersectingRive).filter(frame => !isFailedRive(frame) && !isHoverRiveGallery(frame)).sort(riveRank);
     const keep = new Set(ranked.slice(0, MAX_LIVE_RIVE));
     liveRiveFrames().forEach(frame => {
+      if (isHoverRiveGallery(frame)) return;
       if (!keep.has(frame)) unmountRiveFrame(frame);
     });
     keep.forEach(mountRiveFrame);
@@ -150,8 +155,72 @@
     return rect.bottom > -200 && rect.top < window.innerHeight + 200 && (rect.width > 0 || rect.height > 0);
   }
 
+  function isHoverRiveGallery(node) {
+    return Boolean(node && node.closest('[data-rive-hover], [data-rive-on-demand]'));
+  }
+
   function riveFramesToObserve(container) {
-    return Array.from(container.querySelectorAll('iframe[data-src]')).filter(iframe => !iframe.closest('[data-rive-on-demand]'));
+    return Array.from(container.querySelectorAll('iframe[data-src]')).filter(iframe => !isHoverRiveGallery(iframe));
+  }
+
+  function ensureRivePrefetch(href, rel) {
+    if (!href) return;
+    const selector = 'link[data-rive-prefetch="' + href + '"]';
+    if (document.querySelector(selector)) return;
+    const link = document.createElement('link');
+    link.rel = rel;
+    link.href = href;
+    if (rel === 'preconnect') link.crossOrigin = 'anonymous';
+    if (rel === 'prefetch') link.as = 'document';
+    link.setAttribute('data-rive-prefetch', href);
+    document.head.appendChild(link);
+  }
+
+  function prefetchRiveWarmup(gallery) {
+    ensureRivePrefetch('https://rive.app', 'preconnect');
+    ensureRivePrefetch('https://rive.app', 'dns-prefetch');
+    Array.from(gallery.querySelectorAll('iframe[data-src]'))
+      .slice(0, MAX_LIVE_RIVE)
+      .forEach(iframe => ensureRivePrefetch(iframe.dataset.src, 'prefetch'));
+  }
+
+  function reconcileHoverRive() {
+    if (reduceMotion) return;
+    const ranked = Array.from(hoverRiveWanted.entries())
+      .filter(([frame]) => !isFailedRive(frame))
+      .sort((a, b) => b[1] - a[1])
+      .map(([frame]) => frame);
+    const keep = new Set(ranked.slice(0, MAX_LIVE_RIVE));
+    liveRiveFrames().forEach(frame => {
+      if (!isHoverRiveGallery(frame)) return;
+      if (!keep.has(frame)) unmountRiveFrame(frame);
+    });
+    keep.forEach(mountRiveFrame);
+  }
+
+  function requestHoverRive(iframe) {
+    if (!iframe || reduceMotion || isFailedRive(iframe)) return;
+    const timer = hoverRiveTimers.get(iframe);
+    if (timer) {
+      clearTimeout(timer);
+      hoverRiveTimers.delete(iframe);
+    }
+    hoverRiveWanted.set(iframe, ++hoverRiveSeq);
+    reconcileHoverRive();
+  }
+
+  function releaseHoverRive(iframe, delay) {
+    if (!iframe) return;
+    const wait = delay == null ? HOVER_UNMOUNT_MS : delay;
+    const existing = hoverRiveTimers.get(iframe);
+    if (existing) clearTimeout(existing);
+    const timer = window.setTimeout(() => {
+      hoverRiveTimers.delete(iframe);
+      hoverRiveWanted.delete(iframe);
+      unmountRiveFrame(iframe);
+      reconcileHoverRive();
+    }, wait);
+    hoverRiveTimers.set(iframe, timer);
   }
 
   function iframeFromObserveTarget(target) {
@@ -223,24 +292,40 @@
   }
 
   function bindRiveOnDemand(root) {
-    (root || document).querySelectorAll('[data-rive-on-demand]').forEach(gallery => {
+    (root || document).querySelectorAll('[data-rive-hover], [data-rive-on-demand]').forEach(gallery => {
       if (gallery.dataset.riveBound === 'true') return;
       gallery.dataset.riveBound = 'true';
-      const enable = gallery.querySelector('[data-enable-rive]');
+      gallery.classList.add('is-rive-enabled');
+      hideRiveEnable(gallery.querySelector('[data-enable-rive]'));
       if (reduceMotion) {
         hydrateLazyMedia(gallery, { rive: 'off' });
-        gallery.classList.add('is-rive-enabled');
-        hideRiveEnable(enable);
         return;
       }
       hydrateLazyMedia(gallery, { rive: 'wait' });
-      const start = () => {
-        gallery.classList.add('is-rive-enabled');
-        gallery.removeAttribute('data-rive-on-demand');
-        hideRiveEnable(enable);
-        hydrateLazyMedia(gallery, { rive: 'observe' });
-      };
-      if (enable) enable.addEventListener('click', start, { once: true });
+      prefetchRiveWarmup(gallery);
+      const coarsePointer = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+      gallery.querySelectorAll('.rive-embed-card').forEach(card => {
+        const iframe = card.querySelector('iframe[data-src]');
+        if (!iframe) return;
+        if (!card.hasAttribute('tabindex')) card.tabIndex = 0;
+        const title = iframe.getAttribute('title');
+        if (title && !card.getAttribute('aria-label')) card.setAttribute('aria-label', title);
+        const play = () => requestHoverRive(iframe);
+        const pause = () => {
+          if (coarsePointer) return;
+          releaseHoverRive(iframe);
+        };
+        card.addEventListener('pointerenter', play);
+        card.addEventListener('focusin', play);
+        card.addEventListener('pointerdown', event => {
+          if (event.pointerType === 'touch' || event.pointerType === 'pen') play();
+        });
+        card.addEventListener('pointerleave', pause);
+        card.addEventListener('focusout', event => {
+          if (card.contains(event.relatedTarget)) return;
+          pause();
+        });
+      });
     });
   }
 
@@ -255,9 +340,11 @@
     const iframe = event.target;
     if (!iframe || iframe.tagName !== 'IFRAME' || !iframe.dataset.src) return;
     iframe.dataset.riveFailed = 'true';
+    hoverRiveWanted.delete(iframe);
     setRiveLive(iframe, false);
     markRiveFallback(iframe);
     reconcileLiveRive();
+    reconcileHoverRive();
   }, true);
 
   function unloadLazyMedia(container) {
@@ -273,6 +360,12 @@
     }
     container.querySelectorAll('iframe[data-src]').forEach(iframe => {
       intersectingRive.delete(iframe);
+      hoverRiveWanted.delete(iframe);
+      const timer = hoverRiveTimers.get(iframe);
+      if (timer) {
+        clearTimeout(timer);
+        hoverRiveTimers.delete(iframe);
+      }
       unmountRiveFrame(iframe);
     });
     reconcileLiveRive();
@@ -457,31 +550,12 @@
     else window.setTimeout(fn, 220);
   }
 
-  function initDecorativeMotion() {
-    if (!window.gsap || reduceMotion || motionLite) return;
-    document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
-      if (button.closest('.hero-btns')) return;
-      button.addEventListener('pointermove', event => {
-        const rect = button.getBoundingClientRect();
-        gsap.to(button, {
-          x: (event.clientX - rect.left - rect.width / 2) * .16,
-          y: (event.clientY - rect.top - rect.height / 2) * .2,
-          duration: .35, ease: 'power2.out'
-        });
-      });
-      button.addEventListener('pointerleave', () => {
-        gsap.to(button, { x: 0, y: 0, duration: .6, ease: 'elastic.out(1, .35)' });
-      });
-    });
-  }
-
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initMotion, { once: true });
   } else {
     initMotion();
   }
   initHeroReel();
-  whenIdle(initDecorativeMotion, 1600);
 
   document.addEventListener('visibilitychange', () => {
     const video = document.getElementById('heroReel');
@@ -595,10 +669,10 @@
     document.body.style.overflow = 'hidden';
     const closeBtn = projectModal.querySelector('.modal-close');
     if (closeBtn) closeBtn.focus();
-    const hasOnDemandRive = Boolean(projectModal.querySelector('[data-rive-on-demand], [data-enable-rive]'));
+    const hasHoverRive = Boolean(projectModal.querySelector('[data-rive-hover], [data-rive-on-demand], [data-enable-rive]'));
     hydrateLazyMedia(projectModal, {
       eagerVideo: true,
-      rive: reduceMotion ? 'off' : (hasOnDemandRive ? 'wait' : 'observe')
+      rive: reduceMotion ? 'off' : (hasHoverRive ? 'wait' : 'observe')
     });
     bindRiveOnDemand(projectModal);
   }
@@ -905,7 +979,7 @@
   );
   netlifyForms.forEach(bindNetlifyForm);
 
-  document.querySelectorAll('[data-hydrate-media]:not([data-rive-on-demand])').forEach(node => {
+  document.querySelectorAll('[data-hydrate-media]:not([data-rive-on-demand]):not([data-rive-hover])').forEach(node => {
     hydrateLazyMedia(node, { rive: reduceMotion ? 'off' : 'observe' });
   });
   bindRiveOnDemand(document);
