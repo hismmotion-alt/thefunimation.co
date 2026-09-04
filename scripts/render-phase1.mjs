@@ -175,7 +175,7 @@ function bazaarGallery(items = BAZAAR_ICONS) {
   return `<section class="rive-project-gallery" data-rive-hover>
     <div class="rive-project-head">
       <h3>Icon system</h3>
-      <p>Hover an icon to play. Static art first — a few live icons at a time.</p>
+      <p>Hover an icon to play. The art is ready — two live at a time.</p>
     </div>
     <div class="rive-gallery-grid">
       ${items.map(item => `<div class="rive-embed-card">

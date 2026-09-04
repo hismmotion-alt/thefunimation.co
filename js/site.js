@@ -1,7 +1,7 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const motionLite = document.body.hasAttribute('data-motion-lite');
-  const MAX_LIVE_RIVE = 3;
-  const HOVER_UNMOUNT_MS = 320;
+  const MAX_LIVE_RIVE = 2;
+  const HOVER_UNMOUNT_MS = 80;
   const hoverRiveWanted = new Map();
   const hoverRiveTimers = new WeakMap();
   let hoverRiveSeq = 0;
@@ -176,12 +176,22 @@
     document.head.appendChild(link);
   }
 
-  function prefetchRiveWarmup(gallery) {
+  function prefetchRiveWarmup() {
     ensureRivePrefetch('https://rive.app', 'preconnect');
     ensureRivePrefetch('https://rive.app', 'dns-prefetch');
-    Array.from(gallery.querySelectorAll('iframe[data-src]'))
-      .slice(0, MAX_LIVE_RIVE)
-      .forEach(iframe => ensureRivePrefetch(iframe.dataset.src, 'prefetch'));
+  }
+
+  function bazaarLiveFrames() {
+    return liveRiveFrames().filter(frame => isHoverRiveGallery(frame) && !isFailedRive(frame));
+  }
+
+  function pauseFarthestLive(except) {
+    const extras = bazaarLiveFrames().filter(frame => !except.has(frame))
+      .sort((a, b) => riveDistance(b) - riveDistance(a));
+    extras.forEach(frame => {
+      hoverRiveWanted.delete(frame);
+      unmountRiveFrame(frame);
+    });
   }
 
   function reconcileHoverRive() {
@@ -191,8 +201,8 @@
       .sort((a, b) => b[1] - a[1])
       .map(([frame]) => frame);
     const keep = new Set(ranked.slice(0, MAX_LIVE_RIVE));
-    liveRiveFrames().forEach(frame => {
-      if (!isHoverRiveGallery(frame)) return;
+    pauseFarthestLive(keep);
+    bazaarLiveFrames().forEach(frame => {
       if (!keep.has(frame)) unmountRiveFrame(frame);
     });
     keep.forEach(mountRiveFrame);
@@ -206,6 +216,17 @@
       hoverRiveTimers.delete(iframe);
     }
     hoverRiveWanted.set(iframe, ++hoverRiveSeq);
+    const live = bazaarLiveFrames();
+    if (live.length >= MAX_LIVE_RIVE && live.indexOf(iframe) === -1) {
+      const farthest = live
+        .filter(frame => frame !== iframe)
+        .sort((a, b) => riveDistance(b) - riveDistance(a))[0];
+      if (farthest) {
+        hoverRiveWanted.delete(farthest);
+        unmountRiveFrame(farthest);
+      }
+    }
+    mountRiveFrame(iframe);
     reconcileHoverRive();
   }
 
@@ -302,30 +323,61 @@
         return;
       }
       hydrateLazyMedia(gallery, { rive: 'wait' });
-      prefetchRiveWarmup(gallery);
+      prefetchRiveWarmup();
       const coarsePointer = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+      const scrollRoot = gallery.closest('.modal-overlay');
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          const iframe = iframeFromObserveTarget(entry.target);
+          if (!iframe) return;
+          if (entry.isIntersecting) {
+            intersectingRive.add(iframe);
+            return;
+          }
+          intersectingRive.delete(iframe);
+          hoverRiveWanted.delete(iframe);
+          unmountRiveFrame(iframe);
+        });
+        reconcileHoverRive();
+      }, { root: scrollRoot, rootMargin: '80px 0px', threshold: 0.01 });
+
       gallery.querySelectorAll('.rive-embed-card').forEach(card => {
         const iframe = card.querySelector('iframe[data-src]');
         if (!iframe) return;
-        if (!card.hasAttribute('tabindex')) card.tabIndex = 0;
+        if (!coarsePointer && !card.hasAttribute('tabindex')) card.tabIndex = 0;
         const title = iframe.getAttribute('title');
         if (title && !card.getAttribute('aria-label')) card.setAttribute('aria-label', title);
+        io.observe(card);
         const play = () => requestHoverRive(iframe);
-        const pause = () => {
-          if (coarsePointer) return;
-          releaseHoverRive(iframe);
-        };
-        card.addEventListener('pointerenter', play);
-        card.addEventListener('focusin', play);
+        const pause = () => releaseHoverRive(iframe);
+        if (!coarsePointer) {
+          card.addEventListener('pointerenter', play);
+          card.addEventListener('pointerleave', pause);
+          card.addEventListener('focusin', play);
+          card.addEventListener('focusout', event => {
+            if (card.contains(event.relatedTarget)) return;
+            pause();
+          });
+        }
+        let tapPoint = null;
         card.addEventListener('pointerdown', event => {
-          if (event.pointerType === 'touch' || event.pointerType === 'pen') play();
+          if (event.pointerType !== 'touch' && event.pointerType !== 'pen') return;
+          tapPoint = { id: event.pointerId, x: event.clientX, y: event.clientY };
         });
-        card.addEventListener('pointerleave', pause);
-        card.addEventListener('focusout', event => {
-          if (card.contains(event.relatedTarget)) return;
-          pause();
+        card.addEventListener('pointerup', event => {
+          if (!tapPoint || event.pointerId !== tapPoint.id) return;
+          const dx = Math.abs(event.clientX - tapPoint.x);
+          const dy = Math.abs(event.clientY - tapPoint.y);
+          tapPoint = null;
+          if (dx > 12 || dy > 12) return;
+          if (isLiveRiveSrc(iframe.getAttribute('src'))) pause();
+          else play();
+        });
+        card.addEventListener('pointercancel', () => {
+          tapPoint = null;
         });
       });
+      gallery._lazyIo = io;
     });
   }
 
