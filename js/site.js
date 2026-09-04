@@ -1,5 +1,24 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motionLite = document.body.hasAttribute('data-motion-lite');
+  const MAX_LIVE_RIVE = 2;
   let lenis;
+
+  const PROJECT_MODAL_IDS = {
+    'ismed-clim': 'projectModal',
+    'hancock-health': 'hancockProjectModal',
+    'before-health': 'beforeHealthProjectModal',
+    'sela-cloud': 'selaCloudProjectModal',
+    'upfit-supply': 'upfitSupplyProjectModal',
+    'mtech-systems': 'mtechProjectModal',
+    'greenopia': 'greenopiaProjectModal',
+    'secufy-sos': 'secufyProjectModal',
+    'farmerlink': 'farmerLinkProjectModal',
+    'buddywerking': 'buddywerkingProjectModal',
+    'carakit': 'carakitProjectModal',
+    'gifybox': 'gifyboxProjectModal',
+    'maven': 'mavenProjectModal',
+    'bazaar': 'bazaarProjectModal'
+  };
 
   function loadVideoSources(video) {
     let changed = false;
@@ -12,42 +31,171 @@
     if (changed) video.load();
   }
 
-  function hydrateLazyMedia(container) {
+  function markRiveFallback(iframe) {
+    const card = iframe.closest('.rive-embed-card, .work-card-rive') || iframe.parentElement;
+    if (card) card.classList.add('rive-static');
+    iframe.setAttribute('hidden', '');
+    iframe.removeAttribute('src');
+  }
+
+  const intersectingRive = new Set();
+
+  function isLiveRiveSrc(src) {
+    return Boolean(src) && src !== 'about:blank';
+  }
+
+  function liveRiveFrames() {
+    return Array.from(document.querySelectorAll('iframe[data-src]')).filter(frame => isLiveRiveSrc(frame.getAttribute('src')));
+  }
+
+  function riveDistance(iframe) {
+    const rect = iframe.getBoundingClientRect();
+    return Math.abs(rect.top + rect.height / 2 - window.innerHeight / 2);
+  }
+
+  function mountRiveFrame(iframe) {
+    if (reduceMotion || !iframe.dataset.src || isLiveRiveSrc(iframe.getAttribute('src'))) return;
+    iframe.removeAttribute('hidden');
+    iframe.src = iframe.dataset.src;
+  }
+
+  function unmountRiveFrame(iframe) {
+    if (!iframe.dataset.src) return;
+    iframe.removeAttribute('src');
+  }
+
+  function forgetRiveFrames(container) {
+    if (!container) return;
+    container.querySelectorAll('iframe[data-src]').forEach(frame => intersectingRive.delete(frame));
+  }
+
+  function reconcileLiveRive() {
+    if (reduceMotion) return;
+    const ranked = Array.from(intersectingRive).sort((a, b) => riveDistance(a) - riveDistance(b));
+    const keep = new Set(ranked.slice(0, MAX_LIVE_RIVE));
+    liveRiveFrames().forEach(frame => {
+      if (!keep.has(frame)) unmountRiveFrame(frame);
+    });
+    keep.forEach(mountRiveFrame);
+  }
+
+  function riveHost(iframe) {
+    return iframe.closest('.rive-embed-card, .work-card-rive') || iframe;
+  }
+
+  function riveNearViewport(node) {
+    const rect = node.getBoundingClientRect();
+    return rect.bottom > -200 && rect.top < window.innerHeight + 200 && (rect.width > 0 || rect.height > 0);
+  }
+
+  function riveFramesToObserve(container) {
+    return Array.from(container.querySelectorAll('iframe[data-src]')).filter(iframe => !iframe.closest('[data-rive-on-demand]'));
+  }
+
+  function iframeFromObserveTarget(target) {
+    return target.matches('iframe') ? target : target.querySelector('iframe[data-src]');
+  }
+
+  function hydrateLazyMedia(container, options) {
+    if (!container) return;
+    const settings = Object.assign({ eagerVideo: false, rive: 'observe' }, options || {});
     container.querySelectorAll('img[data-src]').forEach(img => {
       if (!img.getAttribute('src')) img.src = img.dataset.src;
     });
-    container.querySelectorAll('video').forEach(loadVideoSources);
 
     const scrollRoot = container.classList && container.classList.contains('modal-overlay')
       ? container
       : null;
-    const io = new IntersectionObserver((entries, observer) => {
+
+    const videoIo = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
-        const iframe = entry.target;
-        if (iframe.dataset.src && !iframe.getAttribute('src')) {
-          iframe.src = iframe.dataset.src;
-        }
-        observer.unobserve(iframe);
+        loadVideoSources(entry.target);
+        observer.unobserve(entry.target);
       });
-    }, { root: scrollRoot, rootMargin: '220px 0px', threshold: 0.01 });
+    }, { root: scrollRoot, rootMargin: '120px 0px', threshold: 0.01 });
 
-    container.querySelectorAll('iframe[data-src]').forEach(iframe => {
-      if (iframe.getAttribute('src')) return;
-      io.observe(iframe);
+    container.querySelectorAll('video').forEach(video => {
+      if (settings.eagerVideo) loadVideoSources(video);
+      else videoIo.observe(video);
     });
-    if (container._lazyIo) container._lazyIo.disconnect();
-    container._lazyIo = io;
-  }
 
-  function unloadLazyMedia(container) {
+    if (container._lazyVideoIo) container._lazyVideoIo.disconnect();
+    container._lazyVideoIo = videoIo;
+
     if (container._lazyIo) {
+      forgetRiveFrames(container);
       container._lazyIo.disconnect();
       container._lazyIo = null;
     }
+
+    if (reduceMotion || settings.rive === 'off') {
+      container.querySelectorAll('iframe[data-src]').forEach(markRiveFallback);
+      reconcileLiveRive();
+      return;
+    }
+
+    if (settings.rive === 'wait') {
+      container.querySelectorAll('iframe[data-src]').forEach(unmountRiveFrame);
+      reconcileLiveRive();
+      return;
+    }
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const iframe = iframeFromObserveTarget(entry.target);
+        if (!iframe) return;
+        if (entry.isIntersecting) intersectingRive.add(iframe);
+        else intersectingRive.delete(iframe);
+      });
+      reconcileLiveRive();
+    }, { root: scrollRoot, rootMargin: '200px 0px', threshold: 0.01 });
+
+    riveFramesToObserve(container).forEach(iframe => {
+      const host = riveHost(iframe);
+      io.observe(host);
+      if (riveNearViewport(host)) intersectingRive.add(iframe);
+    });
+    container._lazyIo = io;
+    reconcileLiveRive();
+  }
+
+  function bindRiveOnDemand(root) {
+    (root || document).querySelectorAll('[data-rive-on-demand]').forEach(gallery => {
+      if (gallery.dataset.riveBound === 'true') return;
+      gallery.dataset.riveBound = 'true';
+      const enable = gallery.querySelector('[data-enable-rive]');
+      if (reduceMotion) {
+        hydrateLazyMedia(gallery, { rive: 'off' });
+        if (enable) enable.hidden = true;
+        return;
+      }
+      hydrateLazyMedia(gallery, { rive: 'wait' });
+      const start = () => {
+        gallery.removeAttribute('data-rive-on-demand');
+        if (enable) enable.hidden = true;
+        hydrateLazyMedia(gallery, { rive: 'observe' });
+      };
+      if (enable) enable.addEventListener('click', start, { once: true });
+    });
+  }
+
+  function unloadLazyMedia(container) {
+    if (!container) return;
+    if (container._lazyIo) {
+      forgetRiveFrames(container);
+      container._lazyIo.disconnect();
+      container._lazyIo = null;
+    }
+    if (container._lazyVideoIo) {
+      container._lazyVideoIo.disconnect();
+      container._lazyVideoIo = null;
+    }
     container.querySelectorAll('iframe[data-src]').forEach(iframe => {
+      intersectingRive.delete(iframe);
       iframe.removeAttribute('src');
     });
+    reconcileLiveRive();
     container.querySelectorAll('video').forEach(video => {
       video.pause();
       video.querySelectorAll('source[data-src]').forEach(source => {
@@ -95,7 +243,7 @@
   }
 
   function initMotion() {
-    if (!window.gsap || !window.ScrollTrigger || !window.Lenis || reduceMotion) {
+    if (!window.gsap || !window.ScrollTrigger || !window.Lenis || reduceMotion || motionLite) {
       revealFallback();
       return;
     }
@@ -112,7 +260,6 @@
     gsap.ticker.add(time => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
 
-    // Existing CSS reveal classes are now controlled by GSAP.
     gsap.set('.reveal, .reveal-scale, .why-point', { opacity: 1, y: 0, scale: 1 });
     gsap.set('.reveal-stagger > *', { opacity: 1, y: 0 });
 
@@ -123,7 +270,6 @@
 
     const heroStage = document.querySelector('.hero-stage');
     const motionCard = heroStage ? heroStage.querySelector('.lottie-frame') : null;
-    // Stage chips and hero blobs are CSS-hidden; skip their GSAP loops.
     if (heroStage && motionCard && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
       const tiltY = gsap.quickTo(motionCard, 'rotationY', { duration: .65, ease: 'power3.out' });
       const tiltX = gsap.quickTo(motionCard, 'rotationX', { duration: .65, ease: 'power3.out' });
@@ -144,7 +290,7 @@
       });
     }
 
-    if (window.matchMedia('(min-width: 901px)').matches) {
+    if (document.querySelector('.hero') && window.matchMedia('(min-width: 901px)').matches) {
       gsap.to('.hero-content', {
         yPercent: 22, opacity: .25, scale: .94, ease: 'none',
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 }
@@ -167,13 +313,14 @@
       ['.why-points', '.why-point'],
       ['.testimonials-grid', '.test-card']
     ].forEach(([trigger, targets]) => {
+      if (!document.querySelector(trigger)) return;
       gsap.from(targets, {
         y: 58, opacity: 0, scale: .96, stagger: .1, duration: .8, ease: 'power3.out',
         scrollTrigger: { trigger, start: 'top 82%', once: true }
       });
     });
 
-    document.querySelectorAll('.work-card:not(.extra-project)').forEach((card, index) => {
+    if (!document.querySelector('[data-work-filters]')) document.querySelectorAll('.work-card:not(.extra-project)').forEach((card, index) => {
       gsap.from(card, {
         x: index % 2 ? 70 : -70, y: 30, opacity: 0, rotation: index % 2 ? 1.5 : -1.5,
         duration: 1, ease: 'power3.out',
@@ -188,29 +335,39 @@
       }
     });
 
-    gsap.from('.process-step', {
-      y: 70, opacity: 0, rotationX: -12, transformOrigin: 'center bottom',
-      stagger: .12, duration: .9, ease: 'power3.out',
-      scrollTrigger: { trigger: '.process-steps', start: 'top 80%', once: true }
-    });
-    gsap.to('.process-steps', {
-      xPercent: -2.5, ease: 'none',
-      scrollTrigger: { trigger: '.process-section', start: 'top bottom', end: 'bottom top', scrub: 1.5 }
-    });
+    if (document.querySelector('.process-step')) {
+      gsap.from('.process-step', {
+        y: 70, opacity: 0, rotationX: -12, transformOrigin: 'center bottom',
+        stagger: .12, duration: .9, ease: 'power3.out',
+        scrollTrigger: { trigger: '.process-steps', start: 'top 80%', once: true }
+      });
+    }
+    if (document.querySelector('.process-section') && document.querySelector('.process-steps')) {
+      gsap.to('.process-steps', {
+        xPercent: -2.5, ease: 'none',
+        scrollTrigger: { trigger: '.process-section', start: 'top bottom', end: 'bottom top', scrub: 1.5 }
+      });
+    }
 
-    gsap.from('.faq-item', {
-      x: -38, opacity: 0, stagger: .08, duration: .7, ease: 'power3.out',
-      scrollTrigger: { trigger: '.faq-list', start: 'top 82%', once: true }
-    });
-    gsap.from('.final-cta h2, .final-cta p, .final-cta .btn-primary', {
-      y: 55, opacity: 0, stagger: .14, duration: .9, ease: 'power3.out',
-      scrollTrigger: { trigger: '.final-cta', start: 'top 74%', once: true }
-    });
+    if (document.querySelector('.faq-item')) {
+      gsap.from('.faq-item', {
+        x: -38, opacity: 0, stagger: .08, duration: .7, ease: 'power3.out',
+        scrollTrigger: { trigger: '.faq-list', start: 'top 82%', once: true }
+      });
+    }
+    if (document.querySelector('.final-cta')) {
+      gsap.from('.final-cta h2, .final-cta p, .final-cta .btn-primary', {
+        y: 55, opacity: 0, stagger: .14, duration: .9, ease: 'power3.out',
+        scrollTrigger: { trigger: '.final-cta', start: 'top 74%', once: true }
+      });
+    }
 
-    gsap.to('.scroll-progress', {
-      scaleX: 1, ease: 'none',
-      scrollTrigger: { start: 0, end: 'max', scrub: .25 }
-    });
+    if (document.querySelector('.scroll-progress')) {
+      gsap.to('.scroll-progress', {
+        scaleX: 1, ease: 'none',
+        scrollTrigger: { start: 0, end: 'max', scrub: .25 }
+      });
+    }
 
     window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
   }
@@ -221,7 +378,7 @@
   }
 
   function initDecorativeMotion() {
-    if (!window.gsap || reduceMotion) return;
+    if (!window.gsap || reduceMotion || motionLite) return;
     document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
       if (button.closest('.hero-btns')) return;
       button.addEventListener('pointermove', event => {
@@ -262,12 +419,13 @@
     }
   });
 
-  // Nav shadow on scroll
-  window.addEventListener('scroll', () => {
-    document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 40);
-  }, { passive: true });
+  const navEl = document.querySelector('nav');
+  if (navEl) {
+    window.addEventListener('scroll', () => {
+      navEl.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+  }
 
-  // Animated stat counters
   const countObs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting && !e.target.dataset.counted) {
@@ -289,9 +447,8 @@
   }, { threshold: 0.5 });
   document.querySelectorAll('.stat-num').forEach(el => countObs.observe(el));
 
-  // Card tilt is decorative; attach after first paint to keep TBT down.
   whenIdle(() => {
-    if (reduceMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    if (reduceMotion || motionLite || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
     document.querySelectorAll('.service-card, .test-card').forEach(card => {
       card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
@@ -305,12 +462,12 @@
     });
   }, 1800);
 
-  // Conversational project brief
   const wizardSteps = Array.from(document.querySelectorAll('.wizard-step'));
   const wizardProgress = Array.from(document.querySelectorAll('.wizard-progress span'));
   let currentWizardStep = 0;
 
   function showWizardStep(index) {
+    if (!wizardSteps.length) return;
     currentWizardStep = Math.max(0, Math.min(index, wizardSteps.length - 1));
     wizardSteps.forEach((step, stepIndex) => step.classList.toggle('active', stepIndex === currentWizardStep));
     wizardProgress.forEach((bar, barIndex) => bar.classList.toggle('active', barIndex <= currentWizardStep));
@@ -320,7 +477,7 @@
 
   document.querySelectorAll('[data-next]').forEach(button => {
     button.addEventListener('click', () => {
-      const field = wizardSteps[currentWizardStep].querySelector('input, textarea');
+      const field = wizardSteps[currentWizardStep] && wizardSteps[currentWizardStep].querySelector('input, textarea');
       if (field && !field.reportValidity()) return;
       showWizardStep(currentWizardStep + 1);
     });
@@ -329,31 +486,45 @@
     button.addEventListener('click', () => showWizardStep(currentWizardStep - 1));
   });
 
-  // Modal open/close
+  const contactModal = document.getElementById('contactModal');
+
   function openModal(e) {
     if (e) e.preventDefault();
+    if (!contactModal) {
+      window.location.href = '/contact/';
+      return;
+    }
     showWizardStep(0);
-    document.querySelector('#projectForm .form-status').textContent = '';
-    document.getElementById('contactModal').classList.add('active');
+    const status = document.querySelector('#projectForm .form-status');
+    if (status) status.textContent = '';
+    contactModal.classList.add('active');
     document.body.style.overflow = 'hidden';
     if (lenis) lenis.stop();
   }
   function closeModal() {
-    document.getElementById('contactModal').classList.remove('active');
+    if (!contactModal) return;
+    contactModal.classList.remove('active');
     document.body.style.overflow = '';
     if (lenis) lenis.start();
   }
   function openNamedProjectModal(id) {
     const projectModal = document.getElementById(id);
+    if (!projectModal) return;
     projectModal.classList.add('active');
     projectModal.scrollTop = 0;
     document.body.style.overflow = 'hidden';
     const closeBtn = projectModal.querySelector('.modal-close');
     if (closeBtn) closeBtn.focus();
-    hydrateLazyMedia(projectModal);
+    const hasOnDemandRive = Boolean(projectModal.querySelector('[data-rive-on-demand], [data-enable-rive]'));
+    hydrateLazyMedia(projectModal, {
+      eagerVideo: true,
+      rive: reduceMotion ? 'off' : (hasOnDemandRive ? 'wait' : 'observe')
+    });
+    bindRiveOnDemand(projectModal);
   }
   function closeNamedProjectModal(id) {
     const projectModal = document.getElementById(id);
+    if (!projectModal) return;
     projectModal.classList.remove('active');
     unloadLazyMedia(projectModal);
     document.body.style.overflow = '';
@@ -386,192 +557,145 @@
   function closeMavenProjectModal() { closeNamedProjectModal('mavenProjectModal'); }
   function openBazaarProjectModal() { openNamedProjectModal('bazaarProjectModal'); }
   function closeBazaarProjectModal() { closeNamedProjectModal('bazaarProjectModal'); }
-  // Close on overlay click
-  document.getElementById('contactModal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
-  document.getElementById('projectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeProjectModal();
-  });
-  document.getElementById('hancockProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeHancockProjectModal();
-  });
-  document.getElementById('beforeHealthProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeBeforeHealthProjectModal();
-  });
-  document.getElementById('selaCloudProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeSelaCloudProjectModal();
-  });
-  document.getElementById('upfitSupplyProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeUpfitSupplyProjectModal();
-  });
-  document.getElementById('mtechProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeMtechProjectModal();
-  });
-  document.getElementById('greenopiaProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeGreenopiaProjectModal();
-  });
-  document.getElementById('secufyProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeSecufyProjectModal();
-  });
-  document.getElementById('farmerLinkProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeFarmerLinkProjectModal();
-  });
-  document.getElementById('buddywerkingProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeBuddywerkingProjectModal();
-  });
-  document.getElementById('carakitProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeCarakitProjectModal();
-  });
-  document.getElementById('gifyboxProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeGifyboxProjectModal();
-  });
-  document.getElementById('mavenProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeMavenProjectModal();
-  });
-  document.getElementById('bazaarProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeBazaarProjectModal();
-  });
-  // Close on Escape
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      closeModal();
-      closeProjectModal();
-      closeHancockProjectModal();
-      closeBeforeHealthProjectModal();
-      closeSelaCloudProjectModal();
-      closeUpfitSupplyProjectModal();
-      closeMtechProjectModal();
-      closeGreenopiaProjectModal();
-      closeSecufyProjectModal();
-      closeFarmerLinkProjectModal();
-      closeBuddywerkingProjectModal();
-      closeCarakitProjectModal();
-      closeGifyboxProjectModal();
-      closeMavenProjectModal();
-      closeBazaarProjectModal();
-    }
-  });
-  // Wire up all CTA buttons
-  document.querySelectorAll('.btn-primary, .form-submit').forEach(btn => {
-    if (btn.classList.contains('form-submit')) return;
-    btn.addEventListener('click', openModal);
-  });
 
-  // Mobile navigation
-  const nav = document.querySelector('nav');
-  const navToggle = document.querySelector('.nav-toggle');
-  navToggle.addEventListener('click', () => {
-    const isOpen = nav.classList.toggle('menu-open');
-    navToggle.setAttribute('aria-expanded', String(isOpen));
-    navToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
-    navToggle.textContent = isOpen ? '✕' : '☰';
-  });
-  document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-      nav.classList.remove('menu-open');
-      navToggle.setAttribute('aria-expanded', 'false');
-      navToggle.setAttribute('aria-label', 'Open navigation');
-      navToggle.textContent = '☰';
+  window.openModal = openModal;
+  window.closeModal = closeModal;
+  window.openProjectModal = openProjectModal;
+  window.closeProjectModal = closeProjectModal;
+  window.openHancockProjectModal = openHancockProjectModal;
+  window.closeHancockProjectModal = closeHancockProjectModal;
+  window.openBeforeHealthProjectModal = openBeforeHealthProjectModal;
+  window.closeBeforeHealthProjectModal = closeBeforeHealthProjectModal;
+  window.openSelaCloudProjectModal = openSelaCloudProjectModal;
+  window.closeSelaCloudProjectModal = closeSelaCloudProjectModal;
+  window.openUpfitSupplyProjectModal = openUpfitSupplyProjectModal;
+  window.closeUpfitSupplyProjectModal = closeUpfitSupplyProjectModal;
+  window.openMtechProjectModal = openMtechProjectModal;
+  window.closeMtechProjectModal = closeMtechProjectModal;
+  window.openGreenopiaProjectModal = openGreenopiaProjectModal;
+  window.closeGreenopiaProjectModal = closeGreenopiaProjectModal;
+  window.openSecufyProjectModal = openSecufyProjectModal;
+  window.closeSecufyProjectModal = closeSecufyProjectModal;
+  window.openFarmerLinkProjectModal = openFarmerLinkProjectModal;
+  window.closeFarmerLinkProjectModal = closeFarmerLinkProjectModal;
+  window.openBuddywerkingProjectModal = openBuddywerkingProjectModal;
+  window.closeBuddywerkingProjectModal = closeBuddywerkingProjectModal;
+  window.openCarakitProjectModal = openCarakitProjectModal;
+  window.closeCarakitProjectModal = closeCarakitProjectModal;
+  window.openGifyboxProjectModal = openGifyboxProjectModal;
+  window.closeGifyboxProjectModal = closeGifyboxProjectModal;
+  window.openMavenProjectModal = openMavenProjectModal;
+  window.closeMavenProjectModal = closeMavenProjectModal;
+  window.openBazaarProjectModal = openBazaarProjectModal;
+  window.closeBazaarProjectModal = closeBazaarProjectModal;
+
+  if (contactModal) {
+    contactModal.addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+  }
+  Object.values(PROJECT_MODAL_IDS).forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('click', function(e) {
+      if (e.target === this) closeNamedProjectModal(id);
     });
   });
 
-  // Expandable portfolio
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    closeModal();
+    Object.values(PROJECT_MODAL_IDS).forEach(closeNamedProjectModal);
+  });
+
+  document.querySelectorAll('[data-open-contact]').forEach(btn => {
+    btn.addEventListener('click', openModal);
+  });
+
+  const nav = document.querySelector('nav');
+  const navToggle = document.querySelector('.nav-toggle');
+  if (nav && navToggle) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('menu-open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+      navToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
+      navToggle.textContent = isOpen ? '✕' : '☰';
+    });
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        nav.classList.remove('menu-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.setAttribute('aria-label', 'Open navigation');
+        navToggle.textContent = '☰';
+      });
+    });
+  }
+
   const workGrid = document.querySelector('.work-grid');
   const showMoreButton = document.querySelector('.show-more-btn');
   const extraProjects = document.querySelectorAll('.extra-project');
-  showMoreButton.addEventListener('click', () => {
-    const expanding = !workGrid.classList.contains('expanded');
-    showMoreButton.setAttribute('aria-expanded', String(expanding));
-    showMoreButton.querySelector('.show-more-label').textContent = expanding ? 'Show less' : 'Show more';
+  if (workGrid && showMoreButton) {
+    showMoreButton.addEventListener('click', () => {
+      const expanding = !workGrid.classList.contains('expanded');
+      showMoreButton.setAttribute('aria-expanded', String(expanding));
+      const label = showMoreButton.querySelector('.show-more-label');
+      if (label) label.textContent = expanding ? 'Show less' : 'Show more';
 
-    if (expanding) {
-      workGrid.classList.add('expanded');
-      hydrateLazyMedia(workGrid);
-      if (window.gsap) {
-        gsap.fromTo(extraProjects,
-          { opacity: 0, y: 50, scale: .97 },
-          { opacity: 1, y: 0, scale: 1, stagger: .12, duration: .8, ease: 'power3.out', onComplete: () => ScrollTrigger.refresh() }
-        );
-      }
-    } else if (window.gsap) {
-      gsap.to(extraProjects, {
-        opacity: 0, y: 30, stagger: .06, duration: .35, ease: 'power2.in',
-        onComplete: () => {
-          workGrid.classList.remove('expanded');
-          unloadLazyMedia(workGrid);
-          gsap.set(extraProjects, { clearProps: 'opacity,transform' });
-          ScrollTrigger.refresh();
+      if (expanding) {
+        workGrid.classList.add('expanded');
+        hydrateLazyMedia(workGrid, { rive: reduceMotion ? 'off' : 'observe' });
+        if (window.gsap) {
+          gsap.fromTo(extraProjects,
+            { opacity: 0, y: 50, scale: .97 },
+            { opacity: 1, y: 0, scale: 1, stagger: .12, duration: .8, ease: 'power3.out', onComplete: () => window.ScrollTrigger && ScrollTrigger.refresh() }
+          );
         }
-      });
-    } else {
-      workGrid.classList.remove('expanded');
-      unloadLazyMedia(workGrid);
-    }
-  });
+      } else if (window.gsap) {
+        gsap.to(extraProjects, {
+          opacity: 0, y: 30, stagger: .06, duration: .35, ease: 'power2.in',
+          onComplete: () => {
+            workGrid.classList.remove('expanded');
+            unloadLazyMedia(workGrid);
+            gsap.set(extraProjects, { clearProps: 'opacity,transform' });
+            if (window.ScrollTrigger) ScrollTrigger.refresh();
+          }
+        });
+      } else {
+        workGrid.classList.remove('expanded');
+        unloadLazyMedia(workGrid);
+      }
+    });
+  }
 
-  // Portfolio cards lead naturally into a project conversation
+  const modalOpeners = {
+    'ismed-clim': openProjectModal,
+    'hancock-health': openHancockProjectModal,
+    'before-health': openBeforeHealthProjectModal,
+    'sela-cloud': openSelaCloudProjectModal,
+    'upfit-supply': openUpfitSupplyProjectModal,
+    'mtech-systems': openMtechProjectModal,
+    'greenopia': openGreenopiaProjectModal,
+    'secufy-sos': openSecufyProjectModal,
+    'farmerlink': openFarmerLinkProjectModal,
+    'buddywerking': openBuddywerkingProjectModal,
+    'carakit': openCarakitProjectModal,
+    'gifybox': openGifyboxProjectModal,
+    'maven': openMavenProjectModal,
+    'bazaar': openBazaarProjectModal
+  };
+
   document.querySelectorAll('.work-card').forEach(card => {
+    if (card.tagName === 'A') return;
     const openProject = () => {
-      if (card.dataset.project === 'ismed-clim') {
-        openProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'hancock-health') {
-        openHancockProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'before-health') {
-        openBeforeHealthProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'sela-cloud') {
-        openSelaCloudProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'upfit-supply') {
-        openUpfitSupplyProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'mtech-systems') {
-        openMtechProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'greenopia') {
-        openGreenopiaProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'secufy-sos') {
-        openSecufyProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'farmerlink') {
-        openFarmerLinkProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'buddywerking') {
-        openBuddywerkingProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'carakit') {
-        openCarakitProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'gifybox') {
-        openGifyboxProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'maven') {
-        openMavenProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'bazaar') {
-        openBazaarProjectModal();
+      const opener = modalOpeners[card.dataset.project];
+      if (opener) {
+        opener();
         return;
       }
       openModal();
-      const title = card.querySelector('h3').textContent;
-      document.getElementById('projectDetails').value = 'I’m interested in a project similar to ' + title + '.';
+      const title = card.querySelector('h3');
+      const details = document.getElementById('projectDetails');
+      if (title && details) details.value = 'I’m interested in a project similar to ' + title.textContent + '.';
     };
     card.addEventListener('click', openProject);
     card.addEventListener('keydown', e => {
@@ -582,27 +706,43 @@
     });
   });
 
-  // Guided chat
+  const requestedProject = new URLSearchParams(window.location.search).get('project');
+  if (requestedProject && modalOpeners[requestedProject] && document.getElementById(PROJECT_MODAL_IDS[requestedProject])) {
+    modalOpeners[requestedProject]();
+  }
+
   const chatLauncher = document.querySelector('.chat-launcher');
   const chatPanel = document.querySelector('.chat-panel');
-  function setChat(open) {
-    chatPanel.classList.toggle('open', open);
-    chatLauncher.setAttribute('aria-expanded', String(open));
-    chatLauncher.textContent = open ? '✕' : '✦';
+  if (chatLauncher && chatPanel) {
+    function setChat(open) {
+      chatPanel.classList.toggle('open', open);
+      chatLauncher.setAttribute('aria-expanded', String(open));
+      chatLauncher.textContent = open ? '✕' : '✦';
+    }
+    chatLauncher.addEventListener('click', () => setChat(!chatPanel.classList.contains('open')));
+    const chatClose = document.querySelector('.chat-close');
+    if (chatClose) chatClose.addEventListener('click', () => setChat(false));
+    const chatProject = document.querySelector('[data-chat-project]');
+    if (chatProject) {
+      chatProject.addEventListener('click', () => {
+        setChat(false);
+        openModal();
+      });
+    }
+    const chatWork = document.querySelector('[data-chat-work]');
+    if (chatWork) {
+      chatWork.addEventListener('click', () => {
+        setChat(false);
+        if (document.getElementById('work')) {
+          if (lenis) lenis.scrollTo('#work', { offset: -70 });
+          else document.querySelector('#work').scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.location.href = '/work/';
+        }
+      });
+    }
   }
-  chatLauncher.addEventListener('click', () => setChat(!chatPanel.classList.contains('open')));
-  document.querySelector('.chat-close').addEventListener('click', () => setChat(false));
-  document.querySelector('[data-chat-project]').addEventListener('click', () => {
-    setChat(false);
-    openModal();
-  });
-  document.querySelector('[data-chat-work]').addEventListener('click', () => {
-    setChat(false);
-    if (lenis) lenis.scrollTo('#work', { offset: -70 });
-    else document.querySelector('#work').scrollIntoView({ behavior: 'smooth' });
-  });
 
-  // Count a Google Ads lead only after Netlify accepts the form submission.
   function reportConsultationConversion() {
     if (typeof window.gtag !== 'function') return;
     window.gtag('event', 'conversion', {
@@ -610,50 +750,98 @@
     });
   }
 
-  // Submit project inquiries to Netlify Forms without leaving the page.
-  document.getElementById('projectForm').addEventListener('submit', async e => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const status = form.querySelector('.form-status');
-    const submitButton = form.querySelector('[type="submit"]');
-    const originalLabel = submitButton.textContent;
+  function bindNetlifyForm(form) {
+    if (!form || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const status = form.querySelector('.form-status');
+      const submitButton = form.querySelector('[type="submit"]');
+      const originalLabel = submitButton ? submitButton.textContent : '';
 
-    submitButton.disabled = true;
-    submitButton.textContent = 'Sending…';
-    form.setAttribute('aria-busy', 'true');
-    status.style.color = 'var(--purple)';
-    status.textContent = 'Sending your project brief…';
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending…';
+      }
+      form.setAttribute('aria-busy', 'true');
+      if (status) {
+        status.style.color = 'var(--purple)';
+        status.textContent = 'Sending your project brief…';
+      }
 
-    try {
-      const response = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(new FormData(form)).toString()
-      });
+      try {
+        const response = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(new FormData(form)).toString()
+        });
 
-      if (!response.ok) throw new Error(`Form submission failed: ${response.status}`);
+        if (!response.ok) throw new Error(`Form submission failed: ${response.status}`);
 
-      reportConsultationConversion();
-      status.style.color = '#147d61';
-      status.textContent = 'Thanks! Your message was sent. We’ll reply within one business day.';
-      submitButton.textContent = 'Sent ✓';
-      form.reset();
+        reportConsultationConversion();
+        if (status) {
+          status.style.color = '#147d61';
+          status.textContent = 'Thanks! Your message was sent. We’ll reply within one business day.';
+        }
+        if (submitButton) submitButton.textContent = 'Sent ✓';
+        form.reset();
 
-      window.setTimeout(() => {
-        closeModal();
-        showWizardStep(0);
-        status.textContent = '';
-        submitButton.textContent = originalLabel;
-        submitButton.disabled = false;
-      }, 2200);
-    } catch (error) {
-      console.error(error);
-      status.style.color = '#c23b2a';
-      status.textContent = 'Message could not be sent. Please email hello@thefunimation.co.';
-      submitButton.textContent = originalLabel;
-      submitButton.disabled = false;
-    } finally {
-      form.removeAttribute('aria-busy');
-      status.scrollIntoView({ block: 'nearest' });
-    }
+        window.setTimeout(() => {
+          closeModal();
+          showWizardStep(0);
+          if (status) status.textContent = '';
+          if (submitButton) {
+            submitButton.textContent = originalLabel;
+            submitButton.disabled = false;
+          }
+        }, 2200);
+      } catch (error) {
+        console.error(error);
+        if (status) {
+          status.style.color = '#c23b2a';
+          status.textContent = 'Message could not be sent. Please email hello@thefunimation.co.';
+        }
+        if (submitButton) {
+          submitButton.textContent = originalLabel;
+          submitButton.disabled = false;
+        }
+      } finally {
+        form.removeAttribute('aria-busy');
+        if (status) status.scrollIntoView({ block: 'nearest' });
+      }
+    });
+  }
+
+  // Netlify strips data-netlify / netlify-honeypot from served HTML after
+  // detecting the form at build time, so do not bind on those attributes alone.
+  const netlifyForms = new Set(
+    [
+      document.getElementById('projectForm'),
+      document.getElementById('contactForm'),
+      ...document.querySelectorAll('form[name="project-brief"], form[data-netlify="true"]')
+    ].filter(Boolean)
+  );
+  netlifyForms.forEach(bindNetlifyForm);
+
+  document.querySelectorAll('[data-hydrate-media]:not([data-rive-on-demand])').forEach(node => {
+    hydrateLazyMedia(node, { rive: reduceMotion ? 'off' : 'observe' });
   });
+  bindRiveOnDemand(document);
+
+  const filterBar = document.querySelector('[data-work-filters]');
+  if (filterBar && workGrid) {
+    filterBar.addEventListener('click', event => {
+      const button = event.target.closest('[data-filter]');
+      if (!button) return;
+      const filter = button.dataset.filter;
+      filterBar.querySelectorAll('[data-filter]').forEach(btn => {
+        btn.classList.toggle('active', btn === button);
+        btn.setAttribute('aria-pressed', String(btn === button));
+      });
+      workGrid.querySelectorAll('.work-card').forEach(card => {
+        const tags = (card.dataset.filters || '').split(/\s+/);
+        const show = filter === 'all' || tags.includes(filter);
+        card.classList.toggle('is-hidden', !show);
+      });
+    });
+  }
