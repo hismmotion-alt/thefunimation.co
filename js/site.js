@@ -79,8 +79,21 @@
     keep.forEach(mountRiveFrame);
   }
 
+  function riveHost(iframe) {
+    return iframe.closest('.rive-embed-card, .work-card-rive') || iframe;
+  }
+
+  function riveNearViewport(node) {
+    const rect = node.getBoundingClientRect();
+    return rect.bottom > -200 && rect.top < window.innerHeight + 200 && (rect.width > 0 || rect.height > 0);
+  }
+
   function riveFramesToObserve(container) {
     return Array.from(container.querySelectorAll('iframe[data-src]')).filter(iframe => !iframe.closest('[data-rive-on-demand]'));
+  }
+
+  function iframeFromObserveTarget(target) {
+    return target.matches('iframe') ? target : target.querySelector('iframe[data-src]');
   }
 
   function hydrateLazyMedia(container, options) {
@@ -130,14 +143,21 @@
 
     const io = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) intersectingRive.add(entry.target);
-        else intersectingRive.delete(entry.target);
+        const iframe = iframeFromObserveTarget(entry.target);
+        if (!iframe) return;
+        if (entry.isIntersecting) intersectingRive.add(iframe);
+        else intersectingRive.delete(iframe);
       });
       reconcileLiveRive();
     }, { root: scrollRoot, rootMargin: '200px 0px', threshold: 0.01 });
 
-    riveFramesToObserve(container).forEach(iframe => io.observe(iframe));
+    riveFramesToObserve(container).forEach(iframe => {
+      const host = riveHost(iframe);
+      io.observe(host);
+      if (riveNearViewport(host)) intersectingRive.add(iframe);
+    });
     container._lazyIo = io;
+    reconcileLiveRive();
   }
 
   function bindRiveOnDemand(root) {
