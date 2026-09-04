@@ -153,7 +153,7 @@ ${cta('Give Your App a More Natural Sense of Motion', 'Whether you need UI motio
     body: `<header class="page-hero">
   <div class="section-inner">
     <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/services/">Services</a><span>/</span><span>Character Animation</span></nav>
-    <p class="page-kicker">Character animation studio</p>
+    <p class="page-kicker">Character animation</p>
     <h1>Characters that make a product feel human.</h1>
     <p class="lead">Characters can make a complex product feel more human, turn an abstract idea into a story, and give audiences something memorable to connect with. Funimation is a character animation studio creating custom animated characters, mascots, brand personalities, and story-driven scenes for SaaS companies, startups, campaigns, websites, and digital products.</p>
     ${HERO_CTAS}
@@ -245,7 +245,7 @@ ${cta('Have a Character in Mind?', 'Whether you are starting with a rough idea, 
     body: `<header class="page-hero">
   <div class="section-inner">
     <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/services/">Services</a><span>/</span><span>Motion Graphics</span></nav>
-    <p class="page-kicker">Motion graphics agency</p>
+    <p class="page-kicker">Motion graphics</p>
     <h1>Graphics that move a message, not just a frame.</h1>
     <p class="lead">Funimation is a motion graphics agency creating custom animated visuals for brands, SaaS companies, product teams, and marketing campaigns. From product launches and marketing motion graphics videos to social media content, presentations, and digital experiences, we use movement to make information clearer and stories more engaging.</p>
     ${HERO_CTAS}
@@ -580,7 +580,7 @@ ${cta('Have a Project in Mind? Let’s Build It Step by Step', 'Whether you need
     body: `<header class="page-hero">
   <div class="section-inner">
     <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><span>Industries</span><span>/</span><span>SaaS &amp; Startups</span></nav>
-    <p class="page-kicker">SaaS animation studio</p>
+    <p class="page-kicker">SaaS &amp; startups</p>
     <h1>Animation built for SaaS and startups.</h1>
     <p class="lead">Explainer videos and product animation built specifically for SaaS companies and startups. We help teams launch, convert, and grow — from a first product story to ongoing feature motion.</p>
     ${HERO_CTAS}
