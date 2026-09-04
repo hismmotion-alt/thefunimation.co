@@ -1,6 +1,10 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const motionLite = document.body.hasAttribute('data-motion-lite');
   const MAX_LIVE_RIVE = 2;
+  const HOVER_UNMOUNT_MS = 80;
+  const hoverRiveWanted = new Map();
+  const hoverRiveTimers = new WeakMap();
+  let hoverRiveSeq = 0;
   let lenis;
 
   const PROJECT_PAGE_URLS = {
@@ -137,9 +141,10 @@
 
   function reconcileLiveRive() {
     if (reduceMotion) return;
-    const ranked = Array.from(intersectingRive).filter(frame => !isFailedRive(frame)).sort(riveRank);
+    const ranked = Array.from(intersectingRive).filter(frame => !isFailedRive(frame) && !isHoverRiveGallery(frame)).sort(riveRank);
     const keep = new Set(ranked.slice(0, MAX_LIVE_RIVE));
     liveRiveFrames().forEach(frame => {
+      if (isHoverRiveGallery(frame)) return;
       if (!keep.has(frame)) unmountRiveFrame(frame);
     });
     keep.forEach(mountRiveFrame);
@@ -150,8 +155,93 @@
     return rect.bottom > -200 && rect.top < window.innerHeight + 200 && (rect.width > 0 || rect.height > 0);
   }
 
+  function isHoverRiveGallery(node) {
+    return Boolean(node && node.closest('[data-rive-hover], [data-rive-on-demand]'));
+  }
+
   function riveFramesToObserve(container) {
-    return Array.from(container.querySelectorAll('iframe[data-src]')).filter(iframe => !iframe.closest('[data-rive-on-demand]'));
+    return Array.from(container.querySelectorAll('iframe[data-src]')).filter(iframe => !isHoverRiveGallery(iframe));
+  }
+
+  function ensureRivePrefetch(href, rel) {
+    if (!href) return;
+    const selector = 'link[data-rive-prefetch="' + href + '"]';
+    if (document.querySelector(selector)) return;
+    const link = document.createElement('link');
+    link.rel = rel;
+    link.href = href;
+    if (rel === 'preconnect') link.crossOrigin = 'anonymous';
+    if (rel === 'prefetch') link.as = 'document';
+    link.setAttribute('data-rive-prefetch', href);
+    document.head.appendChild(link);
+  }
+
+  function prefetchRiveWarmup() {
+    ensureRivePrefetch('https://rive.app', 'preconnect');
+    ensureRivePrefetch('https://rive.app', 'dns-prefetch');
+  }
+
+  function bazaarLiveFrames() {
+    return liveRiveFrames().filter(frame => isHoverRiveGallery(frame) && !isFailedRive(frame));
+  }
+
+  function pauseFarthestLive(except) {
+    const extras = bazaarLiveFrames().filter(frame => !except.has(frame))
+      .sort((a, b) => riveDistance(b) - riveDistance(a));
+    extras.forEach(frame => {
+      hoverRiveWanted.delete(frame);
+      unmountRiveFrame(frame);
+    });
+  }
+
+  function reconcileHoverRive() {
+    if (reduceMotion) return;
+    const ranked = Array.from(hoverRiveWanted.entries())
+      .filter(([frame]) => !isFailedRive(frame))
+      .sort((a, b) => b[1] - a[1])
+      .map(([frame]) => frame);
+    const keep = new Set(ranked.slice(0, MAX_LIVE_RIVE));
+    pauseFarthestLive(keep);
+    bazaarLiveFrames().forEach(frame => {
+      if (!keep.has(frame)) unmountRiveFrame(frame);
+    });
+    keep.forEach(mountRiveFrame);
+  }
+
+  function requestHoverRive(iframe) {
+    if (!iframe || reduceMotion || isFailedRive(iframe)) return;
+    const timer = hoverRiveTimers.get(iframe);
+    if (timer) {
+      clearTimeout(timer);
+      hoverRiveTimers.delete(iframe);
+    }
+    hoverRiveWanted.set(iframe, ++hoverRiveSeq);
+    const live = bazaarLiveFrames();
+    if (live.length >= MAX_LIVE_RIVE && live.indexOf(iframe) === -1) {
+      const farthest = live
+        .filter(frame => frame !== iframe)
+        .sort((a, b) => riveDistance(b) - riveDistance(a))[0];
+      if (farthest) {
+        hoverRiveWanted.delete(farthest);
+        unmountRiveFrame(farthest);
+      }
+    }
+    mountRiveFrame(iframe);
+    reconcileHoverRive();
+  }
+
+  function releaseHoverRive(iframe, delay) {
+    if (!iframe) return;
+    const wait = delay == null ? HOVER_UNMOUNT_MS : delay;
+    const existing = hoverRiveTimers.get(iframe);
+    if (existing) clearTimeout(existing);
+    const timer = window.setTimeout(() => {
+      hoverRiveTimers.delete(iframe);
+      hoverRiveWanted.delete(iframe);
+      unmountRiveFrame(iframe);
+      reconcileHoverRive();
+    }, wait);
+    hoverRiveTimers.set(iframe, timer);
   }
 
   function iframeFromObserveTarget(target) {
@@ -223,24 +313,80 @@
   }
 
   function bindRiveOnDemand(root) {
-    (root || document).querySelectorAll('[data-rive-on-demand]').forEach(gallery => {
+    (root || document).querySelectorAll('[data-rive-hover], [data-rive-on-demand]').forEach(gallery => {
       if (gallery.dataset.riveBound === 'true') return;
       gallery.dataset.riveBound = 'true';
-      const enable = gallery.querySelector('[data-enable-rive]');
+      gallery.classList.add('is-rive-enabled');
+      hideRiveEnable(gallery.querySelector('[data-enable-rive]'));
       if (reduceMotion) {
         hydrateLazyMedia(gallery, { rive: 'off' });
-        gallery.classList.add('is-rive-enabled');
-        hideRiveEnable(enable);
         return;
       }
       hydrateLazyMedia(gallery, { rive: 'wait' });
-      const start = () => {
-        gallery.classList.add('is-rive-enabled');
-        gallery.removeAttribute('data-rive-on-demand');
-        hideRiveEnable(enable);
-        hydrateLazyMedia(gallery, { rive: 'observe' });
-      };
-      if (enable) enable.addEventListener('click', start, { once: true });
+      prefetchRiveWarmup();
+      const scrollRoot = gallery.closest('.modal-overlay');
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          const iframe = iframeFromObserveTarget(entry.target);
+          if (!iframe) return;
+          if (entry.isIntersecting) {
+            intersectingRive.add(iframe);
+            return;
+          }
+          intersectingRive.delete(iframe);
+          hoverRiveWanted.delete(iframe);
+          unmountRiveFrame(iframe);
+        });
+        reconcileHoverRive();
+      }, { root: scrollRoot, rootMargin: '80px 0px', threshold: 0.01 });
+
+      gallery.querySelectorAll('.rive-embed-card').forEach(card => {
+        const iframe = card.querySelector('iframe[data-src]');
+        if (!iframe) return;
+        if (!card.hasAttribute('tabindex')) card.tabIndex = 0;
+        const title = iframe.getAttribute('title');
+        if (title && !card.getAttribute('aria-label')) card.setAttribute('aria-label', title);
+        io.observe(card);
+        const play = () => requestHoverRive(iframe);
+        const pause = () => releaseHoverRive(iframe);
+        card.addEventListener('pointerenter', event => {
+          if (event.pointerType === 'touch') return;
+          play();
+        });
+        card.addEventListener('pointerleave', event => {
+          if (event.pointerType === 'touch') return;
+          pause();
+        });
+        let tapPoint = null;
+        let ignoreFocusPlay = false;
+        card.addEventListener('focusin', () => {
+          if (ignoreFocusPlay) return;
+          play();
+        });
+        card.addEventListener('focusout', event => {
+          if (card.contains(event.relatedTarget)) return;
+          pause();
+        });
+        card.addEventListener('pointerdown', event => {
+          if (event.pointerType !== 'touch' && event.pointerType !== 'pen') return;
+          tapPoint = { id: event.pointerId, x: event.clientX, y: event.clientY };
+        });
+        card.addEventListener('pointerup', event => {
+          if (!tapPoint || event.pointerId !== tapPoint.id) return;
+          const dx = Math.abs(event.clientX - tapPoint.x);
+          const dy = Math.abs(event.clientY - tapPoint.y);
+          tapPoint = null;
+          if (dx > 12 || dy > 12) return;
+          ignoreFocusPlay = true;
+          if (isLiveRiveSrc(iframe.getAttribute('src'))) pause();
+          else play();
+          window.setTimeout(() => { ignoreFocusPlay = false; }, 0);
+        });
+        card.addEventListener('pointercancel', () => {
+          tapPoint = null;
+        });
+      });
+      gallery._lazyIo = io;
     });
   }
 
@@ -255,9 +401,11 @@
     const iframe = event.target;
     if (!iframe || iframe.tagName !== 'IFRAME' || !iframe.dataset.src) return;
     iframe.dataset.riveFailed = 'true';
+    hoverRiveWanted.delete(iframe);
     setRiveLive(iframe, false);
     markRiveFallback(iframe);
     reconcileLiveRive();
+    reconcileHoverRive();
   }, true);
 
   function unloadLazyMedia(container) {
@@ -273,6 +421,12 @@
     }
     container.querySelectorAll('iframe[data-src]').forEach(iframe => {
       intersectingRive.delete(iframe);
+      hoverRiveWanted.delete(iframe);
+      const timer = hoverRiveTimers.get(iframe);
+      if (timer) {
+        clearTimeout(timer);
+        hoverRiveTimers.delete(iframe);
+      }
       unmountRiveFrame(iframe);
     });
     reconcileLiveRive();
@@ -436,7 +590,7 @@
       });
     }
     if (document.querySelector('.final-cta')) {
-      gsap.from('.final-cta h2, .final-cta p, .final-cta .btn-primary', {
+      gsap.from('.final-cta h2, .final-cta p, .final-cta .hero-btns', {
         y: 55, opacity: 0, stagger: .14, duration: .9, ease: 'power3.out',
         scrollTrigger: { trigger: '.final-cta', start: 'top 74%', once: true }
       });
@@ -457,31 +611,12 @@
     else window.setTimeout(fn, 220);
   }
 
-  function initDecorativeMotion() {
-    if (!window.gsap || reduceMotion || motionLite) return;
-    document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
-      if (button.closest('.hero-btns')) return;
-      button.addEventListener('pointermove', event => {
-        const rect = button.getBoundingClientRect();
-        gsap.to(button, {
-          x: (event.clientX - rect.left - rect.width / 2) * .16,
-          y: (event.clientY - rect.top - rect.height / 2) * .2,
-          duration: .35, ease: 'power2.out'
-        });
-      });
-      button.addEventListener('pointerleave', () => {
-        gsap.to(button, { x: 0, y: 0, duration: .6, ease: 'elastic.out(1, .35)' });
-      });
-    });
-  }
-
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initMotion, { once: true });
   } else {
     initMotion();
   }
   initHeroReel();
-  whenIdle(initDecorativeMotion, 1600);
 
   document.addEventListener('visibilitychange', () => {
     const video = document.getElementById('heroReel');
@@ -595,10 +730,10 @@
     document.body.style.overflow = 'hidden';
     const closeBtn = projectModal.querySelector('.modal-close');
     if (closeBtn) closeBtn.focus();
-    const hasOnDemandRive = Boolean(projectModal.querySelector('[data-rive-on-demand], [data-enable-rive]'));
+    const hasHoverRive = Boolean(projectModal.querySelector('[data-rive-hover], [data-rive-on-demand], [data-enable-rive]'));
     hydrateLazyMedia(projectModal, {
       eagerVideo: true,
-      rive: reduceMotion ? 'off' : (hasOnDemandRive ? 'wait' : 'observe')
+      rive: reduceMotion ? 'off' : (hasHoverRive ? 'wait' : 'observe')
     });
     bindRiveOnDemand(projectModal);
   }
@@ -905,7 +1040,7 @@
   );
   netlifyForms.forEach(bindNetlifyForm);
 
-  document.querySelectorAll('[data-hydrate-media]:not([data-rive-on-demand])').forEach(node => {
+  document.querySelectorAll('[data-hydrate-media]:not([data-rive-on-demand]):not([data-rive-hover])').forEach(node => {
     hydrateLazyMedia(node, { rive: reduceMotion ? 'off' : 'observe' });
   });
   bindRiveOnDemand(document);

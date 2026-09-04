@@ -126,9 +126,9 @@ function cta(title, copy, primary = { href: '/contact/', label: 'Get a free cons
   <div class="blob blob-2" style="width:380px;height:380px"></div>
   <h2>${title}</h2>
   <p>${copy}</p>
-  <div class="hero-btns" style="justify-content:center">
+  <div class="hero-btns">
     <a href="${primary.href}" class="btn-primary">${primary.label}</a>
-    <a href="${secondary.href}" class="btn-secondary" style="border-color:rgba(255,255,255,.35);color:#fff">${secondary.label}</a>
+    <a href="${secondary.href}" class="btn-secondary">${secondary.label}</a>
   </div>
 </section>`;
 }
@@ -172,12 +172,11 @@ const BAZAAR_ICONS = [
 ];
 
 function bazaarGallery(items = BAZAAR_ICONS) {
-  return `<section class="rive-project-gallery" data-rive-on-demand>
+  return `<section class="rive-project-gallery" data-rive-hover>
     <div class="rive-project-head">
       <h3>Icon system</h3>
-      <p>Static art first. Motion is progressive enhancement — two live icons at a time, near the viewport.</p>
+      <p>Hover an icon to play. The art is ready — two live at a time.</p>
     </div>
-    <button class="btn-secondary rive-enable" type="button" data-enable-rive>Bring the icons to life</button>
     <div class="rive-gallery-grid">
       ${items.map(item => `<div class="rive-embed-card">
         <img class="rive-poster" src="${item.frame}" alt="Bazaar brand icon, static art frame" width="800" height="800" loading="lazy" decoding="async">
@@ -924,6 +923,7 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, stake, chal
   </div>`;
   const stage = `<div class="case-stage">
       <div class="case-stage-copy">
+        <a class="case-back" href="/work/"><span class="case-back-arrow" aria-hidden="true"><svg viewBox="0 0 16 16" focusable="false"><path d="M10.25 3.25 5.5 8l4.75 4.75" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span> All work</a>
         <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/work/">Work</a><span>/</span><span>${escape(client)}</span></nav>
         <div class="project-kicker">${kicker}</div>
         <h1 id="caseTitle">${h1}</h1>
@@ -945,13 +945,7 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, stake, chal
         <a class="project-resource" href="/contact/">Contact us</a>
       </aside>
     </div>`;
-  const rest = `<section class="section">
-      <div class="section-inner">
-        <h2 class="section-title">More work</h2>
-        <p><a href="/work/" class="btn-secondary">See our work</a> <a href="/contact/" class="btn-primary" style="margin-left:8px">Get a free consultation</a></p>
-      </div>
-    </section>
-    ${cta('Want a similar result?', 'Tell us about the product or story you need to explain. We will help shape the right animation approach.')}`;
+  const rest = cta('Want a similar result?', 'Tell us about the product or story you need to explain. We will help shape the right animation approach.');
 
   return page({
     title: metaTitle,
@@ -963,6 +957,7 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, stake, chal
     schema,
     bodyClass: 'case-page',
     bodyAttrs: rive ? 'data-motion-lite' : '',
+    extraHead: rive ? '<link rel="preconnect" href="https://rive.app" crossorigin>\n<link rel="dns-prefetch" href="https://rive.app">\n' : '',
     body: rive
       ? `${stage}
     ${bazaarGallery()}
