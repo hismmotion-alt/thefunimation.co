@@ -29,26 +29,69 @@
     if (changed) video.load();
   }
 
-  function hydrateLazyMedia(container) {
+  function markRiveFallback(iframe) {
+    const card = iframe.closest('.rive-embed-card, .work-card-rive') || iframe.parentElement;
+    if (card) card.classList.add('rive-static');
+    iframe.setAttribute('hidden', '');
+    iframe.removeAttribute('src');
+  }
+
+  function mountRiveFrame(iframe) {
+    if (reduceMotion || !iframe.dataset.src || iframe.getAttribute('src')) return;
+    iframe.src = iframe.dataset.src;
+  }
+
+  function unmountRiveFrame(iframe) {
+    if (!iframe.dataset.src) return;
+    iframe.removeAttribute('src');
+  }
+
+  function hydrateLazyMedia(container, options) {
     if (!container) return;
+    const settings = Object.assign({ eagerVideo: false, rive: 'observe' }, options || {});
     container.querySelectorAll('img[data-src]').forEach(img => {
       if (!img.getAttribute('src')) img.src = img.dataset.src;
     });
-    container.querySelectorAll('video').forEach(loadVideoSources);
 
     const scrollRoot = container.classList && container.classList.contains('modal-overlay')
       ? container
       : null;
-    const io = new IntersectionObserver((entries, observer) => {
+
+    const videoIo = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
-        const iframe = entry.target;
-        if (iframe.dataset.src && !iframe.getAttribute('src')) {
-          iframe.src = iframe.dataset.src;
-        }
-        observer.unobserve(iframe);
+        loadVideoSources(entry.target);
+        observer.unobserve(entry.target);
       });
-    }, { root: scrollRoot, rootMargin: '220px 0px', threshold: 0.01 });
+    }, { root: scrollRoot, rootMargin: '120px 0px', threshold: 0.01 });
+
+    container.querySelectorAll('video').forEach(video => {
+      if (settings.eagerVideo) loadVideoSources(video);
+      else videoIo.observe(video);
+    });
+
+    if (container._lazyVideoIo) container._lazyVideoIo.disconnect();
+    container._lazyVideoIo = videoIo;
+
+    if (reduceMotion || settings.rive === 'off') {
+      container.querySelectorAll('iframe[data-src]').forEach(markRiveFallback);
+      return;
+    }
+
+    if (settings.rive === 'wait') {
+      container.querySelectorAll('iframe[data-src]').forEach(iframe => {
+        iframe.removeAttribute('src');
+      });
+      return;
+    }
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const iframe = entry.target;
+        if (entry.isIntersecting) mountRiveFrame(iframe);
+        else unmountRiveFrame(iframe);
+      });
+    }, { root: scrollRoot, rootMargin: '80px 0px', threshold: 0.01 });
 
     container.querySelectorAll('iframe[data-src]').forEach(iframe => {
       if (iframe.getAttribute('src')) return;
@@ -191,7 +234,7 @@
       });
     });
 
-    document.querySelectorAll('.work-card:not(.extra-project)').forEach((card, index) => {
+    if (!document.querySelector('[data-work-filters]')) document.querySelectorAll('.work-card:not(.extra-project)').forEach((card, index) => {
       gsap.from(card, {
         x: index % 2 ? 70 : -70, y: 30, opacity: 0, rotation: index % 2 ? 1.5 : -1.5,
         duration: 1, ease: 'power3.out',
@@ -386,7 +429,7 @@
     document.body.style.overflow = 'hidden';
     const closeBtn = projectModal.querySelector('.modal-close');
     if (closeBtn) closeBtn.focus();
-    hydrateLazyMedia(projectModal);
+    hydrateLazyMedia(projectModal, { eagerVideo: true });
   }
   function closeNamedProjectModal(id) {
     const projectModal = document.getElementById(id);
@@ -680,9 +723,24 @@
 
   document.querySelectorAll('form[data-netlify="true"]').forEach(bindNetlifyForm);
 
-  if (document.body.hasAttribute('data-hydrate-media') || document.querySelector('[data-hydrate-media]')) {
-    hydrateLazyMedia(document);
-  }
+  document.querySelectorAll('[data-hydrate-media]:not([data-rive-on-demand])').forEach(node => {
+    hydrateLazyMedia(node, { rive: reduceMotion ? 'off' : 'observe' });
+  });
+
+  document.querySelectorAll('[data-rive-on-demand]').forEach(gallery => {
+    if (reduceMotion) {
+      hydrateLazyMedia(gallery, { rive: 'off' });
+      return;
+    }
+    const enable = gallery.querySelector('[data-enable-rive]');
+    hydrateLazyMedia(gallery, { rive: 'wait' });
+    if (!enable) return;
+    enable.addEventListener('click', () => {
+      gallery.removeAttribute('data-rive-on-demand');
+      enable.hidden = true;
+      hydrateLazyMedia(gallery, { rive: 'observe' });
+    }, { once: true });
+  });
 
   const filterBar = document.querySelector('[data-work-filters]');
   if (filterBar && workGrid) {

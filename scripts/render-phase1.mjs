@@ -831,13 +831,14 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, paragraphs,
     </div>
   </section>` : '';
   const media = rive
-    ? `<section class="rive-project-gallery" data-hydrate-media>
+    ? `<section class="rive-project-gallery" data-rive-on-demand>
     <div class="rive-project-head">
       <h3>Interactive icon collection</h3>
-      <p>Explore the live Rive animations below. Move, click, or tap to experience their interactive states. Embeds load only when they approach the viewport.</p>
+      <p>Static frames first. Live Rive runtimes mount only after you enable them, then only while a card is near the viewport.</p>
     </div>
+    <button class="btn-secondary rive-enable" type="button" data-enable-rive>Load interactive icons</button>
     <div class="rive-gallery-grid">
-      ${rive.map((src, i) => `<div class="rive-embed-card"><iframe data-src="${src}" title="Bazaar interactive icon ${i + 1}" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>`).join('\n      ')}
+      ${rive.map((src, i) => `<div class="rive-embed-card"><span class="rive-fallback-label">Bazaar icon ${i + 1}</span><iframe data-src="${src}" title="Bazaar interactive icon ${i + 1}" loading="lazy" allow="autoplay" allowfullscreen></iframe></div>`).join('\n      ')}
     </div>
   </section>`
     : `<div class="project-media" data-hydrate-media>
