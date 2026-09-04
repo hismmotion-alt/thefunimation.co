@@ -923,7 +923,7 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, stake, chal
   </div>`;
   const stage = `<div class="case-stage">
       <div class="case-stage-copy">
-        <a class="case-back" href="/work/"><span class="case-back-arrow" aria-hidden="true">←</span> All work</a>
+        <a class="case-back" href="/work/"><span class="case-back-arrow" aria-hidden="true"><svg viewBox="0 0 16 16" focusable="false"><path d="M10.25 3.25 5.5 8l4.75 4.75" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span> All work</a>
         <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/work/">Work</a><span>/</span><span>${escape(client)}</span></nav>
         <div class="project-kicker">${kicker}</div>
         <h1 id="caseTitle">${h1}</h1>

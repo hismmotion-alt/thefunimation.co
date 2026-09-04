@@ -123,18 +123,18 @@
   }
   .btn-primary {
     background: linear-gradient(135deg, #6C4DFF, #9B5CFF); color: #fff;
-    box-shadow: 0 12px 28px rgba(108,77,255,.2);
+    box-shadow: 0 6px 16px rgba(108,77,255,.18);
   }
   .btn-primary:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 14px 30px rgba(108,77,255,.28);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(108,77,255,.24);
   }
   .btn-secondary {
     background: transparent; color: var(--dark);
     border-color: rgba(14,17,22,0.15);
   }
   .btn-secondary:hover {
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-1px);
     background: rgba(14,17,22,0.04);
     border-color: rgba(14,17,22,0.3);
   }
@@ -194,24 +194,26 @@
   .hero-btns { display: flex; justify-content: flex-start; align-items: center; gap: 12px; flex-wrap: wrap; }
   .hero-btns .btn-primary,
   .hero-btns .btn-secondary {
+    height: 48px;
     min-height: 48px;
-    padding: 12px 28px;
+    padding: 0 28px;
     font-size: 14px;
+    line-height: 1;
   }
   .hero-btns .btn-primary {
     background: linear-gradient(135deg, #6C4DFF, #9B5CFF);
     color: #fff;
-    box-shadow: 0 12px 30px rgba(108,77,255,.22);
+    box-shadow: 0 6px 16px rgba(108,77,255,.18);
   }
   .hero-btns .btn-primary:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 14px 32px rgba(108,77,255,.3);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(108,77,255,.24);
   }
   .hero-btns .btn-secondary {
     background: rgba(108,77,255,.08); color: #5b3fff; border-color: rgba(108,77,255,.24);
   }
   .hero-btns .btn-secondary:hover {
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-1px);
     background: rgba(108,77,255,.14); border-color: rgba(108,77,255,.42);
   }
   .hero-stage {
@@ -730,32 +732,44 @@
     position: relative; z-index: 1; line-height: 1.7;
   }
   .final-cta .hero-btns {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    gap: 12px;
     position: relative;
     z-index: 1;
   }
-  .final-cta .btn-primary,
-  .final-cta .btn-secondary {
+  .final-cta .hero-btns .btn-primary,
+  .final-cta .hero-btns .btn-secondary {
     position: relative;
     z-index: 1;
+    height: 52px;
     min-height: 52px;
-    padding: 14px 28px;
+    padding: 0 28px;
     font-size: 16px;
+    line-height: 1;
+    box-shadow: none;
   }
-  .final-cta .btn-secondary {
+  .final-cta .hero-btns .btn-primary:hover,
+  .final-cta .hero-btns .btn-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: none;
+  }
+  .final-cta .hero-btns .btn-secondary {
     border-color: rgba(255,255,255,.35);
     color: #fff;
     background: transparent;
   }
-  .final-cta .btn-secondary:hover {
+  .final-cta .hero-btns .btn-primary:hover,
+  .final-cta .hero-btns .btn-secondary:hover {
+    transform: translateY(-1px);
+  }
+  .final-cta .hero-btns .btn-secondary:hover {
     color: #fff;
     background: rgba(255,255,255,.08);
     border-color: rgba(255,255,255,.55);
-    transform: translateY(-2px) scale(1.02);
-  }
-  .final-cta .btn-primary:hover {
-    transform: translateY(-2px) scale(1.02);
+    box-shadow: none;
   }
 
   /* ---- FOOTER ---- */
@@ -1131,11 +1145,11 @@
     transition: transform 0.35s var(--ease), box-shadow 0.35s;
   }
   .form-submit:hover {
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-1px);
     box-shadow: 0 10px 28px rgba(255,107,53,0.38);
   }
   .form-submit:active {
-    transform: translateY(0) scale(1);
+    transform: none;
   }
   .form-submit:disabled {
     opacity: .68; cursor: wait; transform: none; box-shadow: none;
@@ -1428,11 +1442,11 @@
   /* ---- BUTTON HOVER ---- */
   .btn-primary:hover,
   .btn-secondary:hover {
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-1px);
   }
   .btn-primary:active,
   .btn-secondary:active {
-    transform: translateY(0) scale(1);
+    transform: none;
   }
 
   /* ---- CARD TILT EFFECT ---- */
@@ -1562,6 +1576,19 @@
     .hero-copy p { max-width: 28rem; margin-bottom: 22px; font-size: 11px; line-height: 1.62; }
     .hero-btns { display: grid; width: 100%; gap: 10px; }
     .hero-btns a { width: 100%; justify-content: center; min-height: 43px; font-size: 13px; }
+    .final-cta .hero-btns {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      width: min(100%, 360px);
+      margin-inline: auto;
+    }
+    .final-cta .hero-btns a {
+      width: 100%;
+      min-height: 52px;
+      height: 52px;
+      font-size: 16px;
+    }
     .hero-stage { min-height: auto; }
     .lottie-frame { width: 100%; max-width: 460px; border-radius: 18px; box-shadow: 0 24px 55px rgba(14,17,22,.14); }
     .hero-trust { margin-bottom: 12px; font-size: 10px; text-align: center; }
@@ -1743,12 +1770,12 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin: 0 0 14px;
+    margin: 0 0 16px;
     font-family: var(--font-head);
     font-size: 14px;
     font-weight: 600;
-    color: rgba(14,17,22,.62);
-    transition: color .2s, transform .2s var(--ease);
+    color: rgba(14,17,22,.7);
+    transition: color .2s, background .2s;
   }
   .case-back:hover,
   .case-back:focus-visible {
@@ -1756,14 +1783,18 @@
   }
   .case-back-arrow {
     display: inline-flex;
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     background: rgba(14,17,22,.06);
-    font-size: 13px;
-    line-height: 1;
+  }
+  .case-back-arrow svg {
+    display: block;
+    width: 14px;
+    height: 14px;
   }
   .check-grid {
     display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 24px;

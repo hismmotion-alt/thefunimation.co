@@ -529,7 +529,7 @@
       });
     }
     if (document.querySelector('.final-cta')) {
-      gsap.from('.final-cta h2, .final-cta p, .final-cta .btn-primary', {
+      gsap.from('.final-cta h2, .final-cta p, .final-cta .hero-btns', {
         y: 55, opacity: 0, stagger: .14, duration: .9, ease: 'power3.out',
         scrollTrigger: { trigger: '.final-cta', start: 'top 74%', once: true }
       });
