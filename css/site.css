@@ -1035,8 +1035,21 @@
     transform: none;
   }
   [data-motion-lite] .service-card:hover,
-  [data-motion-lite] .work-card:hover {
-    transform: translateY(-3px);
+  [data-motion-lite] .work-card:hover,
+  [data-motion-lite] .plan-card:hover,
+  [data-motion-lite] .blog-card:hover {
+    transform: translateY(-2px);
+  }
+  [data-motion-lite] .plan-card,
+  [data-motion-lite] .blog-card {
+    transition-duration: 180ms;
+    transition-timing-function: ease-out;
+  }
+  [data-motion-lite] .blob {
+    animation: none;
+  }
+  [data-motion-lite] .service-icon {
+    animation: none !important;
   }
   [data-motion-lite] .rive-embed-card.is-rive-live:hover {
     transform: none;

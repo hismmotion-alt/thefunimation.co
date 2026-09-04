@@ -157,7 +157,7 @@ function proofStrip({ video, poster, stills = [], label = 'Work in motion' }) {
 </section>`;
 }
 
-function page({ title, description, canonical, ogImage, ogAlt, ogType = 'website', current, schema = [], body }) {
+function page({ title, description, canonical, ogImage, ogAlt, ogType = 'website', current, schema = [], bodyAttrs = 'data-motion-lite', body }) {
   const graph = [ORG_SCHEMA, {
     '@type': 'WebSite',
     '@id': 'https://thefunimation.co/#website',
@@ -169,6 +169,11 @@ function page({ title, description, canonical, ogImage, ogAlt, ogType = 'website
   }, ...schema];
   const image = ogImage || 'https://thefunimation.co/1st%20project/cover.png';
   const alt = ogAlt || 'Funimation Studio animation work';
+  const motionLite = /\bdata-motion-lite\b/.test(bodyAttrs);
+  const motionScripts = motionLite ? '' : `<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.23/dist/lenis.min.js" defer></script>
+`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -210,8 +215,7 @@ function page({ title, description, canonical, ogImage, ogAlt, ogType = 'website
 <meta name="twitter:title" content="${escape(title)}">
 <meta name="twitter:description" content="${escape(description)}">
 <meta name="twitter:image" content="${image}">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preload" href="/fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
+${motionLite ? '' : '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>\n'}<link rel="preload" href="/fonts/sora-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/site.css">
 <script type="application/ld+json">
@@ -219,15 +223,12 @@ ${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }, null, 2)
 </script>
 
 </head>
-<body>
+<body${bodyAttrs ? ` ${bodyAttrs}` : ''}>
 <div class="scroll-progress" aria-hidden="true"></div>
 ${nav(current)}
 ${body}
 ${footer()}
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.23/dist/lenis.min.js" defer></script>
-<script src="/js/site.js" defer></script>
+${motionScripts}<script src="/js/site.js" defer></script>
 </body>
 </html>
 `;
@@ -364,7 +365,8 @@ export function registerPhase3({
   writePage: writeFn = writePage,
   HERO_CTAS: heroCtas = HERO_CTAS
 } = {}) {
-  const industriesHub = pageFn({
+  const pageLite = opts => pageFn({ ...opts, bodyAttrs: 'data-motion-lite' });
+  const industriesHub = pageLite({
     title: 'Industries We Animate For - Funimation',
     description: 'Animation for SaaS and startups, healthcare, and AgTech, cloud, and sustainability. See the work, then get a free consultation.',
     canonical: 'https://thefunimation.co/industries/',
@@ -406,7 +408,7 @@ export function registerPhase3({
 ${ctaFn('Not sure which page fits?', 'Tell us the product and who needs to understand it. We will point you at the right motion approach.')}`
   });
 
-  const healthcare = pageFn({
+  const healthcare = pageLite({
     title: 'Healthcare Animation & Patient Explainers - Funimation',
     description: 'Healthcare animation for patient education, clinical products, and safety flows. See Before Health, Hancock Health, and related work.',
     canonical: 'https://thefunimation.co/industries/healthcare/',
@@ -495,7 +497,7 @@ ${moreIndustries('health')}
 ${ctaFn('Building a healthcare story that needs to stay clear?', 'Tell us who has to understand it — patients, clinicians, or buyers. We will help shape the right animation approach.')}`
   });
 
-  const agtech = pageFn({
+  const agtech = pageLite({
     title: 'AgTech, Cloud & Sustainability Animation - Funimation',
     description: 'Animation for AgTech, cloud, and sustainability products. See MTech, FarmerLink, Greenopia, and Sela Cloud.',
     canonical: 'https://thefunimation.co/industries/agtech-cloud-sustainability/',
@@ -585,7 +587,7 @@ ${moreIndustries('ag')}
 ${ctaFn('Building a platform that is hard to demo live?', 'Tell us what the system does and who has to trust it. We will help shape the right animation approach.')}`
   });
 
-  const blogHub = pageFn({
+  const blogHub = pageLite({
     title: 'Animation Notes & Resources - Funimation',
     description: 'Practical notes from Funimation on explainer length, 2D vs 3D, Rive vs Lottie, and SaaS onboarding animation.',
     canonical: 'https://thefunimation.co/blog/',
@@ -713,7 +715,7 @@ ${ctaFn('Have a product that needs a clearer story?', 'If a note here matches th
   };
 
   const articlePages = ARTICLES.map(article => {
-    const html = pageFn({
+    const html = pageLite({
       title: `${article.title} - Funimation`,
       description: article.description,
       canonical: `https://thefunimation.co/blog/${article.slug}/`,
