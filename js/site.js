@@ -812,7 +812,16 @@
     });
   }
 
-  document.querySelectorAll('form[data-netlify="true"]').forEach(bindNetlifyForm);
+  // Netlify strips data-netlify / netlify-honeypot from served HTML after
+  // detecting the form at build time, so do not bind on those attributes alone.
+  const netlifyForms = new Set(
+    [
+      document.getElementById('projectForm'),
+      document.getElementById('contactForm'),
+      ...document.querySelectorAll('form[name="project-brief"], form[data-netlify="true"]')
+    ].filter(Boolean)
+  );
+  netlifyForms.forEach(bindNetlifyForm);
 
   document.querySelectorAll('[data-hydrate-media]:not([data-rive-on-demand])').forEach(node => {
     hydrateLazyMedia(node, { rive: reduceMotion ? 'off' : 'observe' });
