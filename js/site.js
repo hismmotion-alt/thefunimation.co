@@ -1,6 +1,23 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let lenis;
 
+  const PROJECT_MODAL_IDS = {
+    'ismed-clim': 'projectModal',
+    'hancock-health': 'hancockProjectModal',
+    'before-health': 'beforeHealthProjectModal',
+    'sela-cloud': 'selaCloudProjectModal',
+    'upfit-supply': 'upfitSupplyProjectModal',
+    'mtech-systems': 'mtechProjectModal',
+    'greenopia': 'greenopiaProjectModal',
+    'secufy-sos': 'secufyProjectModal',
+    'farmerlink': 'farmerLinkProjectModal',
+    'buddywerking': 'buddywerkingProjectModal',
+    'carakit': 'carakitProjectModal',
+    'gifybox': 'gifyboxProjectModal',
+    'maven': 'mavenProjectModal',
+    'bazaar': 'bazaarProjectModal'
+  };
+
   function loadVideoSources(video) {
     let changed = false;
     video.querySelectorAll('source[data-src]').forEach(source => {
@@ -13,6 +30,7 @@
   }
 
   function hydrateLazyMedia(container) {
+    if (!container) return;
     container.querySelectorAll('img[data-src]').forEach(img => {
       if (!img.getAttribute('src')) img.src = img.dataset.src;
     });
@@ -41,6 +59,7 @@
   }
 
   function unloadLazyMedia(container) {
+    if (!container) return;
     if (container._lazyIo) {
       container._lazyIo.disconnect();
       container._lazyIo = null;
@@ -112,7 +131,6 @@
     gsap.ticker.add(time => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
 
-    // Existing CSS reveal classes are now controlled by GSAP.
     gsap.set('.reveal, .reveal-scale, .why-point', { opacity: 1, y: 0, scale: 1 });
     gsap.set('.reveal-stagger > *', { opacity: 1, y: 0 });
 
@@ -123,7 +141,6 @@
 
     const heroStage = document.querySelector('.hero-stage');
     const motionCard = heroStage ? heroStage.querySelector('.lottie-frame') : null;
-    // Stage chips and hero blobs are CSS-hidden; skip their GSAP loops.
     if (heroStage && motionCard && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
       const tiltY = gsap.quickTo(motionCard, 'rotationY', { duration: .65, ease: 'power3.out' });
       const tiltX = gsap.quickTo(motionCard, 'rotationX', { duration: .65, ease: 'power3.out' });
@@ -144,7 +161,7 @@
       });
     }
 
-    if (window.matchMedia('(min-width: 901px)').matches) {
+    if (document.querySelector('.hero') && window.matchMedia('(min-width: 901px)').matches) {
       gsap.to('.hero-content', {
         yPercent: 22, opacity: .25, scale: .94, ease: 'none',
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 1 }
@@ -167,6 +184,7 @@
       ['.why-points', '.why-point'],
       ['.testimonials-grid', '.test-card']
     ].forEach(([trigger, targets]) => {
+      if (!document.querySelector(trigger)) return;
       gsap.from(targets, {
         y: 58, opacity: 0, scale: .96, stagger: .1, duration: .8, ease: 'power3.out',
         scrollTrigger: { trigger, start: 'top 82%', once: true }
@@ -188,29 +206,39 @@
       }
     });
 
-    gsap.from('.process-step', {
-      y: 70, opacity: 0, rotationX: -12, transformOrigin: 'center bottom',
-      stagger: .12, duration: .9, ease: 'power3.out',
-      scrollTrigger: { trigger: '.process-steps', start: 'top 80%', once: true }
-    });
-    gsap.to('.process-steps', {
-      xPercent: -2.5, ease: 'none',
-      scrollTrigger: { trigger: '.process-section', start: 'top bottom', end: 'bottom top', scrub: 1.5 }
-    });
+    if (document.querySelector('.process-step')) {
+      gsap.from('.process-step', {
+        y: 70, opacity: 0, rotationX: -12, transformOrigin: 'center bottom',
+        stagger: .12, duration: .9, ease: 'power3.out',
+        scrollTrigger: { trigger: '.process-steps', start: 'top 80%', once: true }
+      });
+    }
+    if (document.querySelector('.process-section') && document.querySelector('.process-steps')) {
+      gsap.to('.process-steps', {
+        xPercent: -2.5, ease: 'none',
+        scrollTrigger: { trigger: '.process-section', start: 'top bottom', end: 'bottom top', scrub: 1.5 }
+      });
+    }
 
-    gsap.from('.faq-item', {
-      x: -38, opacity: 0, stagger: .08, duration: .7, ease: 'power3.out',
-      scrollTrigger: { trigger: '.faq-list', start: 'top 82%', once: true }
-    });
-    gsap.from('.final-cta h2, .final-cta p, .final-cta .btn-primary', {
-      y: 55, opacity: 0, stagger: .14, duration: .9, ease: 'power3.out',
-      scrollTrigger: { trigger: '.final-cta', start: 'top 74%', once: true }
-    });
+    if (document.querySelector('.faq-item')) {
+      gsap.from('.faq-item', {
+        x: -38, opacity: 0, stagger: .08, duration: .7, ease: 'power3.out',
+        scrollTrigger: { trigger: '.faq-list', start: 'top 82%', once: true }
+      });
+    }
+    if (document.querySelector('.final-cta')) {
+      gsap.from('.final-cta h2, .final-cta p, .final-cta .btn-primary', {
+        y: 55, opacity: 0, stagger: .14, duration: .9, ease: 'power3.out',
+        scrollTrigger: { trigger: '.final-cta', start: 'top 74%', once: true }
+      });
+    }
 
-    gsap.to('.scroll-progress', {
-      scaleX: 1, ease: 'none',
-      scrollTrigger: { start: 0, end: 'max', scrub: .25 }
-    });
+    if (document.querySelector('.scroll-progress')) {
+      gsap.to('.scroll-progress', {
+        scaleX: 1, ease: 'none',
+        scrollTrigger: { start: 0, end: 'max', scrub: .25 }
+      });
+    }
 
     window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
   }
@@ -262,12 +290,13 @@
     }
   });
 
-  // Nav shadow on scroll
-  window.addEventListener('scroll', () => {
-    document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 40);
-  }, { passive: true });
+  const navEl = document.querySelector('nav');
+  if (navEl) {
+    window.addEventListener('scroll', () => {
+      navEl.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+  }
 
-  // Animated stat counters
   const countObs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting && !e.target.dataset.counted) {
@@ -289,7 +318,6 @@
   }, { threshold: 0.5 });
   document.querySelectorAll('.stat-num').forEach(el => countObs.observe(el));
 
-  // Card tilt is decorative; attach after first paint to keep TBT down.
   whenIdle(() => {
     if (reduceMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
     document.querySelectorAll('.service-card, .test-card').forEach(card => {
@@ -305,12 +333,12 @@
     });
   }, 1800);
 
-  // Conversational project brief
   const wizardSteps = Array.from(document.querySelectorAll('.wizard-step'));
   const wizardProgress = Array.from(document.querySelectorAll('.wizard-progress span'));
   let currentWizardStep = 0;
 
   function showWizardStep(index) {
+    if (!wizardSteps.length) return;
     currentWizardStep = Math.max(0, Math.min(index, wizardSteps.length - 1));
     wizardSteps.forEach((step, stepIndex) => step.classList.toggle('active', stepIndex === currentWizardStep));
     wizardProgress.forEach((bar, barIndex) => bar.classList.toggle('active', barIndex <= currentWizardStep));
@@ -320,7 +348,7 @@
 
   document.querySelectorAll('[data-next]').forEach(button => {
     button.addEventListener('click', () => {
-      const field = wizardSteps[currentWizardStep].querySelector('input, textarea');
+      const field = wizardSteps[currentWizardStep] && wizardSteps[currentWizardStep].querySelector('input, textarea');
       if (field && !field.reportValidity()) return;
       showWizardStep(currentWizardStep + 1);
     });
@@ -329,22 +357,30 @@
     button.addEventListener('click', () => showWizardStep(currentWizardStep - 1));
   });
 
-  // Modal open/close
+  const contactModal = document.getElementById('contactModal');
+
   function openModal(e) {
     if (e) e.preventDefault();
+    if (!contactModal) {
+      window.location.href = '/contact/';
+      return;
+    }
     showWizardStep(0);
-    document.querySelector('#projectForm .form-status').textContent = '';
-    document.getElementById('contactModal').classList.add('active');
+    const status = document.querySelector('#projectForm .form-status');
+    if (status) status.textContent = '';
+    contactModal.classList.add('active');
     document.body.style.overflow = 'hidden';
     if (lenis) lenis.stop();
   }
   function closeModal() {
-    document.getElementById('contactModal').classList.remove('active');
+    if (!contactModal) return;
+    contactModal.classList.remove('active');
     document.body.style.overflow = '';
     if (lenis) lenis.start();
   }
   function openNamedProjectModal(id) {
     const projectModal = document.getElementById(id);
+    if (!projectModal) return;
     projectModal.classList.add('active');
     projectModal.scrollTop = 0;
     document.body.style.overflow = 'hidden';
@@ -354,6 +390,7 @@
   }
   function closeNamedProjectModal(id) {
     const projectModal = document.getElementById(id);
+    if (!projectModal) return;
     projectModal.classList.remove('active');
     unloadLazyMedia(projectModal);
     document.body.style.overflow = '';
@@ -386,192 +423,145 @@
   function closeMavenProjectModal() { closeNamedProjectModal('mavenProjectModal'); }
   function openBazaarProjectModal() { openNamedProjectModal('bazaarProjectModal'); }
   function closeBazaarProjectModal() { closeNamedProjectModal('bazaarProjectModal'); }
-  // Close on overlay click
-  document.getElementById('contactModal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
-  document.getElementById('projectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeProjectModal();
-  });
-  document.getElementById('hancockProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeHancockProjectModal();
-  });
-  document.getElementById('beforeHealthProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeBeforeHealthProjectModal();
-  });
-  document.getElementById('selaCloudProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeSelaCloudProjectModal();
-  });
-  document.getElementById('upfitSupplyProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeUpfitSupplyProjectModal();
-  });
-  document.getElementById('mtechProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeMtechProjectModal();
-  });
-  document.getElementById('greenopiaProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeGreenopiaProjectModal();
-  });
-  document.getElementById('secufyProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeSecufyProjectModal();
-  });
-  document.getElementById('farmerLinkProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeFarmerLinkProjectModal();
-  });
-  document.getElementById('buddywerkingProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeBuddywerkingProjectModal();
-  });
-  document.getElementById('carakitProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeCarakitProjectModal();
-  });
-  document.getElementById('gifyboxProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeGifyboxProjectModal();
-  });
-  document.getElementById('mavenProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeMavenProjectModal();
-  });
-  document.getElementById('bazaarProjectModal').addEventListener('click', function(e) {
-    if (e.target === this) closeBazaarProjectModal();
-  });
-  // Close on Escape
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      closeModal();
-      closeProjectModal();
-      closeHancockProjectModal();
-      closeBeforeHealthProjectModal();
-      closeSelaCloudProjectModal();
-      closeUpfitSupplyProjectModal();
-      closeMtechProjectModal();
-      closeGreenopiaProjectModal();
-      closeSecufyProjectModal();
-      closeFarmerLinkProjectModal();
-      closeBuddywerkingProjectModal();
-      closeCarakitProjectModal();
-      closeGifyboxProjectModal();
-      closeMavenProjectModal();
-      closeBazaarProjectModal();
-    }
-  });
-  // Wire up all CTA buttons
-  document.querySelectorAll('.btn-primary, .form-submit').forEach(btn => {
-    if (btn.classList.contains('form-submit')) return;
-    btn.addEventListener('click', openModal);
-  });
 
-  // Mobile navigation
-  const nav = document.querySelector('nav');
-  const navToggle = document.querySelector('.nav-toggle');
-  navToggle.addEventListener('click', () => {
-    const isOpen = nav.classList.toggle('menu-open');
-    navToggle.setAttribute('aria-expanded', String(isOpen));
-    navToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
-    navToggle.textContent = isOpen ? '✕' : '☰';
-  });
-  document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-      nav.classList.remove('menu-open');
-      navToggle.setAttribute('aria-expanded', 'false');
-      navToggle.setAttribute('aria-label', 'Open navigation');
-      navToggle.textContent = '☰';
+  window.openModal = openModal;
+  window.closeModal = closeModal;
+  window.openProjectModal = openProjectModal;
+  window.closeProjectModal = closeProjectModal;
+  window.openHancockProjectModal = openHancockProjectModal;
+  window.closeHancockProjectModal = closeHancockProjectModal;
+  window.openBeforeHealthProjectModal = openBeforeHealthProjectModal;
+  window.closeBeforeHealthProjectModal = closeBeforeHealthProjectModal;
+  window.openSelaCloudProjectModal = openSelaCloudProjectModal;
+  window.closeSelaCloudProjectModal = closeSelaCloudProjectModal;
+  window.openUpfitSupplyProjectModal = openUpfitSupplyProjectModal;
+  window.closeUpfitSupplyProjectModal = closeUpfitSupplyProjectModal;
+  window.openMtechProjectModal = openMtechProjectModal;
+  window.closeMtechProjectModal = closeMtechProjectModal;
+  window.openGreenopiaProjectModal = openGreenopiaProjectModal;
+  window.closeGreenopiaProjectModal = closeGreenopiaProjectModal;
+  window.openSecufyProjectModal = openSecufyProjectModal;
+  window.closeSecufyProjectModal = closeSecufyProjectModal;
+  window.openFarmerLinkProjectModal = openFarmerLinkProjectModal;
+  window.closeFarmerLinkProjectModal = closeFarmerLinkProjectModal;
+  window.openBuddywerkingProjectModal = openBuddywerkingProjectModal;
+  window.closeBuddywerkingProjectModal = closeBuddywerkingProjectModal;
+  window.openCarakitProjectModal = openCarakitProjectModal;
+  window.closeCarakitProjectModal = closeCarakitProjectModal;
+  window.openGifyboxProjectModal = openGifyboxProjectModal;
+  window.closeGifyboxProjectModal = closeGifyboxProjectModal;
+  window.openMavenProjectModal = openMavenProjectModal;
+  window.closeMavenProjectModal = closeMavenProjectModal;
+  window.openBazaarProjectModal = openBazaarProjectModal;
+  window.closeBazaarProjectModal = closeBazaarProjectModal;
+
+  if (contactModal) {
+    contactModal.addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+  }
+  Object.values(PROJECT_MODAL_IDS).forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('click', function(e) {
+      if (e.target === this) closeNamedProjectModal(id);
     });
   });
 
-  // Expandable portfolio
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    closeModal();
+    Object.values(PROJECT_MODAL_IDS).forEach(closeNamedProjectModal);
+  });
+
+  document.querySelectorAll('[data-open-contact]').forEach(btn => {
+    btn.addEventListener('click', openModal);
+  });
+
+  const nav = document.querySelector('nav');
+  const navToggle = document.querySelector('.nav-toggle');
+  if (nav && navToggle) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('menu-open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+      navToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
+      navToggle.textContent = isOpen ? '✕' : '☰';
+    });
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        nav.classList.remove('menu-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.setAttribute('aria-label', 'Open navigation');
+        navToggle.textContent = '☰';
+      });
+    });
+  }
+
   const workGrid = document.querySelector('.work-grid');
   const showMoreButton = document.querySelector('.show-more-btn');
   const extraProjects = document.querySelectorAll('.extra-project');
-  showMoreButton.addEventListener('click', () => {
-    const expanding = !workGrid.classList.contains('expanded');
-    showMoreButton.setAttribute('aria-expanded', String(expanding));
-    showMoreButton.querySelector('.show-more-label').textContent = expanding ? 'Show less' : 'Show more';
+  if (workGrid && showMoreButton) {
+    showMoreButton.addEventListener('click', () => {
+      const expanding = !workGrid.classList.contains('expanded');
+      showMoreButton.setAttribute('aria-expanded', String(expanding));
+      const label = showMoreButton.querySelector('.show-more-label');
+      if (label) label.textContent = expanding ? 'Show less' : 'Show more';
 
-    if (expanding) {
-      workGrid.classList.add('expanded');
-      hydrateLazyMedia(workGrid);
-      if (window.gsap) {
-        gsap.fromTo(extraProjects,
-          { opacity: 0, y: 50, scale: .97 },
-          { opacity: 1, y: 0, scale: 1, stagger: .12, duration: .8, ease: 'power3.out', onComplete: () => ScrollTrigger.refresh() }
-        );
-      }
-    } else if (window.gsap) {
-      gsap.to(extraProjects, {
-        opacity: 0, y: 30, stagger: .06, duration: .35, ease: 'power2.in',
-        onComplete: () => {
-          workGrid.classList.remove('expanded');
-          unloadLazyMedia(workGrid);
-          gsap.set(extraProjects, { clearProps: 'opacity,transform' });
-          ScrollTrigger.refresh();
+      if (expanding) {
+        workGrid.classList.add('expanded');
+        hydrateLazyMedia(workGrid);
+        if (window.gsap) {
+          gsap.fromTo(extraProjects,
+            { opacity: 0, y: 50, scale: .97 },
+            { opacity: 1, y: 0, scale: 1, stagger: .12, duration: .8, ease: 'power3.out', onComplete: () => window.ScrollTrigger && ScrollTrigger.refresh() }
+          );
         }
-      });
-    } else {
-      workGrid.classList.remove('expanded');
-      unloadLazyMedia(workGrid);
-    }
-  });
+      } else if (window.gsap) {
+        gsap.to(extraProjects, {
+          opacity: 0, y: 30, stagger: .06, duration: .35, ease: 'power2.in',
+          onComplete: () => {
+            workGrid.classList.remove('expanded');
+            unloadLazyMedia(workGrid);
+            gsap.set(extraProjects, { clearProps: 'opacity,transform' });
+            if (window.ScrollTrigger) ScrollTrigger.refresh();
+          }
+        });
+      } else {
+        workGrid.classList.remove('expanded');
+        unloadLazyMedia(workGrid);
+      }
+    });
+  }
 
-  // Portfolio cards lead naturally into a project conversation
+  const modalOpeners = {
+    'ismed-clim': openProjectModal,
+    'hancock-health': openHancockProjectModal,
+    'before-health': openBeforeHealthProjectModal,
+    'sela-cloud': openSelaCloudProjectModal,
+    'upfit-supply': openUpfitSupplyProjectModal,
+    'mtech-systems': openMtechProjectModal,
+    'greenopia': openGreenopiaProjectModal,
+    'secufy-sos': openSecufyProjectModal,
+    'farmerlink': openFarmerLinkProjectModal,
+    'buddywerking': openBuddywerkingProjectModal,
+    'carakit': openCarakitProjectModal,
+    'gifybox': openGifyboxProjectModal,
+    'maven': openMavenProjectModal,
+    'bazaar': openBazaarProjectModal
+  };
+
   document.querySelectorAll('.work-card').forEach(card => {
+    if (card.tagName === 'A') return;
     const openProject = () => {
-      if (card.dataset.project === 'ismed-clim') {
-        openProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'hancock-health') {
-        openHancockProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'before-health') {
-        openBeforeHealthProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'sela-cloud') {
-        openSelaCloudProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'upfit-supply') {
-        openUpfitSupplyProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'mtech-systems') {
-        openMtechProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'greenopia') {
-        openGreenopiaProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'secufy-sos') {
-        openSecufyProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'farmerlink') {
-        openFarmerLinkProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'buddywerking') {
-        openBuddywerkingProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'carakit') {
-        openCarakitProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'gifybox') {
-        openGifyboxProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'maven') {
-        openMavenProjectModal();
-        return;
-      }
-      if (card.dataset.project === 'bazaar') {
-        openBazaarProjectModal();
+      const opener = modalOpeners[card.dataset.project];
+      if (opener) {
+        opener();
         return;
       }
       openModal();
-      const title = card.querySelector('h3').textContent;
-      document.getElementById('projectDetails').value = 'I’m interested in a project similar to ' + title + '.';
+      const title = card.querySelector('h3');
+      const details = document.getElementById('projectDetails');
+      if (title && details) details.value = 'I’m interested in a project similar to ' + title.textContent + '.';
     };
     card.addEventListener('click', openProject);
     card.addEventListener('keydown', e => {
@@ -582,27 +572,43 @@
     });
   });
 
-  // Guided chat
+  const requestedProject = new URLSearchParams(window.location.search).get('project');
+  if (requestedProject && modalOpeners[requestedProject] && document.getElementById(PROJECT_MODAL_IDS[requestedProject])) {
+    modalOpeners[requestedProject]();
+  }
+
   const chatLauncher = document.querySelector('.chat-launcher');
   const chatPanel = document.querySelector('.chat-panel');
-  function setChat(open) {
-    chatPanel.classList.toggle('open', open);
-    chatLauncher.setAttribute('aria-expanded', String(open));
-    chatLauncher.textContent = open ? '✕' : '✦';
+  if (chatLauncher && chatPanel) {
+    function setChat(open) {
+      chatPanel.classList.toggle('open', open);
+      chatLauncher.setAttribute('aria-expanded', String(open));
+      chatLauncher.textContent = open ? '✕' : '✦';
+    }
+    chatLauncher.addEventListener('click', () => setChat(!chatPanel.classList.contains('open')));
+    const chatClose = document.querySelector('.chat-close');
+    if (chatClose) chatClose.addEventListener('click', () => setChat(false));
+    const chatProject = document.querySelector('[data-chat-project]');
+    if (chatProject) {
+      chatProject.addEventListener('click', () => {
+        setChat(false);
+        openModal();
+      });
+    }
+    const chatWork = document.querySelector('[data-chat-work]');
+    if (chatWork) {
+      chatWork.addEventListener('click', () => {
+        setChat(false);
+        if (document.getElementById('work')) {
+          if (lenis) lenis.scrollTo('#work', { offset: -70 });
+          else document.querySelector('#work').scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.location.href = '/work/';
+        }
+      });
+    }
   }
-  chatLauncher.addEventListener('click', () => setChat(!chatPanel.classList.contains('open')));
-  document.querySelector('.chat-close').addEventListener('click', () => setChat(false));
-  document.querySelector('[data-chat-project]').addEventListener('click', () => {
-    setChat(false);
-    openModal();
-  });
-  document.querySelector('[data-chat-work]').addEventListener('click', () => {
-    setChat(false);
-    if (lenis) lenis.scrollTo('#work', { offset: -70 });
-    else document.querySelector('#work').scrollIntoView({ behavior: 'smooth' });
-  });
 
-  // Count a Google Ads lead only after Netlify accepts the form submission.
   function reportConsultationConversion() {
     if (typeof window.gtag !== 'function') return;
     window.gtag('event', 'conversion', {
@@ -610,50 +616,88 @@
     });
   }
 
-  // Submit project inquiries to Netlify Forms without leaving the page.
-  document.getElementById('projectForm').addEventListener('submit', async e => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const status = form.querySelector('.form-status');
-    const submitButton = form.querySelector('[type="submit"]');
-    const originalLabel = submitButton.textContent;
+  function bindNetlifyForm(form) {
+    if (!form || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const status = form.querySelector('.form-status');
+      const submitButton = form.querySelector('[type="submit"]');
+      const originalLabel = submitButton ? submitButton.textContent : '';
 
-    submitButton.disabled = true;
-    submitButton.textContent = 'Sending…';
-    form.setAttribute('aria-busy', 'true');
-    status.style.color = 'var(--purple)';
-    status.textContent = 'Sending your project brief…';
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending…';
+      }
+      form.setAttribute('aria-busy', 'true');
+      if (status) {
+        status.style.color = 'var(--purple)';
+        status.textContent = 'Sending your project brief…';
+      }
 
-    try {
-      const response = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(new FormData(form)).toString()
+      try {
+        const response = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(new FormData(form)).toString()
+        });
+
+        if (!response.ok) throw new Error(`Form submission failed: ${response.status}`);
+
+        reportConsultationConversion();
+        if (status) {
+          status.style.color = '#147d61';
+          status.textContent = 'Thanks! Your message was sent. We’ll reply within one business day.';
+        }
+        if (submitButton) submitButton.textContent = 'Sent ✓';
+        form.reset();
+
+        window.setTimeout(() => {
+          closeModal();
+          showWizardStep(0);
+          if (status) status.textContent = '';
+          if (submitButton) {
+            submitButton.textContent = originalLabel;
+            submitButton.disabled = false;
+          }
+        }, 2200);
+      } catch (error) {
+        console.error(error);
+        if (status) {
+          status.style.color = '#c23b2a';
+          status.textContent = 'Message could not be sent. Please email hello@thefunimation.co.';
+        }
+        if (submitButton) {
+          submitButton.textContent = originalLabel;
+          submitButton.disabled = false;
+        }
+      } finally {
+        form.removeAttribute('aria-busy');
+        if (status) status.scrollIntoView({ block: 'nearest' });
+      }
+    });
+  }
+
+  document.querySelectorAll('form[data-netlify="true"]').forEach(bindNetlifyForm);
+
+  if (document.body.hasAttribute('data-hydrate-media') || document.querySelector('[data-hydrate-media]')) {
+    hydrateLazyMedia(document);
+  }
+
+  const filterBar = document.querySelector('[data-work-filters]');
+  if (filterBar && workGrid) {
+    filterBar.addEventListener('click', event => {
+      const button = event.target.closest('[data-filter]');
+      if (!button) return;
+      const filter = button.dataset.filter;
+      filterBar.querySelectorAll('[data-filter]').forEach(btn => {
+        btn.classList.toggle('active', btn === button);
+        btn.setAttribute('aria-pressed', String(btn === button));
       });
-
-      if (!response.ok) throw new Error(`Form submission failed: ${response.status}`);
-
-      reportConsultationConversion();
-      status.style.color = '#147d61';
-      status.textContent = 'Thanks! Your message was sent. We’ll reply within one business day.';
-      submitButton.textContent = 'Sent ✓';
-      form.reset();
-
-      window.setTimeout(() => {
-        closeModal();
-        showWizardStep(0);
-        status.textContent = '';
-        submitButton.textContent = originalLabel;
-        submitButton.disabled = false;
-      }, 2200);
-    } catch (error) {
-      console.error(error);
-      status.style.color = '#c23b2a';
-      status.textContent = 'Message could not be sent. Please email hello@thefunimation.co.';
-      submitButton.textContent = originalLabel;
-      submitButton.disabled = false;
-    } finally {
-      form.removeAttribute('aria-busy');
-      status.scrollIntoView({ block: 'nearest' });
-    }
-  });
+      workGrid.querySelectorAll('.work-card').forEach(card => {
+        const tags = (card.dataset.filters || '').split(/\s+/);
+        const show = filter === 'all' || tags.includes(filter);
+        card.classList.toggle('is-hidden', !show);
+      });
+    });
+  }
