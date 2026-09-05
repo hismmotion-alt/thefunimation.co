@@ -1929,12 +1929,18 @@
   .proof-cell video,
   .proof-cell img {
     width: 100%;
+    /* HTML width/height attrs (e.g. 1920×1080) otherwise become a definite
+       height and ignore aspect-ratio, stretching <video> into a tall box. */
+    height: auto;
     aspect-ratio: 16 / 9;
     object-fit: cover;
     border-radius: 20px;
     display: block;
     background: #111;
     box-shadow: 0 12px 32px rgba(14,17,22,.1);
+  }
+  .proof-cell video {
+    object-fit: contain;
   }
   .proof-cell img[src*="bazaar/frames"] {
     object-fit: contain;
