@@ -123,7 +123,7 @@
     border-right: 1.5px solid currentColor;
     border-bottom: 1.5px solid currentColor;
     transform: rotate(45deg);
-    transition: transform .2s ease;
+    transition: transform 180ms ease-out;
   }
   .nav-item.is-open .nav-caret { transform: rotate(225deg); margin-top: 2px; }
   .nav-dropdown {
@@ -134,7 +134,9 @@
     border-radius: 16px;
     box-shadow: 0 18px 50px rgba(14,17,22,.18);
     opacity: 0; visibility: hidden; pointer-events: none;
+    transform: translateY(-6px);
     z-index: 120;
+    transition: opacity 180ms ease-out, transform 180ms ease-out, visibility 0s linear 180ms;
   }
   .nav-dropdown::before {
     content: "";
@@ -142,10 +144,14 @@
   }
   .nav-item.is-open .nav-dropdown {
     opacity: 1; visibility: visible; pointer-events: auto;
+    transform: translateY(0);
+    transition: opacity 180ms ease-out, transform 180ms ease-out, visibility 0s;
   }
   @media (min-width: 901px) and (hover: hover) and (pointer: fine) {
     .nav-item:hover > .nav-dropdown {
       opacity: 1; visibility: visible; pointer-events: auto;
+      transform: translateY(0);
+      transition: opacity 180ms ease-out, transform 180ms ease-out, visibility 0s;
     }
     .nav-item:hover > .nav-trigger { opacity: 1; }
   }
@@ -1698,10 +1704,11 @@
       background: var(--light);
       overflow-y: auto; -webkit-overflow-scrolling: touch;
       opacity: 0; visibility: hidden; pointer-events: none;
-      transition: opacity .2s;
+      transition: opacity 180ms ease-out, visibility 0s linear 180ms;
     }
     nav.menu-open .nav-links {
       opacity: 1; visibility: visible; pointer-events: auto;
+      transition: opacity 180ms ease-out, visibility 0s;
     }
     nav.menu-open ~ .chat-launcher,
     nav.menu-open ~ .chat-panel { visibility: hidden; pointer-events: none; }
@@ -1715,14 +1722,21 @@
     .nav-item.is-open .nav-caret { margin-top: 4px; }
     .nav-dropdown {
       position: static; transform: none;
-      display: none; min-width: 0; width: 100%;
-      padding: 0 0 4px 10px; margin: 0;
+      display: grid; gap: 2px; min-width: 0; width: 100%;
+      max-height: 0; overflow: hidden;
+      padding: 0 0 0 10px; margin: 0;
       border: 0; border-radius: 0; box-shadow: none;
       background: transparent;
-      opacity: 1; visibility: visible; pointer-events: auto;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: max-height 200ms ease-out, opacity 180ms ease-out, visibility 0s linear 180ms;
     }
     .nav-dropdown::before { display: none; }
-    .nav-item.is-open .nav-dropdown { display: grid; gap: 2px; }
+    .nav-item.is-open .nav-dropdown {
+      display: grid; gap: 2px;
+      max-height: 28rem; opacity: 1; visibility: visible; pointer-events: auto;
+      padding: 0 0 4px 10px;
+      transition: max-height 200ms ease-out, opacity 180ms ease-out, visibility 0s;
+    }
     .nav-links a {
       display: flex; align-items: center; min-height: 48px;
       padding: 12px 14px; opacity: 1;
@@ -1934,6 +1948,14 @@
       opacity: 1 !important; transform: none !important;
     }
     .scroll-progress { display: none; }
+    .nav-dropdown,
+    .nav-item.is-open .nav-dropdown,
+    .nav-item:hover > .nav-dropdown,
+    .nav-links,
+    nav.menu-open .nav-links,
+    .nav-caret {
+      transition: none !important;
+    }
     [data-enable-rive] { display: none !important; }
     .rive-embed-card iframe,
     .work-card-rive iframe { display: none !important; }
