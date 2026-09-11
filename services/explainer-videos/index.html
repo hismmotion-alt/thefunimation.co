@@ -131,9 +131,31 @@
     <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primaryNav">☰</button>
     <div class="nav-links" id="primaryNav">
       <a href="/work/">Work</a>
-      <a href="/services/" aria-current="page">Services</a>
+      <div class="nav-item">
+        <button class="nav-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="nav-services-menu" aria-current="true">Services <span class="nav-caret" aria-hidden="true"></span></button>
+        <div class="nav-dropdown" id="nav-services-menu">
+        <a href="/services/">All services</a>
+        <a href="/services/explainer-videos/" aria-current="page">Explainer Videos</a>
+        <a href="/services/saas-product-animation/">SaaS Product Animation</a>
+        <a href="/services/interactive-web-animation/">Interactive Web Animation</a>
+        <a href="/services/app-motion-design/">App Motion</a>
+        <a href="/services/character-animation/">Character Animation</a>
+        <a href="/services/motion-graphics/">Motion Graphics</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <button class="nav-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="nav-industries-menu">Industries <span class="nav-caret" aria-hidden="true"></span></button>
+        <div class="nav-dropdown" id="nav-industries-menu">
+        <a href="/industries/">All industries</a>
+        <a href="/industries/saas-startups/">SaaS &amp; Startups</a>
+        <a href="/industries/healthcare/">Healthcare</a>
+        <a href="/industries/agtech-cloud-sustainability/">AgTech, Cloud &amp; Sustainability</a>
+        </div>
+      </div>
       <a href="/process/">Process</a>
+      <a href="/blog/">Blog</a>
       <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
       <a class="btn-primary" href="/contact/">Get a free consultation</a>
     </div>
   </div>
