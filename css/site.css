@@ -134,6 +134,12 @@
   .nav-item.is-open .nav-dropdown {
     opacity: 1; visibility: visible; pointer-events: auto;
   }
+  @media (min-width: 901px) and (hover: hover) and (pointer: fine) {
+    .nav-item:hover > .nav-dropdown {
+      opacity: 1; visibility: visible; pointer-events: auto;
+    }
+    .nav-item:hover > .nav-trigger { opacity: 1; }
+  }
   .nav-dropdown a {
     display: flex; align-items: center;
     min-height: 40px; padding: 8px 12px; border-radius: 10px;
