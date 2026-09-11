@@ -555,13 +555,16 @@
     });
 
     if (!document.querySelector('[data-work-filters]')) document.querySelectorAll('.work-card:not(.extra-project)').forEach((card, index) => {
+      const wide = window.matchMedia('(min-width: 901px)').matches;
       gsap.from(card, {
-        x: index % 2 ? 70 : -70, y: 30, opacity: 0, rotation: index % 2 ? 1.5 : -1.5,
+        x: wide ? (index % 2 ? 70 : -70) : 0,
+        y: 30, opacity: 0,
+        rotation: wide ? (index % 2 ? 1.5 : -1.5) : 0,
         duration: 1, ease: 'power3.out',
         scrollTrigger: { trigger: card, start: 'top 84%', once: true }
       });
       const cardImg = card.querySelector('img');
-      if (cardImg) {
+      if (cardImg && wide) {
         gsap.fromTo(cardImg, { scale: 1.12, yPercent: -4 }, {
           scale: 1.02, yPercent: 4, ease: 'none',
           scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 1 }
@@ -576,7 +579,7 @@
         scrollTrigger: { trigger: '.process-steps', start: 'top 80%', once: true }
       });
     }
-    if (document.querySelector('.process-section') && document.querySelector('.process-steps')) {
+    if (document.querySelector('.process-section') && document.querySelector('.process-steps') && window.matchMedia('(min-width: 901px)').matches) {
       gsap.to('.process-steps', {
         xPercent: -2.5, ease: 'none',
         scrollTrigger: { trigger: '.process-section', start: 'top bottom', end: 'bottom top', scrub: 1.5 }
@@ -584,8 +587,9 @@
     }
 
     if (document.querySelector('.faq-item')) {
+      const wide = window.matchMedia('(min-width: 901px)').matches;
       gsap.from('.faq-item', {
-        x: -38, opacity: 0, stagger: .08, duration: .7, ease: 'power3.out',
+        x: wide ? -38 : 0, y: wide ? 0 : 24, opacity: 0, stagger: .08, duration: .7, ease: 'power3.out',
         scrollTrigger: { trigger: '.faq-list', start: 'top 82%', once: true }
       });
     }
@@ -830,19 +834,24 @@
   const nav = document.querySelector('nav');
   const navToggle = document.querySelector('.nav-toggle');
   if (nav && navToggle) {
-    navToggle.addEventListener('click', () => {
-      const isOpen = nav.classList.toggle('menu-open');
+    function setNavOpen(isOpen) {
+      nav.classList.toggle('menu-open', isOpen);
+      document.body.classList.toggle('nav-locked', isOpen);
       navToggle.setAttribute('aria-expanded', String(isOpen));
       navToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
       navToggle.textContent = isOpen ? '✕' : '☰';
+    }
+    navToggle.addEventListener('click', () => {
+      setNavOpen(!nav.classList.contains('menu-open'));
     });
     document.querySelectorAll('.nav-links a').forEach(link => {
-      link.addEventListener('click', () => {
-        nav.classList.remove('menu-open');
-        navToggle.setAttribute('aria-expanded', 'false');
-        navToggle.setAttribute('aria-label', 'Open navigation');
-        navToggle.textContent = '☰';
-      });
+      link.addEventListener('click', () => setNavOpen(false));
+    });
+    window.matchMedia('(max-width: 900px)').addEventListener('change', event => {
+      if (!event.matches) setNavOpen(false);
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && nav.classList.contains('menu-open')) setNavOpen(false);
     });
   }
 
