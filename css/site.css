@@ -1611,20 +1611,32 @@
     .nav-inner { padding: 12px 18px; }
     .logo img { height: 36px; max-width: 196px; }
     .nav-toggle { display: inline-flex; }
-    .nav-links {
-      position: absolute; top: 64px; left: 12px; right: 12px;
-      display: grid; gap: 4px; padding: 10px;
-      border: 1px solid rgba(14,17,22,.08); border-radius: 18px;
-      background: rgba(250,250,248,.97); box-shadow: var(--shadow);
-      opacity: 0; visibility: hidden; transform: translateY(-10px);
-      transition: opacity .25s, transform .25s, visibility .25s;
+    nav.menu-open {
+      height: 100dvh;
+      background: var(--light);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
-    nav.menu-open .nav-links { opacity: 1; visibility: visible; transform: translateY(0); }
+    .nav-links {
+      position: absolute; top: 60px; left: 0; right: 0; bottom: 0;
+      display: grid; align-content: start; gap: 4px;
+      padding: 12px 16px calc(24px + env(safe-area-inset-bottom));
+      border: 0; border-top: 1px solid rgba(14,17,22,.06); border-radius: 0;
+      background: var(--light);
+      overflow-y: auto; -webkit-overflow-scrolling: touch;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity .2s;
+    }
+    nav.menu-open .nav-links {
+      opacity: 1; visibility: visible; pointer-events: auto;
+    }
+    nav.menu-open ~ .chat-launcher,
+    nav.menu-open ~ .chat-panel { visibility: hidden; pointer-events: none; }
     .nav-links a {
       display: flex; align-items: center; min-height: 48px;
       padding: 12px 14px; opacity: 1;
     }
-    .nav-links .btn-primary { justify-content: center; margin-top: 4px; }
+    .nav-links .btn-primary { justify-content: center; margin-top: 8px; }
     .services-grid, .why-grid, .testimonials-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .plans-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1664,7 +1676,6 @@
     .plan-details { grid-template-columns: 1fr; gap: 16px; margin-block: 18px; padding: 16px; }
     .nav-inner { padding: 10px 16px; }
     .logo img { height: 32px; max-width: 168px; }
-    .nav-links { top: 58px; }
     .hero { padding: 104px 18px 48px; min-height: auto; }
     .hero-content { gap: 26px; }
     .hero h1 {
