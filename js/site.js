@@ -834,13 +834,30 @@
   const nav = document.querySelector('nav');
   const navToggle = document.querySelector('.nav-toggle');
   if (nav && navToggle) {
+    const desktopNav = window.matchMedia('(min-width: 901px)');
+    const hoverNav = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+    function setDropdown(item, open) {
+      item.classList.toggle('is-open', open);
+      const trigger = item.querySelector('.nav-trigger');
+      if (trigger) trigger.setAttribute('aria-expanded', String(open));
+    }
+
+    function closeDropdowns(except) {
+      nav.querySelectorAll('.nav-item').forEach(item => {
+        if (item !== except) setDropdown(item, false);
+      });
+    }
+
     function setNavOpen(isOpen) {
       nav.classList.toggle('menu-open', isOpen);
       document.body.classList.toggle('nav-locked', isOpen);
       navToggle.setAttribute('aria-expanded', String(isOpen));
       navToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
       navToggle.textContent = isOpen ? '✕' : '☰';
+      if (!isOpen) closeDropdowns();
     }
+
     navToggle.addEventListener('click', () => {
       setNavOpen(!nav.classList.contains('menu-open'));
     });
@@ -850,8 +867,75 @@
     window.matchMedia('(max-width: 900px)').addEventListener('change', event => {
       if (!event.matches) setNavOpen(false);
     });
+
+    nav.querySelectorAll('.nav-item').forEach(item => {
+      const trigger = item.querySelector('.nav-trigger');
+      const menu = item.querySelector('.nav-dropdown');
+      if (!trigger || !menu) return;
+
+      trigger.addEventListener('click', event => {
+        event.preventDefault();
+        const willOpen = !item.classList.contains('is-open');
+        closeDropdowns(item);
+        setDropdown(item, willOpen);
+      });
+
+      item.addEventListener('pointerenter', event => {
+        if (event.pointerType === 'touch') return;
+        if (!desktopNav.matches || !hoverNav.matches) return;
+        closeDropdowns(item);
+        setDropdown(item, true);
+      });
+      item.addEventListener('pointerleave', event => {
+        if (event.pointerType === 'touch') return;
+        if (!desktopNav.matches || !hoverNav.matches) return;
+        setDropdown(item, false);
+      });
+      item.addEventListener('focusout', event => {
+        if (item.contains(event.relatedTarget)) return;
+        if (desktopNav.matches) setDropdown(item, false);
+      });
+
+      trigger.addEventListener('keydown', event => {
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+        event.preventDefault();
+        closeDropdowns(item);
+        setDropdown(item, true);
+        const links = Array.from(menu.querySelectorAll('a'));
+        const target = event.key === 'ArrowUp' ? links[links.length - 1] : links[0];
+        if (target) target.focus();
+      });
+
+      menu.addEventListener('keydown', event => {
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+        const links = Array.from(menu.querySelectorAll('a'));
+        const index = links.indexOf(document.activeElement);
+        if (index === -1) return;
+        event.preventDefault();
+        const next = event.key === 'ArrowDown'
+          ? links[(index + 1) % links.length]
+          : links[(index - 1 + links.length) % links.length];
+        next.focus();
+      });
+    });
+
+    document.addEventListener('pointerdown', event => {
+      if (!nav.contains(event.target)) closeDropdowns();
+    });
+
     document.addEventListener('keydown', event => {
-      if (event.key === 'Escape' && nav.classList.contains('menu-open')) setNavOpen(false);
+      if (event.key !== 'Escape') return;
+      const openItem = nav.querySelector('.nav-item.is-open');
+      if (openItem) {
+        setDropdown(openItem, false);
+        const trigger = openItem.querySelector('.nav-trigger');
+        if (trigger) trigger.focus();
+        return;
+      }
+      if (nav.classList.contains('menu-open')) {
+        setNavOpen(false);
+        navToggle.focus();
+      }
     });
   }
 
