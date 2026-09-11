@@ -38,14 +38,14 @@
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html { scroll-behavior: smooth; overflow-x: clip; }
+  html { scroll-behavior: smooth; }
 
   body {
     font-family: var(--font-body);
     background: var(--light);
     color: var(--dark);
     line-height: 1.6;
-    overflow-x: clip;
+    overflow-x: hidden;
   }
   body.nav-locked { overflow: hidden; }
   img, video, iframe { max-width: 100%; }
@@ -2258,5 +2258,9 @@
     .case-page .rive-project-gallery { padding-top: 16px; }
     .case-stage-stills { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .proof-strip-inner { padding-inline: 20px; }
+    .crumb a, .case-back, .nap-list a {
+      min-height: 44px; display: inline-flex; align-items: center;
+    }
+    .modal-close { width: 44px; height: 44px; }
   }
 
