@@ -13,6 +13,7 @@ class Page(HTMLParser):
         super().__init__()
         self.path, self.refs, self.ids, self.images, self.forms = path, [], [], [], []
         self.structured, self.json_text = [], None
+        self.posters = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -23,6 +24,8 @@ class Page(HTMLParser):
                 self.refs.append(attrs[name])
         if tag == 'img':
             self.images.append(attrs)
+        if tag == 'video' and attrs.get('poster'):
+            self.posters.append(attrs['poster'])
         if tag == 'form':
             self.forms.append({'attrs': attrs, 'fields': []})
         if tag in ('input', 'textarea', 'select') and self.forms:
@@ -79,6 +82,9 @@ for path, page in pages.items():
             errors.append(f'{label}: image has no alt attribute')
         if image.get('data-src') and '/scenes/' not in image['data-src']:
             errors.append(f'{label}: image relies on script hydration')
+    for poster in page.posters:
+        if unquote(poster).lstrip('/').lower() in covers:
+            errors.append(f'{label}: video poster bypasses optimized cover: {poster}')
     for form in page.forms:
         attrs = form['attrs']
         if attrs.get('data-netlify') != 'true':
