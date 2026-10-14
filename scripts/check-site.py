@@ -48,6 +48,7 @@ for path in ROOT.rglob('*.html'):
     page.feed(path.read_text())
     pages[path] = page
 
+covers = {name.lower() for name in json.loads((ROOT / 'scripts/thumbnail-manifest.json').read_text())}
 errors, refs, images = [], 0, 0
 for path, page in pages.items():
     label = str(path.relative_to(ROOT))
@@ -69,6 +70,8 @@ for path, page in pages.items():
     for image in page.images:
         images += 1
         src = image.get('src', '')
+        if unquote(src).lstrip('/').lower() in covers:
+            errors.append(f'{label}: project cover bypasses optimized thumbnail: {src}')
         if '/thumbnails/' in src:
             if not image.get('width') or not image.get('height'):
                 errors.append(f'{label}: thumbnail has no reserved dimensions: {src}')

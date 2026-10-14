@@ -7,7 +7,7 @@ export function optimizeImages(html) {
   return html.replace(/<img\b[^>]*>/g, tag => {
     const match = tag.match(/\b(?:data-)?src="([^"]+)"/);
     if (!match || /^(?:https?:|data:)/.test(match[1])) return tag;
-    const cover = thumbnails[decodeURIComponent(match[1]).replace(/^\//, '')];
+    const cover = thumbnails[decodeURIComponent(match[1]).replace(/^\//, '').toLowerCase()];
     if (!cover) return tag;
     tag = tag.replace(match[0], `src="${cover.src}"`);
     if (!/\bwidth=/.test(tag)) tag = tag.replace('<img', `<img width="${cover.width}" height="${cover.height}"`);
