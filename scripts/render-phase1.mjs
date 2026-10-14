@@ -1,3 +1,4 @@
+import { optimizeImages } from './optimize-images.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { registerPhase2 } from './phase2-pages.mjs';
@@ -199,11 +200,7 @@ function page({ title, description, canonical, ogImage, ogAlt, ogType = 'website
   }, ...schema];
   const image = ogImage || 'https://thefunimation.co/1st%20project/cover.png';
   const alt = ogAlt || 'Funimation Studio animation work';
-  const motionLite = /\bdata-motion-lite\b/.test(bodyAttrs);
-  const motionScripts = motionLite ? '' : `<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.23/dist/lenis.min.js" defer></script>
-`;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -258,7 +255,7 @@ ${extraHead}
 ${nav(current)}
 ${body}
 ${footer()}
-${motionScripts}<script src="/js/site.js" defer></script>
+<script src="/js/site.js" defer></script>
 </body>
 </html>
 `;
@@ -282,7 +279,7 @@ function serviceSchema(name, serviceType, url, description) {
 function writePage(rel, html) {
   const dest = path.join('/workspace', rel, 'index.html');
   fs.mkdirSync(path.dirname(dest), { recursive: true });
-  fs.writeFileSync(dest, html);
+  fs.writeFileSync(dest, optimizeImages(html));
   console.log('wrote', dest);
 }
 
