@@ -995,6 +995,8 @@
     transition: transform .55s var(--ease);
   }
   .scene-grid a:hover img { transform: scale(1.035); }
+  .project-scenes-stacked .scene-grid { grid-template-columns: minmax(0, 1fr); }
+  .project-scenes-stacked .scene-grid img { aspect-ratio: auto; height: auto; object-fit: contain; }
   .rive-project-gallery {
     padding: 54px 48px; background: #fff;
   }
@@ -1960,6 +1962,7 @@
   }
   .hero-btns { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 28px; }
   .crumb {
+    position: static; inset: auto; z-index: auto; background: transparent; border: 0;
     display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
     font-size: 13px; color: rgba(14,17,22,.5); margin-bottom: 22px;
   }

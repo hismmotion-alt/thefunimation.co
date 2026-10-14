@@ -6,6 +6,7 @@
   let hoverRiveSeq = 0;
 
   const PROJECT_PAGE_URLS = {
+    'scouter': '/work/scouter-app-motion-illustration/',
     'ismed-clim': '/work/ismed-clim-climate-health-animation/',
     'hancock-health': '/work/hancock-health-explainer-animation/',
     'before-health': '/work/before-health-ai-healthcare-explainer/',

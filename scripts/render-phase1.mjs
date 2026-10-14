@@ -4,6 +4,8 @@ import path from 'node:path';
 import { registerPhase2 } from './phase2-pages.mjs';
 import { registerPhase3 } from './phase3-pages.mjs';
 
+const SCOUTER_PROJECT = JSON.parse(fs.readFileSync(new URL('./scouter-project.json', import.meta.url), 'utf8'));
+
 const ORG_SCHEMA = {
   '@type': 'Organization',
   '@id': 'https://thefunimation.co/#organization',
@@ -807,6 +809,7 @@ ${cta('Ready to Make Your Website More Interactive?', 'Whether you need website 
 });
 
 const workCards = [
+  SCOUTER_PROJECT.card,
   { href: '/work/carakit-care-kit-explainer/', filters: 'explainer character', img: '/11%20project/cover.png', alt: 'CaraKit explainer cover', tags: 'Care & Recovery · Explainer', title: 'CaraKit — Care-Kit Brand Explainer', copy: 'Helping people understand how curated, treatment-aware gifts can bring comfort and practical support.' },
   { href: '/work/before-health-ai-healthcare-explainer/', filters: 'explainer product', img: '/3rd%20project/cover.png', alt: 'Before Health Intelligence cover', tags: 'AI Healthcare · Explainer', title: 'Before Health Intelligence — AI Healthcare Explainer', copy: 'Making predictive health technology clear through approachable characters and modern visual storytelling.' },
   { href: '/work/sela-cloud-explainer-video/', filters: 'explainer product', img: '/4th%20project/cover.png', alt: 'Sela Cloud cover', tags: 'Cloud & AI · Explainer', title: 'Sela Cloud — Cloud & AI Explainer Animation', copy: 'Simplifying cloud infrastructure and AI services for business and technical audiences.' },
@@ -882,7 +885,7 @@ const workHub = page({
 ${cta('Like What You See? Let’s Create Something Together', 'If you have a product, feature, campaign, website, or idea that needs animation, tell us what you are trying to communicate.')}`
 });
 
-function casePage({ slug, title, metaTitle, description, kicker, h1, stake, challenge, approach, result, client, deliverables, focus, website, poster, video, scenes, videoName, rive }) {
+function casePage({ slug, title, metaTitle, description, kicker, h1, stake, challenge, approach, result, client, deliverables, focus, website, poster, video, scenes, videoName, rive, stackedScenes = false, sceneTitle = 'Visual scenes', sceneDescription = 'Selected frames from the animation’s visual development', sceneAlts = [], sceneDimensions = [] }) {
   const canonical = `https://thefunimation.co/work/${slug}/`;
   const schema = [{
     '@type': 'CreativeWork',
@@ -900,13 +903,13 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, stake, chal
       contentUrl: `https://thefunimation.co/${video}`
     });
   }
-  const sceneHtml = scenes ? `<section class="project-scenes">
+  const sceneHtml = scenes ? `<section class="project-scenes${stackedScenes ? ' project-scenes-stacked' : ''}">
     <div class="project-scenes-head">
-      <h3>Visual scenes</h3>
-      <p>Selected frames from the animation’s visual development</p>
+      <h3>${escape(sceneTitle)}</h3>
+      <p>${escape(sceneDescription)}</p>
     </div>
     <div class="scene-grid">
-      ${scenes.map((src, i) => `<a href="/${src}" target="_blank"><img src="/${src}" alt="${escape(client)} visual scene ${i + 1}" loading="lazy"></a>`).join('\n      ')}
+      ${scenes.map((src, i) => `<a href="/${src}" target="_blank" rel="noopener noreferrer"><img src="/${src}" alt="${escape(sceneAlts[i] || `${client} visual scene ${i + 1}`)}"${sceneDimensions[i] ? ` width="${sceneDimensions[i][0]}" height="${sceneDimensions[i][1]}"` : ''} loading="lazy" decoding="async"></a>`).join('\n      ')}
     </div>
   </section>` : '';
   const media = rive
@@ -965,6 +968,8 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, stake, chal
     ${rest}`
   });
 }
+
+const scouter = casePage(SCOUTER_PROJECT);
 
 const carakit = casePage({
   slug: 'carakit-care-kit-explainer',
@@ -1197,6 +1202,7 @@ writePage('services/explainer-videos', explainer);
 writePage('services/saas-product-animation', saas);
 writePage('services/interactive-web-animation', interactive);
 writePage('work', workHub);
+writePage('work/scouter-app-motion-illustration', scouter);
 writePage('work/carakit-care-kit-explainer', carakit);
 writePage('work/before-health-ai-healthcare-explainer', beforeHealth);
 writePage('work/sela-cloud-explainer-video', sela);
@@ -1231,6 +1237,7 @@ const urls = [
   'https://thefunimation.co/services/saas-product-animation/',
   'https://thefunimation.co/services/interactive-web-animation/',
   'https://thefunimation.co/work/',
+  'https://thefunimation.co/work/scouter-app-motion-illustration/',
   'https://thefunimation.co/work/carakit-care-kit-explainer/',
   'https://thefunimation.co/work/before-health-ai-healthcare-explainer/',
   'https://thefunimation.co/work/sela-cloud-explainer-video/',
@@ -1244,7 +1251,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((loc, i) => `  <url>
     <loc>${loc}</loc>
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>${['https://thefunimation.co/', 'https://thefunimation.co/work/', 'https://thefunimation.co/work/scouter-app-motion-illustration/'].includes(loc) ? '2026-10-14' : '2026-09-04'}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>${i === 0 ? '1.0' : loc.includes('/services/') || loc.includes('/work/') || loc.includes('/contact/') || loc.includes('/about/') || loc.includes('/process/') || loc.includes('/industries/') || loc === 'https://thefunimation.co/blog/' ? '0.8' : '0.7'}</priority>
   </url>`).join('\n')}

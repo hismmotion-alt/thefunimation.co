@@ -1,0 +1,48 @@
+{
+  "slug": "scouter-app-motion-illustration",
+  "title": "Scouter",
+  "metaTitle": "Scouter App Motion & Illustration Case Study | Funimation",
+  "description": "App motion, custom illustration, and character animation for Scouter. Explore the product film, finished artwork, and storyboard in this Funimation case study.",
+  "kicker": "Featured Case Study · App Motion & Illustration",
+  "h1": "Scouter — App Motion & Illustration",
+  "stake": "A football-led product story, brought to life through app screens, custom illustration, and character animation.",
+  "challenge": "Connect Scouter’s product screens with the energy of football in a short, cohesive visual story.",
+  "approach": "A vivid green palette, custom characters, kinetic typography, and animated interface sequences connect the app with its illustrated football world.",
+  "result": "A 27-second product film, supported by finished illustration frames and a storyboard showing the progression from initial sketches to final motion.",
+  "client": "Scouter",
+  "deliverables": "App product film, custom illustration, character animation, motion graphics, storyboard",
+  "focus": "Product storytelling, interface animation, football-inspired visual development",
+  "poster": "14%20project/cover.webp",
+  "video": "14%20project/scouter-app.mp4",
+  "videoName": "Scouter app — motion and illustrations",
+  "scenes": [
+    "14%20project/scenes/finished-artwork.webp",
+    "14%20project/scenes/storyboard.webp"
+  ],
+  "sceneTitle": "Visual development",
+  "sceneDescription": "Finished illustration frames and the storyboard behind the motion.",
+  "sceneAlts": [
+    "Scouter finished artwork sheet combining football characters, app screens, and green illustrated scenes",
+    "Scouter pencil storyboard showing the football-led narrative and app interface sequences"
+  ],
+  "stackedScenes": true,
+  "card": {
+    "href": "/work/scouter-app-motion-illustration/",
+    "filters": "explainer product app character motion",
+    "img": "/14%20project/cover.webp",
+    "alt": "Scouter app cover with an illustrated football player, mobile interface, and stadium backdrop",
+    "tags": "App Motion · Illustration",
+    "title": "Scouter — App Motion & Illustration",
+    "copy": "Bringing a football-focused app story to life through custom characters, interface animation, and a vivid green visual world."
+  },
+  "sceneDimensions": [
+    [
+      2400,
+      1350
+    ],
+    [
+      2400,
+      675
+    ]
+  ]
+}
