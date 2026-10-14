@@ -1,0 +1,67 @@
+{
+  "1st project/cover.png": {
+    "src": "/thumbnails/project-01.webp",
+    "width": 960,
+    "height": 540
+  },
+  "2nd project/cover.png": {
+    "src": "/thumbnails/project-02.webp",
+    "width": 960,
+    "height": 535
+  },
+  "3rd project/cover.png": {
+    "src": "/thumbnails/project-03.webp",
+    "width": 960,
+    "height": 537
+  },
+  "4th project/cover.png": {
+    "src": "/thumbnails/project-04.webp",
+    "width": 960,
+    "height": 485
+  },
+  "5th project/cover.png": {
+    "src": "/thumbnails/project-05.webp",
+    "width": 960,
+    "height": 534
+  },
+  "6th project/cover.png": {
+    "src": "/thumbnails/project-06.webp",
+    "width": 960,
+    "height": 535
+  },
+  "7th project/cover.png": {
+    "src": "/thumbnails/project-07.webp",
+    "width": 960,
+    "height": 526
+  },
+  "8th project/cover-08.png": {
+    "src": "/thumbnails/project-08.webp",
+    "width": 960,
+    "height": 540
+  },
+  "9th project/cover-25.png": {
+    "src": "/thumbnails/project-09.webp",
+    "width": 960,
+    "height": 540
+  },
+  "10 project/cover-08.png": {
+    "src": "/thumbnails/project-10.webp",
+    "width": 960,
+    "height": 540
+  },
+  "11 project/cover.png": {
+    "src": "/thumbnails/project-11.webp",
+    "width": 960,
+    "height": 530
+  },
+  "12 project/cover.png": {
+    "src": "/thumbnails/project-12.webp",
+    "width": 960,
+    "height": 654
+  },
+  "13 project/thumbnail.png": {
+    "src": "/thumbnails/project-13.webp",
+    "width": 960,
+    "height": 499
+  }
+}
