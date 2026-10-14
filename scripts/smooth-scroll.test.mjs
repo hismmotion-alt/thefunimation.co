@@ -15,7 +15,7 @@ function fixture({ reduced = false, pointer = true, fails = false } = {}) {
     destroy() { this.destroyed = true; }
     stop() { this.stopped = true; }
     start() { this.stopped = false; }
-    scrollTo(target, options) { this.target = target; this.offset = options.offset; }
+    scrollTo(target, options = {}) { this.target = target; this.offset = options.offset; }
   }
   let loads = 0, native;
   const doc = {
@@ -35,7 +35,8 @@ function fixture({ reduced = false, pointer = true, fails = false } = {}) {
 test('desktop glide supports anchors and pauses while a modal is open', async () => {
   const f = fixture(); await Promise.resolve();
   assert.equal(f.instances[0].options.syncTouch, false);
-  f.controller.scrollTo('#work'); assert.equal(f.instances[0].offset, -88);
+  f.controller.scrollTo('#work'); assert.equal(f.instances[0].target, '#work');
+  assert.equal(f.instances[0].options.anchors, true); assert.equal(f.instances[0].offset, undefined);
   f.doc.locked = true; f.controller.syncLock(); assert.equal(f.instances[0].stopped, true);
   f.doc.locked = false; f.controller.syncLock(); assert.equal(f.instances[0].stopped, false);
   f.controller.destroy(); assert.equal(f.instances[0].destroyed, true);

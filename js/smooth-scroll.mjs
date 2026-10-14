@@ -34,7 +34,7 @@ export function createSmoothScroll({
         lerp: 0.15,
         smoothWheel: true,
         syncTouch: false,
-        anchors: { offset: -88 },
+        anchors: true,
         stopInertiaOnNavigate: true,
         prevent: node => Boolean(node.closest('.modal-overlay, .nav-links, .chat-panel, textarea, select'))
       });
@@ -55,7 +55,7 @@ export function createSmoothScroll({
   return {
     syncLock,
     scrollTo(target) {
-      if (instance) instance.scrollTo(target, { offset: -88 });
+      if (instance) instance.scrollTo(target); // Lenis honors the shared CSS scroll-padding-top.
       else doc.querySelector(target)?.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth' });
     },
     destroy() {
