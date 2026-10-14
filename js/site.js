@@ -1,4 +1,12 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let smoothScroll;
+  import('/js/smooth-scroll.mjs').then(({ createSmoothScroll }) => {
+    smoothScroll = createSmoothScroll();
+  }).catch(() => {});
+  function updateSmoothScrollLock() {
+    if (smoothScroll) smoothScroll.syncLock();
+  }
+
   const MAX_LIVE_RIVE = 2;
   const HOVER_UNMOUNT_MS = 80;
   const hoverRiveWanted = new Map();
@@ -522,11 +530,13 @@
     if (status) status.textContent = '';
     contactModal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    updateSmoothScrollLock();
   }
   function closeModal() {
     if (!contactModal || !contactModal.classList.contains('active')) return;
     contactModal.classList.remove('active');
     document.body.style.overflow = document.querySelector('.modal-overlay.active') ? 'hidden' : '';
+    updateSmoothScrollLock();
     if (contactModal._returnFocus && contactModal._returnFocus.isConnected) contactModal._returnFocus.focus();
   }
   function openNamedProjectModal(id) {
@@ -536,6 +546,7 @@
     projectModal.classList.add('active');
     projectModal.scrollTop = 0;
     document.body.style.overflow = 'hidden';
+    updateSmoothScrollLock();
     const closeBtn = projectModal.querySelector('.modal-close');
     if (closeBtn) closeBtn.focus();
     const hasHoverRive = Boolean(projectModal.querySelector('[data-rive-hover], [data-rive-on-demand], [data-enable-rive]'));
@@ -551,6 +562,7 @@
     projectModal.classList.remove('active');
     unloadLazyMedia(projectModal);
     document.body.style.overflow = document.querySelector('.modal-overlay.active') ? 'hidden' : '';
+    updateSmoothScrollLock();
     if (projectModal._returnFocus && projectModal._returnFocus.isConnected) projectModal._returnFocus.focus();
   }
   function openProjectModal() { openNamedProjectModal('projectModal'); }
@@ -667,6 +679,7 @@
     function setNavOpen(isOpen) {
       nav.classList.toggle('menu-open', isOpen);
       document.body.classList.toggle('nav-locked', isOpen);
+      updateSmoothScrollLock();
       navToggle.setAttribute('aria-expanded', String(isOpen));
       navToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
       navToggle.textContent = isOpen ? '✕' : '☰';
@@ -837,7 +850,8 @@
       chatWork.addEventListener('click', () => {
         setChat(false);
         if (document.getElementById('work')) {
-          document.querySelector('#work').scrollIntoView({ behavior: 'auto' });
+          if (smoothScroll) smoothScroll.scrollTo('#work');
+          else document.querySelector('#work').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
         } else {
           window.location.href = '/work/';
         }
