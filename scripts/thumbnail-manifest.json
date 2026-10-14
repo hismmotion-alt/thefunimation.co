@@ -63,5 +63,10 @@
     "src": "/thumbnails/project-13.webp",
     "width": 960,
     "height": 499
+  },
+  "14 project/cover.webp": {
+    "src": "/thumbnails/project-14.webp",
+    "width": 960,
+    "height": 540
   }
 }
