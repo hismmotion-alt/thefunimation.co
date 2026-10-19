@@ -25,8 +25,6 @@
     'secufy-sos': '/work/secufy-sos-personal-safety-explainer/',
     'farmerlink': '/work/farmerlink-digital-agriculture-explainer/',
     'buddywerking': '/work/buddywerking-vlaanderen-social-impact-explainer/',
-    'carakit': '/work/carakit-care-kit-explainer/',
-    'gifybox': '/work/gifybox-event-photo-booth-explainer/',
     'maven': '/work/maven-investment-partners-explainer/',
     'bazaar': '/work/bazaar-interactive-icon-animation/'
   };
@@ -42,8 +40,6 @@
     'secufy-sos': 'secufyProjectModal',
     'farmerlink': 'farmerLinkProjectModal',
     'buddywerking': 'buddywerkingProjectModal',
-    'carakit': 'carakitProjectModal',
-    'gifybox': 'gifyboxProjectModal',
     'maven': 'mavenProjectModal',
     'bazaar': 'bazaarProjectModal'
   };
@@ -585,10 +581,6 @@
   function closeFarmerLinkProjectModal() { closeNamedProjectModal('farmerLinkProjectModal'); }
   function openBuddywerkingProjectModal() { openNamedProjectModal('buddywerkingProjectModal'); }
   function closeBuddywerkingProjectModal() { closeNamedProjectModal('buddywerkingProjectModal'); }
-  function openCarakitProjectModal() { openNamedProjectModal('carakitProjectModal'); }
-  function closeCarakitProjectModal() { closeNamedProjectModal('carakitProjectModal'); }
-  function openGifyboxProjectModal() { openNamedProjectModal('gifyboxProjectModal'); }
-  function closeGifyboxProjectModal() { closeNamedProjectModal('gifyboxProjectModal'); }
   function openMavenProjectModal() { openNamedProjectModal('mavenProjectModal'); }
   function closeMavenProjectModal() { closeNamedProjectModal('mavenProjectModal'); }
   function openBazaarProjectModal() { openNamedProjectModal('bazaarProjectModal'); }
@@ -616,10 +608,6 @@
   window.closeFarmerLinkProjectModal = closeFarmerLinkProjectModal;
   window.openBuddywerkingProjectModal = openBuddywerkingProjectModal;
   window.closeBuddywerkingProjectModal = closeBuddywerkingProjectModal;
-  window.openCarakitProjectModal = openCarakitProjectModal;
-  window.closeCarakitProjectModal = closeCarakitProjectModal;
-  window.openGifyboxProjectModal = openGifyboxProjectModal;
-  window.closeGifyboxProjectModal = closeGifyboxProjectModal;
   window.openMavenProjectModal = openMavenProjectModal;
   window.closeMavenProjectModal = closeMavenProjectModal;
   window.openBazaarProjectModal = openBazaarProjectModal;
@@ -792,8 +780,6 @@
     'secufy-sos': openSecufyProjectModal,
     'farmerlink': openFarmerLinkProjectModal,
     'buddywerking': openBuddywerkingProjectModal,
-    'carakit': openCarakitProjectModal,
-    'gifybox': openGifyboxProjectModal,
     'maven': openMavenProjectModal,
     'bazaar': openBazaarProjectModal
   };

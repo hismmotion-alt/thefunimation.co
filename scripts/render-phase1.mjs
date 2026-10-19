@@ -301,7 +301,7 @@ const servicesHub = page({
 </header>
 ${proofStrip({
   stills: [
-    { src: '/11%20project/cover.png', alt: 'CaraKit explainer still' },
+    { src: '/14%20project/cover.webp', alt: 'Scouter explainer still' },
     { src: '/4th%20project/cover.png', alt: 'Sela Cloud product animation still' },
     { src: '/bazaar/frames/01.png', alt: 'Bazaar interactive icon still' }
   ],
@@ -324,7 +324,7 @@ ${proofStrip({
       <p>Your product may be powerful, but that does not mean it is easy to explain. Funimation turns complex products, technical workflows, and new ideas into clear visual stories. As a SaaS animation company, we work with teams that need more than attractive visuals. We create animation that supports product marketing, customer education, launches, websites, apps, and brand communication.</p>
       <p>From a 2D explainer video to an interactive website experience, every project starts with the same question: what does your audience need to understand? We then build the story, design the visuals, and create the motion around that goal. The result is custom animation that feels right for your brand and gives people a clearer reason to keep watching, exploring, or taking the next step.</p>
     </div>
-    <img src="/11%20project/cover.png" alt="CaraKit explainer animation still from Funimation" style="width:100%;border-radius:24px;box-shadow:var(--shadow)">
+    <img src="/14%20project/cover.webp" alt="Scouter explainer animation still from Funimation" style="width:100%;border-radius:24px;box-shadow:var(--shadow)">
   </div>
 </section>
 <section class="section" id="service-grid">
@@ -414,10 +414,6 @@ ${proofStrip({
     <h2 class="section-title">Animation That Speaks for Itself</h2>
     <p class="section-desc">Explore real examples of explainer videos, product stories, interactive experiences, character animation, and motion graphics created for startups, SaaS teams, healthcare organizations, and modern brands.</p>
     <div class="work-grid">
-      <a class="work-card" href="/work/carakit-care-kit-explainer/">
-        <img src="/11%20project/cover.png" alt="CaraKit care-kit explainer animation cover" loading="lazy">
-        <div class="work-card-body"><div class="work-tags"><span class="work-tag">Explainer</span></div><h3>CaraKit</h3><p>Care-kit brand explainer with warm character animation.</p></div>
-      </a>
       <a class="work-card" href="/work/sela-cloud-explainer-video/">
         <img src="/4th%20project/cover.png" alt="Sela Cloud explainer animation cover" loading="lazy">
         <div class="work-card-body"><div class="work-tags"><span class="work-tag">Cloud &amp; AI</span></div><h3>Sela Cloud</h3><p>Cloud infrastructure and AI services, told simply.</p></div>
@@ -451,8 +447,8 @@ const explainer = page({
   description: 'Custom 2D explainer videos for SaaS and startups. We turn complex products into clear, engaging stories that convert. Serving clients across the US & Canada.',
   canonical: 'https://thefunimation.co/services/explainer-videos/',
   current: 'services',
-  ogImage: 'https://thefunimation.co/11%20project/cover.png',
-  ogAlt: 'CaraKit 2D explainer video by Funimation',
+  ogImage: 'https://thefunimation.co/14%20project/cover.webp',
+  ogAlt: 'Scouter 2D explainer video by Funimation',
   schema: [serviceSchema('Explainer videos', '2D explainer video production', 'https://thefunimation.co/services/explainer-videos/', 'Custom 2D explainer videos for SaaS companies, startups, and modern brands.')],
   body: `<header class="page-hero">
   <div class="section-inner">
@@ -464,8 +460,8 @@ const explainer = page({
   </div>
 </header>
 ${proofStrip({
-  video: '/11%20project/Animation%20Video%20111.mp4',
-  poster: '/11%20project/cover.png',
+  video: '/14%20project/scouter-app.mp4',
+  poster: '/14%20project/cover.webp',
   stills: [
     { src: '/3rd%20project/cover.png', alt: 'Before Health Intelligence explainer still' },
     { src: '/4th%20project/cover.png', alt: 'Sela Cloud explainer still' }
@@ -539,7 +535,6 @@ ${proofStrip({
     <h2 class="section-title">See How We Explain Complex Ideas</h2>
     <p class="section-desc">Featured explainer case studies from healthcare, care, and cloud teams.</p>
     <div class="work-grid">
-      <a class="work-card" href="/work/carakit-care-kit-explainer/"><img src="/11%20project/cover.png" alt="CaraKit explainer video" loading="lazy"><div class="work-card-body"><h3>CaraKit</h3><p>Care-kit brand explainer.</p></div></a>
       <a class="work-card" href="/work/before-health-ai-healthcare-explainer/"><img src="/3rd%20project/cover.png" alt="Before Health Intelligence explainer" loading="lazy"><div class="work-card-body"><h3>Before Health Intelligence</h3><p>AI healthcare explainer.</p></div></a>
       <a class="work-card" href="/work/sela-cloud-explainer-video/"><img src="/4th%20project/cover.png" alt="Sela Cloud explainer" loading="lazy"><div class="work-card-body"><h3>Sela Cloud</h3><p>Cloud and AI explainer.</p></div></a>
     </div>
@@ -668,7 +663,6 @@ ${proofStrip({
     <div class="work-grid">
       <a class="work-card" href="/work/sela-cloud-explainer-video/"><img src="/4th%20project/cover.png" alt="Sela Cloud product story" loading="lazy"><div class="work-card-body"><h3>Sela Cloud</h3><p>Cloud and AI services explained for mixed audiences.</p></div></a>
       <a class="work-card" href="/work/before-health-ai-healthcare-explainer/"><img src="/3rd%20project/cover.png" alt="Before Health product story" loading="lazy"><div class="work-card-body"><h3>Before Health Intelligence</h3><p>Predictive healthcare technology, made approachable.</p></div></a>
-      <a class="work-card" href="/work/carakit-care-kit-explainer/"><img src="/11%20project/cover.png" alt="CaraKit product story" loading="lazy"><div class="work-card-body"><h3>CaraKit</h3><p>A product story built around care and clarity.</p></div></a>
     </div>
   </div>
 </section>
@@ -810,13 +804,11 @@ ${cta('Ready to Make Your Website More Interactive?', 'Whether you need website 
 
 const workCards = [
   SCOUTER_PROJECT.card,
-  { href: '/work/carakit-care-kit-explainer/', filters: 'explainer character', img: '/11%20project/cover.png', alt: 'CaraKit explainer cover', tags: 'Care & Recovery · Explainer', title: 'CaraKit — Care-Kit Brand Explainer', copy: 'Helping people understand how curated, treatment-aware gifts can bring comfort and practical support.' },
   { href: '/work/before-health-ai-healthcare-explainer/', filters: 'explainer product', img: '/3rd%20project/cover.png', alt: 'Before Health Intelligence cover', tags: 'AI Healthcare · Explainer', title: 'Before Health Intelligence — AI Healthcare Explainer', copy: 'Making predictive health technology clear through approachable characters and modern visual storytelling.' },
   { href: '/work/sela-cloud-explainer-video/', filters: 'explainer product', img: '/4th%20project/cover.png', alt: 'Sela Cloud cover', tags: 'Cloud & AI · Explainer', title: 'Sela Cloud — Cloud & AI Explainer Animation', copy: 'Simplifying cloud infrastructure and AI services for business and technical audiences.' },
   { href: '/work/bazaar-interactive-icon-animation/', filters: 'interactive', img: '/bazaar/frames/01.png', alt: 'Bazaar interactive brand icon still', tags: 'Interactive · Rive', title: 'Bazaar — Interactive Brand Icon Animation', copy: 'A lightweight interactive icon system bringing motion, feedback, and personality to Bazaar’s digital experience.' },
   { href: '/work/maven-investment-partners-explainer/', filters: 'explainer', img: '/13%20project/thumbnail.png', alt: 'Maven Investment Partners thumbnail', tags: 'Investment · Explainer', title: 'Maven Investment Partners — Explainer Animation', copy: 'Communicating trust, growth, and financial expertise through polished branding and clear presentation.' },
   { href: '/work/ismed-clim-climate-health-animation/', filters: 'explainer character', img: '/1st%20project/cover.png', alt: 'ISMED-CLIM cover', tags: 'Climate & Health · Explainer', title: 'ISMED-CLIM — Climate & Public Health Awareness', copy: 'Making climate-health research clear, accessible, and engaging for audiences across the Mediterranean.' },
-  { href: '/work/gifybox-event-photo-booth-explainer/', filters: 'explainer product motion', img: '/12%20project/cover.png', alt: 'GifyBox cover', tags: 'Event Tech · Product Explainer', title: 'GifyBox — Event Photo Booth Explainer', copy: 'Showing how interactive photo and GIF experiences turn live events into shareable branded moments.' },
   { href: '/work/upfit-supply-product-explainer/', filters: 'explainer product', img: '/5th%20project/cover.png', alt: 'Upfit Supply cover', tags: 'Commercial Vehicles · Product', title: 'Upfit Supply — Product Explainer Animation', copy: 'Showing how custom commercial vehicle solutions improve efficiency, organization, and productivity.' },
   { href: '/work/hancock-health-explainer-animation/', filters: 'explainer character', img: '/2nd%20project/cover.png', alt: 'Hancock Health cover', tags: 'Healthcare · Explainer', title: 'Hancock Health — Healthcare Explainer Animation', copy: 'An approachable visual story helping patients understand community-focused healthcare services.' },
   { href: '/work/mtech-systems-agtech-explainer/', filters: 'explainer product motion', img: '/6th%20project/cover.png', alt: 'MTech Systems cover', tags: 'AgTech · Explainer', title: 'MTech Systems — AgTech Explainer Animation', copy: 'Explaining how real-time data, IoT, and AI help producers make smarter decisions across the supply chain.' },
@@ -970,24 +962,6 @@ function casePage({ slug, title, metaTitle, description, kicker, h1, stake, chal
 }
 
 const scouter = casePage(SCOUTER_PROJECT);
-
-const carakit = casePage({
-  slug: 'carakit-care-kit-explainer',
-  title: 'CaraKit',
-  metaTitle: 'CaraKit Explainer Video Case Study - Funimation',
-  description: '2D explainer animation for CaraKit, a care-kit brand supporting people through treatment and recovery. A Funimation case study.',
-  kicker: 'Featured Case Study · Care & Recovery',
-  h1: 'CaraKit — Care-Kit Brand Explainer',
-  stake: 'People didn’t know how to show up for loved ones in treatment with gifts that actually help.',
-  challenge: 'People didn’t know how to show up for loved ones in treatment with gifts that actually help.',
-  approach: 'Warm character-led 2D explainer that walks through compassionate, treatment-aware gifting.',
-  result: 'An emotional, easy-to-follow story that makes CaraKit feel approachable and purposeful.',
-  client: 'CaraKit',
-  deliverables: '2D explainer animation, character animation, motion graphics',
-  focus: 'Cancer treatment, surgery recovery, compassionate gifting',
-  poster: '11%20project/cover.png',
-  video: '11%20project/Animation%20Video%20111.mp4'
-});
 
 const beforeHealth = casePage({
   slug: 'before-health-ai-healthcare-explainer',
@@ -1203,7 +1177,6 @@ writePage('services/saas-product-animation', saas);
 writePage('services/interactive-web-animation', interactive);
 writePage('work', workHub);
 writePage('work/scouter-app-motion-illustration', scouter);
-writePage('work/carakit-care-kit-explainer', carakit);
 writePage('work/before-health-ai-healthcare-explainer', beforeHealth);
 writePage('work/sela-cloud-explainer-video', sela);
 writePage('work/bazaar-interactive-icon-animation', bazaar);
@@ -1238,7 +1211,6 @@ const urls = [
   'https://thefunimation.co/services/interactive-web-animation/',
   'https://thefunimation.co/work/',
   'https://thefunimation.co/work/scouter-app-motion-illustration/',
-  'https://thefunimation.co/work/carakit-care-kit-explainer/',
   'https://thefunimation.co/work/before-health-ai-healthcare-explainer/',
   'https://thefunimation.co/work/sela-cloud-explainer-video/',
   'https://thefunimation.co/work/bazaar-interactive-icon-animation/',
