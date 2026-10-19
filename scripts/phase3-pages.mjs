@@ -277,8 +277,8 @@ const ARTICLES = [
     kicker: 'Craft notes',
     title: '2D vs 3D animation: which one actually helps your product?',
     description: 'A practical look at 2D versus 3D animation for explainers and product stories — when each earns its keep, and when 2D is the clearer choice.',
-    ogImage: 'https://thefunimation.co/11%20project/cover.png',
-    ogAlt: 'CaraKit 2D explainer still by Funimation',
+    ogImage: 'https://thefunimation.co/14%20project/cover.webp',
+    ogAlt: 'Scouter 2D explainer still by Funimation',
     date: '2026-09-04',
     dateLabel: 'September 4, 2026'
   },

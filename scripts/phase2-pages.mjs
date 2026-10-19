@@ -51,7 +51,7 @@ ${proofStrip({
   video: '/8th%20project/secufy-sos-web.mp4',
   poster: '/8th%20project/cover-08.png',
   stills: [
-    { src: '/11%20project/cover.png', alt: 'CaraKit product still used for motion language' },
+    { src: '/14%20project/cover.webp', alt: 'Scouter product still used for motion language' },
     { src: '/bazaar/frames/04.png', alt: 'Static UI icon still — motion added only when needed' }
   ],
   label: 'App and product motion stills'
@@ -147,8 +147,8 @@ ${cta('Give Your App a More Natural Sense of Motion', 'Whether you need UI motio
     description: 'Custom character and mascot animation for brands and products. Friendly, memorable characters that make your product feel human.',
     canonical: 'https://thefunimation.co/services/character-animation/',
     current: 'services',
-    ogImage: 'https://thefunimation.co/11%20project/cover.png',
-    ogAlt: 'CaraKit character animation by Funimation',
+    ogImage: 'https://thefunimation.co/14%20project/cover.webp',
+    ogAlt: 'Scouter character animation by Funimation',
     schema: [serviceSchema('Character animation', 'Character and mascot animation', 'https://thefunimation.co/services/character-animation/', 'Custom character animation, mascot design, and brand personality for explainers, products, and campaigns.')],
     body: `<header class="page-hero">
   <div class="section-inner">
@@ -160,8 +160,8 @@ ${cta('Give Your App a More Natural Sense of Motion', 'Whether you need UI motio
   </div>
 </header>
 ${proofStrip({
-  video: '/11%20project/Animation%20Video%20111.mp4',
-  poster: '/11%20project/cover.png',
+  video: '/14%20project/scouter-app.mp4',
+  poster: '/14%20project/cover.webp',
   stills: [
     { src: '/10%20project/cover-08.png', alt: 'Buddywerking Vlaanderen character still' },
     { src: '/2nd%20project/cover.png', alt: 'Hancock Health character still' }
@@ -213,7 +213,6 @@ ${proofStrip({
   <div class="section-inner">
     <h2 class="section-title">Meet the Characters We’ve Brought to Life</h2>
     <div class="work-grid">
-      <a class="work-card" href="/work/carakit-care-kit-explainer/"><img src="/11%20project/cover.png" alt="CaraKit character explainer" loading="lazy"><div class="work-card-body"><h3>CaraKit</h3><p>Warm character-led care-kit storytelling.</p></div></a>
       <a class="work-card" href="/work/buddywerking-vlaanderen-social-impact-explainer/"><img src="/10%20project/cover-08.png" alt="Buddywerking character explainer" loading="lazy"><div class="work-card-body"><h3>Buddywerking Vlaanderen</h3><p>Human connection through approachable characters.</p></div></a>
       <a class="work-card" href="/work/hancock-health-explainer-animation/"><img src="/2nd%20project/cover.png" alt="Hancock Health character explainer" loading="lazy"><div class="work-card-body"><h3>Hancock Health</h3><p>Patient-centered healthcare, told with people first.</p></div></a>
     </div>
@@ -255,7 +254,7 @@ ${proofStrip({
   video: '/6th%20project/mtech-systems-web.mp4',
   poster: '/6th%20project/cover.png',
   stills: [
-    { src: '/12%20project/cover.png', alt: 'GifyBox motion graphics still' },
+    { src: '/13%20project/thumbnail.png', alt: 'Maven motion graphics still' },
     { src: '/7th%20project/Cover.png', alt: 'Greenopia motion graphics still' }
   ],
   label: 'Motion graphics in production'
@@ -306,7 +305,6 @@ ${proofStrip({
     <h2 class="section-title">See Our Motion Graphics in Action</h2>
     <div class="work-grid">
       <a class="work-card" href="/work/mtech-systems-agtech-explainer/"><img src="/6th%20project/cover.png" alt="MTech Systems explainer" loading="lazy"><div class="work-card-body"><h3>MTech Systems</h3><p>AgTech data and IoT, made visual.</p></div></a>
-      <a class="work-card" href="/work/gifybox-event-photo-booth-explainer/"><img src="/12%20project/cover.png" alt="GifyBox explainer" loading="lazy"><div class="work-card-body"><h3>GifyBox</h3><p>Playful product motion for live events.</p></div></a>
       <a class="work-card" href="/work/greenopia-sustainability-explainer/"><img src="/7th%20project/Cover.png" alt="Greenopia explainer" loading="lazy"><div class="work-card-body"><h3>Greenopia</h3><p>Sustainability storytelling through illustration and type.</p></div></a>
     </div>
   </div>
@@ -348,7 +346,7 @@ ${cta('Have a Message That Needs More Movement?', 'Whether you need a marketing 
 </header>
 ${proofStrip({
   stills: [
-    { src: '/11%20project/cover.png', alt: 'CaraKit still from Funimation work' },
+    { src: '/14%20project/cover.webp', alt: 'Scouter still from Funimation work' },
     { src: '/4th%20project/cover.png', alt: 'Sela Cloud still from Funimation work' },
     { src: '/bazaar/frames/01.png', alt: 'Bazaar icon still from Funimation work' }
   ],
@@ -399,30 +397,44 @@ ${proofStrip({
     <p style="margin-top:24px"><a href="/process/" class="btn-secondary">See Our Full Process</a></p>
   </div>
 </section>
-<section class="section" style="background:#fff">
+<section id="team" class="section" style="background:#fff">
   <div class="section-inner">
     <h2 class="section-title">The studio</h2>
-    <p class="section-desc">Portrait placeholders while we photograph the team. Roles only — no invented names.</p>
+    <p class="section-desc">Meet the people behind the motion.</p>
     <div class="team-grid">
       <figure class="team-card">
-        <img src="/about/placeholders/portrait-1.svg" alt="Placeholder portrait for an animation director role" width="400" height="500">
+        <img src="/about/team/arpine.webp" alt="Arpine" width="800" height="800" loading="lazy" decoding="async">
         <figcaption>
-          <strong>Animation direction</strong>
-          <span>Placeholder portrait</span>
+          <strong>Arpine</strong>
+          <span>Co-Founder, Executive director</span>
         </figcaption>
       </figure>
       <figure class="team-card">
-        <img src="/about/placeholders/portrait-2.svg" alt="Placeholder portrait for a motion design role" width="400" height="500">
+        <img src="/about/team/smbat.webp" alt="Smbat" width="800" height="800" loading="lazy" decoding="async">
         <figcaption>
-          <strong>Motion design</strong>
-          <span>Placeholder portrait</span>
+          <strong>Smbat</strong>
+          <span>Creative Director</span>
         </figcaption>
       </figure>
       <figure class="team-card">
-        <img src="/about/placeholders/portrait-3.svg" alt="Placeholder portrait for a producer role" width="400" height="500">
+        <img src="/about/team/amit.webp" alt="Amit" width="800" height="800" loading="lazy" decoding="async">
         <figcaption>
-          <strong>Production</strong>
-          <span>Placeholder portrait</span>
+          <strong>Amit</strong>
+          <span>Interactive Motion Designer</span>
+        </figcaption>
+      </figure>
+      <figure class="team-card">
+        <img src="/about/team/anastasia.webp" alt="Anastasia" width="800" height="800" loading="lazy" decoding="async">
+        <figcaption>
+          <strong>Anastasia</strong>
+          <span>Illustrator/Designer</span>
+        </figcaption>
+      </figure>
+      <figure class="team-card">
+        <img src="/about/team/iryna.webp" alt="Iryna" width="800" height="800" loading="lazy" decoding="async">
+        <figcaption>
+          <strong>Iryna</strong>
+          <span>2D Animator</span>
         </figcaption>
       </figure>
     </div>
@@ -687,23 +699,6 @@ ${cta('Building a SaaS product that needs a clearer story?', 'Tell us what you a
       scenes: Array.from({ length: 14 }, (_, i) => `1st%20project/scenes/scene-${String(i + 1).padStart(2, '0')}.jpg`)
     }),
     casePage({
-      slug: 'gifybox-event-photo-booth-explainer',
-      title: 'GifyBox',
-      metaTitle: 'GifyBox Event Photo Booth Explainer - Funimation',
-      description: '2D product explainer for GifyBox, showing how interactive photo and GIF booths turn live events into shareable branded moments.',
-      kicker: 'Featured Case Study · Event Tech',
-      h1: 'GifyBox — Event Photo Booth Explainer',
-      stake: 'Event photo booths sounded like gadgets until the branded, shareable loop was obvious.',
-      challenge: 'Brands and agencies needed to see how live photo and GIF experiences become measurable event moments.',
-      approach: 'Playful, product-focused 2D motion that walks through capture, overlays, social sharing, and engagement.',
-      result: 'A concise explainer event teams can put on a site, deck, or booth screen.',
-      client: 'GifyBox',
-      deliverables: '2D product explainer, motion graphics, product-focused animation',
-      focus: 'Live events, branded photo experiences, social sharing',
-      poster: '12%20project/cover.png',
-      video: '12%20project/GifyBox%20Animation%20v3.0.mp4'
-    }),
-    casePage({
       slug: 'upfit-supply-product-explainer',
       title: 'Upfit Supply',
       metaTitle: 'Upfit Supply Product Explainer Animation - Funimation',
@@ -851,15 +846,14 @@ ${cta('Building a SaaS product that needs a clearer story?', 'Tell us what you a
   writePage('process', processPage);
   writePage('industries/saas-startups', industry);
   writePage('work/ismed-clim-climate-health-animation', moreCases[0]);
-  writePage('work/gifybox-event-photo-booth-explainer', moreCases[1]);
-  writePage('work/upfit-supply-product-explainer', moreCases[2]);
-  writePage('work/hancock-health-explainer-animation', moreCases[3]);
-  writePage('work/mtech-systems-agtech-explainer', moreCases[4]);
-  writePage('work/greenopia-sustainability-explainer', moreCases[5]);
-  writePage('work/secufy-sos-personal-safety-explainer', moreCases[6]);
-  writePage('work/farmerlink-digital-agriculture-explainer', moreCases[7]);
-  writePage('work/buddywerking-vlaanderen-social-impact-explainer', moreCases[8]);
-  writePage('work/maven-investment-partners-explainer', moreCases[9]);
+  writePage('work/upfit-supply-product-explainer', moreCases[1]);
+  writePage('work/hancock-health-explainer-animation', moreCases[2]);
+  writePage('work/mtech-systems-agtech-explainer', moreCases[3]);
+  writePage('work/greenopia-sustainability-explainer', moreCases[4]);
+  writePage('work/secufy-sos-personal-safety-explainer', moreCases[5]);
+  writePage('work/farmerlink-digital-agriculture-explainer', moreCases[6]);
+  writePage('work/buddywerking-vlaanderen-social-impact-explainer', moreCases[7]);
+  writePage('work/maven-investment-partners-explainer', moreCases[8]);
 
   return [
     'https://thefunimation.co/services/app-motion-design/',
@@ -869,7 +863,6 @@ ${cta('Building a SaaS product that needs a clearer story?', 'Tell us what you a
     'https://thefunimation.co/process/',
     'https://thefunimation.co/industries/saas-startups/',
     'https://thefunimation.co/work/ismed-clim-climate-health-animation/',
-    'https://thefunimation.co/work/gifybox-event-photo-booth-explainer/',
     'https://thefunimation.co/work/upfit-supply-product-explainer/',
     'https://thefunimation.co/work/hancock-health-explainer-animation/',
     'https://thefunimation.co/work/mtech-systems-agtech-explainer/',
