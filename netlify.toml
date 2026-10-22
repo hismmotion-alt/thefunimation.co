@@ -1,6 +1,4 @@
 # Static directory indexes (services/index.html, work/index.html, etc.)
 # give Netlify clean trailing-slash URLs without extra redirects.
 
-[[edge_functions]]
-  path = "/*"
-  function = "country-block"
+# Visitors from every country, including Armenia, can access the site.
